@@ -1,0 +1,13 @@
+n = 1
+f = 1.5
+s = "two"
+d = 2000-01-01 12:34:56
+b = true
+
+[subsection]
+n = 2
+pi = 3.14159265
+
+[section2]
+is_subsec = true
+n = 1
