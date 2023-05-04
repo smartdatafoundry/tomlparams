@@ -18,7 +18,7 @@ class CaptureOutput(object):
         try:
             <do stuff>
         finally:
-            c.Restore()
+            c.restore()
         printed = str(c)
     """
     def __init__(self, echo=False, stream='stdout'):
@@ -43,7 +43,7 @@ class CaptureOutput(object):
         if self.echo:
             self.saved.flush()
 
-    def Restore(self):
+    def restore(self):
         if self.stream == 'stdout':
             sys.stdout = self.saved
         else:
