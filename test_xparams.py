@@ -8,7 +8,7 @@ UGDIR = os.path.dirname(__file__)
 XDIR = os.path.join('testdata')
 EXPECTEDDIR = os.path.join('testdata', 'expected')
 
-from xparams.xparams import XParams
+from pyxparams.xparams import XParams
 
 
 class TestXParams(ReferenceTestCase):
