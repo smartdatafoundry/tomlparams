@@ -93,6 +93,7 @@ class TestXParams(ReferenceTestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
+
     def test_write_consolidated_toml_deep_equals(self):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
@@ -123,7 +124,7 @@ class TestXParams(ReferenceTestCase):
             verbose=False,
         )
 
-        params
+        # print(params.this)
 
 
 if __name__ == '__main__':
