@@ -276,7 +276,7 @@ class XParams:
                     )
                 for key, value in v.items():
                     d.__dict__[key] = pp.get(key, value) if pp else value
-            elif k != 'locale':
+            else:
                 self.__dict__[k] = p.get(k, v)
         if (
             bad_keys := set(p.keys())
