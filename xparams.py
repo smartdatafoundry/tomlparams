@@ -103,8 +103,12 @@ def nvl(v: Any, default: Any) -> Any:
 
 
 def error(*msg, exit_code=1):
-    print('**ERROR', *msg, file=sys.stderr)
+    print('*** ERROR:', *msg, file=sys.stderr)
     sys.exit(exit_code)
+
+
+def warn(*msg, exit_code=1):
+    print('*** WARNING ', *msg, file=sys.stderr)
 
 
 def is_user_reserved_path(path):
@@ -216,19 +220,19 @@ class XParams:
             if os.path.exists(std_path):
                 if is_user_reserved_path(path):
                     error(
-                        f'*** ERROR: path {path} is reserved for user '
+                        f'path {path} is reserved for user '
                         'TOML files, but exists in standardparams.'
                     )
                 if os.path.exists(custom_path):
-                    print(
-                        f'*** WARNING: {pfile} exists as {std_path} '
+                    warn(
+                        f'{pfile} exists as {std_path} '
                         f'and {custom_path}; using {custom_path}'
                     )
             elif os.path.exists(custom_path):
                 path = custom_path
             else:
                 error(
-                    f'*** ERROR: No readable file {pfile} exists at'
+                    f'No readable file {pfile} exists at'
                     f' {std_path} or {custom_path}; abandoning all hope.'
                 )
             path = os.path.realpath(path)
