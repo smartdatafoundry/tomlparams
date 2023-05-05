@@ -93,6 +93,38 @@ class TestXParams(ReferenceTestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
+    def test_write_consolidated_toml_deep_equals(self):
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        outdir = tempfile.mkdtemp()
+        defaults = {
+            "not_there_1": 2,
+            "z": 4,
+            "this": {
+                "was": {
+                    "pretty": {
+                        "deep": {
+                            "folks": {
+                                "x": 1,
+                                "y": 3,
+                                "not_there_2": 9
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        params = XParams(
+            defaults,
+            name='deep',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+
+        params
+
 
 if __name__ == '__main__':
     ReferenceTestCase.main()

@@ -4,14 +4,11 @@ Parameters
 """
 import datetime
 import os
-import random
 import re
 import sys
 import tomli
 import tomli_w
 
-from dataclasses import dataclass
-from datetime import date
 from pprint import pformat
 from typing import Optional, Any, Dict
 
@@ -125,7 +122,6 @@ class XParams:
     in the toml file.
     """
 
-    verbose = False
     json_indent = 0
     json_test_indent = 4
 
@@ -278,8 +274,13 @@ class XParams:
                         f'*** ERROR: {k} should be a section '
                         f'of the toml file {self.toml_files_str()}'
                     )
-                for key, value in v.items():
-                    d.__dict__[key] = pp.get(key, value) if pp else value
+
+                recursive_create_params_groups(pp, d)
+                # for key, value in v.items():
+                #     if isinstance(value, dict):
+                #         recursive_create_params_groups(value, d)
+                #     else:
+                #         d.__dict__[key] = pp.get(key, value) if pp else value
             else:
                 self.__dict__[k] = p.get(k, v)
         if (
@@ -318,3 +319,40 @@ class ParamsGroup:
         return flatten(self.__dict__)
 
     __repr__ = __str__
+
+# This will favour tables from the toml over those from the default, replacing
+# whole tables in the default with those from the toml
+# Motivating example: toml -
+# z = 4
+#
+# [this.was.pretty.deep.folks]
+# x = 2
+# y = 5
+#
+# defaults = {
+#             "not_there_1": 2,
+#             "z": 4,
+#             "this": {
+#                 "was": {
+#                     "pretty": {
+#                         "deep": {
+#                             "folks": {
+#                                 "x": 1,
+#                                 "y": 3,
+#                                 "not_there_2": 9
+#                             }
+#                         }
+#                     }
+#                 }
+#             }
+#         }
+#
+# toml table preferred - is this desired behaviour?
+
+def recursive_create_params_groups(d: Dict[str, Any], pg: ParamsGroup):
+    for key, value in d.items():
+        if isinstance(value, dict):
+            pg.__dict__[key] = new_pg = ParamsGroup()
+            recursive_create_params_groups(value, new_pg)
+        else:
+            pg.__dict__[key] = value
