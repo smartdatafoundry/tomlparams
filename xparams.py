@@ -10,7 +10,7 @@ import tomli
 import tomli_w
 
 from pprint import pformat
-from typing import Optional, Any, Dict
+from typing import Optional, Any, Dict, NoReturn
 
 USER_RESERVED_NAMES_RE = re.compile(r'^(u|user)[-_].*$')
 
@@ -64,6 +64,7 @@ def flatten(
             )
 
 
+# TODO wrong return type
 def selectively_update_dict(
     d: Dict[str, Any], new_d: Dict[str, Any], show_warnings: bool = True
 ) -> int:
@@ -87,7 +88,7 @@ def selectively_update_dict(
                     f'Replacing value for {k}, of type {type(d[k])} '
                     f'with dictionary {v}.'
                 )
-                warn(msg, show=show_warnings)
+                warn(msg)
                 warnings.append(msg)
                 d[k] = v
         else:
@@ -99,7 +100,7 @@ def nvl(v: Any, default: Any) -> Any:
     return default if v is None else v
 
 
-def error(*msg, exit_code=1):
+def error(*msg, exit_code=1) -> NoReturn:
     print('*** ERROR:', *msg, file=sys.stderr)
     sys.exit(exit_code)
 
@@ -265,24 +266,13 @@ class XParams:
             report: print loading status
         """
         p = self.read_toml_file(report)
-        for k, v in self._defaults.items():
-            if isinstance(v, dict):
-                self.__dict__[k] = d = ParamsGroup()
-                pp = p.get(k)
-                if pp is not None and type(pp) is not dict:
-                    error(
-                        f'*** ERROR: {k} should be a section '
-                        f'of the toml file {self.toml_files_str()}'
-                    )
+        self.__dict__.update(
+            recursive_create_params_groups(
+                map_dicts(self._defaults, p)
+            ).__dict__
+        )
 
-                recursive_create_params_groups(pp, d)
-                # for key, value in v.items():
-                #     if isinstance(value, dict):
-                #         recursive_create_params_groups(value, d)
-                #     else:
-                #         d.__dict__[key] = pp.get(key, value) if pp else value
-            else:
-                self.__dict__[k] = p.get(k, v)
+        # TODO - this only checks at top level - check keys all way down?
         if (
             bad_keys := set(p.keys())
             - set(self._defaults.keys())
@@ -320,39 +310,28 @@ class ParamsGroup:
 
     __repr__ = __str__
 
-# This will favour tables from the toml over those from the default, replacing
-# whole tables in the default with those from the toml
-# Motivating example: toml -
-# z = 4
-#
-# [this.was.pretty.deep.folks]
-# x = 2
-# y = 5
-#
-# defaults = {
-#             "not_there_1": 2,
-#             "z": 4,
-#             "this": {
-#                 "was": {
-#                     "pretty": {
-#                         "deep": {
-#                             "folks": {
-#                                 "x": 1,
-#                                 "y": 3,
-#                                 "not_there_2": 9
-#                             }
-#                         }
-#                     }
-#                 }
-#             }
-#         }
-#
-# toml table preferred - is this desired behaviour?
 
-def recursive_create_params_groups(d: Dict[str, Any], pg: ParamsGroup):
-    for key, value in d.items():
-        if isinstance(value, dict):
-            pg.__dict__[key] = new_pg = ParamsGroup()
-            recursive_create_params_groups(value, new_pg)
+def recursive_create_params_groups(d: Dict[str, Any]) -> ParamsGroup:
+    pg = ParamsGroup()
+    for k, v in d.items():
+        if isinstance(v, dict):
+            pg.__dict__[k] = recursive_create_params_groups(v)
         else:
-            pg.__dict__[key] = value
+            pg.__dict__[k] = v
+    return pg
+
+
+def map_dicts(defaults: dict[str, Any], overwrite: dict[str, Any]) -> dict[str, Any]:
+    ret_d = {}
+    for dk, dv in defaults.items():
+        if isinstance(dv, dict):
+            ov = overwrite.get(dk)
+            if ov is not None and type(ov) is not dict:
+                error(
+                    f'*** ERROR: {dk} should be a section '
+                    f'of the toml file'
+                )
+            ret_d[dk] = map_dicts(dv, ov)
+        else:
+            ret_d[dk] = overwrite.get(dk, dv)
+    return ret_d
