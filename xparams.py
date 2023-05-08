@@ -268,20 +268,9 @@ class XParams:
         p = self.read_toml_file(report)
         self.__dict__.update(
             recursive_create_params_groups(
-                map_dicts(self._defaults, p)
+                map_dicts(['root'], self._defaults, p)
             ).__dict__
         )
-
-        # TODO - this only checks at top level - check keys all way down?
-        if (
-            bad_keys := set(p.keys())
-            - set(self._defaults.keys())
-            - {'include'}
-        ):
-            error(
-                f'Unknown parameters in {self.toml_files_str()}: ',
-                ' '.join(sorted(bad_keys)),
-            )
 
     def toml_files_str(self):
         return ', '.join(self.toml_files_used) or ''
@@ -302,8 +291,17 @@ class XParams:
 
 
 class ParamsGroup:
-    def __str__(self):
-        return f'ParamsGroup(**{pformat(self.__dict__, indent=4)})'
+    def __init__(self, depth: int = 0):
+        self._depth = depth
+
+    def __str__(self) -> str:
+        indent = "\t" * self._depth
+        desc = 'ParamsGroup(\n'
+        for k, v in self.__dict__.items():
+            if k != "_depth":
+                desc += indent + f"\t{k}: {str(v)},\n"
+        desc = desc[:-2] + '\n' + indent + ')'
+        return desc
 
     def as_saveable_object(self):
         return flatten(self.__dict__)
@@ -311,27 +309,40 @@ class ParamsGroup:
     __repr__ = __str__
 
 
-def recursive_create_params_groups(d: Dict[str, Any]) -> ParamsGroup:
-    pg = ParamsGroup()
+def recursive_create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
+    pg = ParamsGroup(depth)
     for k, v in d.items():
         if isinstance(v, dict):
-            pg.__dict__[k] = recursive_create_params_groups(v)
+            pg.__dict__[k] = recursive_create_params_groups(v, depth + 1)
         else:
             pg.__dict__[k] = v
     return pg
 
 
-def map_dicts(defaults: dict[str, Any], overwrite: dict[str, Any]) -> dict[str, Any]:
+def map_dicts(
+    context: list[str],
+    defaults: dict[str, Any],
+    overwrite: Optional[dict[str, Any]] = None,
+) -> dict[str, Any]:
     ret_d = {}
     for dk, dv in defaults.items():
         if isinstance(dv, dict):
-            ov = overwrite.get(dk)
+            ov = overwrite.get(dk) if overwrite is not None else None
             if ov is not None and type(ov) is not dict:
                 error(
                     f'*** ERROR: {dk} should be a section '
                     f'of the toml file'
                 )
-            ret_d[dk] = map_dicts(dv, ov)
+            ret_d[dk] = map_dicts(context + [dk], dv, ov)
         else:
             ret_d[dk] = overwrite.get(dk, dv)
+
+    if overwrite is not None and (
+        bad_keys := set(overwrite.keys()) - set(defaults.keys()) - {'include'}
+    ):
+        error(
+            f'Unknown parameters in toml at level: {".".join(context)}',
+            ' '.join(sorted(bad_keys)),
+        )
+
     return ret_d
