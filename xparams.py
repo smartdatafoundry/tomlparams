@@ -6,6 +6,8 @@ import datetime
 import os
 import re
 import sys
+from enum import Enum
+
 import tomli
 import tomli_w
 
@@ -16,6 +18,11 @@ USER_RESERVED_NAMES_RE = re.compile(r'^(u|user)[-_].*$')
 
 DEFAULT_PARAMS_NAME = 'xparams'
 
+
+class TypeChecking(Enum):
+    IGNORE = 1
+    WARN = 2
+    ERROR = 3
 
 def flatten(
     o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = False
@@ -126,6 +133,7 @@ class XParams:
         standard_params_dir=None,
         user_params_dir=None,
         verbose=True,
+        check_types=TypeChecking.WARN
     ):
 
         self._defaults = defaults
@@ -139,6 +147,7 @@ class XParams:
             user_params_dir, os.path.expanduser(f'~/user{paramsname}')
         )
         self._verbose = verbose
+        self._check_types = check_types
         self.set_params(name, report_load=self._verbose)
 
     @classmethod
@@ -258,7 +267,12 @@ class XParams:
         toml = self.read_toml_file(report)
         self.__dict__.update(
             create_params_groups(
-                overwrite_defaults_with_toml(hierarchy=[], defaults=self._defaults, overwrite=toml)
+                overwrite_defaults_with_toml(
+                    hierarchy=[],
+                    defaults=self._defaults,
+                    overwrite=toml,
+                    check_types=self._check_types
+                )
             ).__dict__
         )
 
@@ -308,12 +322,15 @@ def create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
             pg.__dict__[k] = v
     return pg
 
+
 def overwrite_defaults_with_toml(
     hierarchy: list[str],
     defaults: dict[str, Any],
+    check_types: TypeChecking,
     overwrite: Optional[dict[str, Any]] = None,
 ) -> dict[str, Any]:
     ret_d = {}
+    hierarchy_level = "at root level" if not hierarchy else f'at level: {".".join(hierarchy)}'
 
     for dk, dv in defaults.items():
         if isinstance(dv, dict):
@@ -323,21 +340,33 @@ def overwrite_defaults_with_toml(
                     f'*** ERROR: {dk} should be a section '
                     f'of the toml file'
                 )
-            ret_d[dk] = overwrite_defaults_with_toml(hierarchy + [dk], defaults=dv, overwrite=ov)
+            ret_d[dk] = overwrite_defaults_with_toml(
+                hierarchy + [dk],
+                check_types=check_types,
+                defaults=dv,
+                overwrite=ov
+            )
         else:
-            ret_d[dk] = overwrite.get(dk, dv) if overwrite is not None else dv
+            overwrite_v = overwrite.get(dk, dv) if overwrite is not None else dv
+            if check_types != TypeChecking.IGNORE and type(overwrite_v) != type(dv):
+                if check_types == TypeChecking.WARN:
+                    warn(
+                        f'Types mismatch in default and toml {hierarchy_level}',
+                        f'key: {dk}, default_type: {type(dv)}, toml_type: {type(overwrite_v)}'
+                    )
+                elif check_types == TypeChecking.ERROR:
+                    error(
+                        f'Types mismatch in default and toml {hierarchy_level}',
+                        f'key: {dk}, default_type: {type(dv)}, toml_type: {type(overwrite_v)}'
+                    )
+            ret_d[dk] = overwrite_v
 
     if overwrite is not None and (
         bad_keys := set(overwrite.keys()) - set(defaults.keys()) - {'include'}
     ):
-        if not hierarchy:
-            error(
-                f'Unknown parameters in toml at root level',
-                ' '.join(sorted(bad_keys)),
-            )
-        else:
-            error(
-                f'Unknown parameters in toml at level: {".".join(hierarchy)}',
-                ' '.join(sorted(bad_keys)),
-            )
+        error(
+            f'Unknown parameters in toml {hierarchy_level}',
+            ' '.join(sorted(bad_keys)),
+        )
+
     return ret_d
