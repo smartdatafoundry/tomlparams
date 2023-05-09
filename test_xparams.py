@@ -97,6 +97,8 @@ class TestXParams(ReferenceTestCase):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
+        consolidated_path = os.path.join(outdir, 'params.toml')
+
         defaults = {
             "not_there_1": 2,
             "z": 4,
@@ -123,7 +125,10 @@ class TestXParams(ReferenceTestCase):
             verbose=False,
         )
 
-        params
+        params.write_consolidated_toml(consolidated_path, verbose=False)
+        self.assertFileCorrect(
+            consolidated_path, os.path.join(EXPECTEDDIR, 'deep.toml')
+        )
 
 
 if __name__ == '__main__':

@@ -255,11 +255,10 @@ class XParams:
         Args:
             report: print loading status
         """
-        p = self.read_toml_file(report)
-        context = []
+        toml = self.read_toml_file(report)
         self.__dict__.update(
-            recursive_create_params_groups(
-                map_dicts(context, self._defaults, p)
+            create_params_groups(
+                overwrite_defaults_with_toml(hierarchy=[], defaults=self._defaults, overwrite=toml)
             ).__dict__
         )
 
@@ -300,22 +299,22 @@ class ParamsGroup:
     __repr__ = __str__
 
 
-def recursive_create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
+def create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
     pg = ParamsGroup(depth)
     for k, v in d.items():
         if isinstance(v, dict):
-            pg.__dict__[k] = recursive_create_params_groups(v, depth + 1)
+            pg.__dict__[k] = create_params_groups(v, depth + 1)
         else:
             pg.__dict__[k] = v
     return pg
 
-
-def map_dicts(
-    context: list[str],
+def overwrite_defaults_with_toml(
+    hierarchy: list[str],
     defaults: dict[str, Any],
     overwrite: Optional[dict[str, Any]] = None,
 ) -> dict[str, Any]:
     ret_d = {}
+
     for dk, dv in defaults.items():
         if isinstance(dv, dict):
             ov = overwrite.get(dk) if overwrite is not None else None
@@ -324,21 +323,21 @@ def map_dicts(
                     f'*** ERROR: {dk} should be a section '
                     f'of the toml file'
                 )
-            ret_d[dk] = map_dicts(context + [dk], dv, ov)
+            ret_d[dk] = overwrite_defaults_with_toml(hierarchy + [dk], defaults=dv, overwrite=ov)
         else:
-            ret_d[dk] = overwrite.get(dk, dv)
+            ret_d[dk] = overwrite.get(dk, dv) if overwrite is not None else dv
 
     if overwrite is not None and (
         bad_keys := set(overwrite.keys()) - set(defaults.keys()) - {'include'}
     ):
-        if not context:
+        if not hierarchy:
             error(
                 f'Unknown parameters in toml at root level',
                 ' '.join(sorted(bad_keys)),
             )
         else:
             error(
-                f'Unknown parameters in toml at level: {".".join(context)}',
+                f'Unknown parameters in toml at level: {".".join(hierarchy)}',
                 ' '.join(sorted(bad_keys)),
             )
     return ret_d
