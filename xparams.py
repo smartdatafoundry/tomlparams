@@ -64,10 +64,9 @@ def flatten(
             )
 
 
-# TODO wrong return type
 def selectively_update_dict(
-    d: Dict[str, Any], new_d: Dict[str, Any], show_warnings: bool = True
-) -> int:
+    d: Dict[str, Any], new_d: Dict[str, Any]
+) -> None:
     """
     Selectively update dictionary d with any values that are in new_d,
     but being careful only to update keys in dictionaries that are present
@@ -76,24 +75,15 @@ def selectively_update_dict(
     Args:
         d: dictionary with string keys
         new_d: dictionary with string keys
-        show_warnings: chattier if true
     """
-    warnings = []
     for k, v in new_d.items():
         if isinstance(v, dict) and k in d:
             if isinstance(d[k], dict):
                 selectively_update_dict(d[k], v)
             else:
-                msg = (
-                    f'Replacing value for {k}, of type {type(d[k])} '
-                    f'with dictionary {v}.'
-                )
-                warn(msg)
-                warnings.append(msg)
                 d[k] = v
         else:
             d[k] = v
-    return warnings
 
 
 def nvl(v: Any, default: Any) -> Any:
@@ -105,7 +95,7 @@ def error(*msg, exit_code=1) -> NoReturn:
     sys.exit(exit_code)
 
 
-def warn(*msg, exit_code=1):
+def warn(*msg):
     print('*** WARNING ', *msg, file=sys.stderr)
 
 
@@ -198,7 +188,7 @@ class XParams:
         Returns:
             dictionary of parameters from toml file.
         """
-        params = {}
+        outer_params = {}
         if name := name or self.name:
             base, ext = os.path.splitext(name)
             if ext == '.toml':
@@ -234,25 +224,25 @@ class XParams:
                 )
             path = os.path.realpath(path)
             if path in self.toml_files_used:
-                return params
+                return outer_params
 
             with open(path, 'rb') as f:
-                params = tomli.load(f)
+                outer_params = tomli.load(f)
                 self.toml_files_used = [path] + self.toml_files_used
 
-                if include := params.get('include', None):
+                if include := outer_params.get('include', None):
                     if isinstance(include, list):
-                        new_params = {}
+                        included_params = {}
                         for name in include:
-                            new_params |= self.read_toml_file(report, name)
+                            included_params |= self.read_toml_file(report, name)
                     else:
-                        new_params = self.read_toml_file(report, include)
-                    selectively_update_dict(new_params, params)
-                    params = new_params
+                        included_params = self.read_toml_file(report, include)
+                    selectively_update_dict(included_params, outer_params)
+                    outer_params = included_params
             if report:
                 print(f'Parameters set from: {path}')
 
-        return params
+        return outer_params
 
     def load(self, report: bool = False):
         """
@@ -266,9 +256,10 @@ class XParams:
             report: print loading status
         """
         p = self.read_toml_file(report)
+        context = []
         self.__dict__.update(
             recursive_create_params_groups(
-                map_dicts(['root'], self._defaults, p)
+                map_dicts(context, self._defaults, p)
             ).__dict__
         )
 
@@ -299,8 +290,8 @@ class ParamsGroup:
         desc = 'ParamsGroup(\n'
         for k, v in self.__dict__.items():
             if k != "_depth":
-                desc += indent + f"\t{k}: {str(v)},\n"
-        desc = desc[:-2] + '\n' + indent + ')'
+                desc += f"{indent}\t{k}: {str(v)},\n"
+        desc = f"{desc[:-2]}\n{indent})"
         return desc
 
     def as_saveable_object(self):
@@ -340,9 +331,14 @@ def map_dicts(
     if overwrite is not None and (
         bad_keys := set(overwrite.keys()) - set(defaults.keys()) - {'include'}
     ):
-        error(
-            f'Unknown parameters in toml at level: {".".join(context)}',
-            ' '.join(sorted(bad_keys)),
-        )
-
+        if not context:
+            error(
+                f'Unknown parameters in toml at root level',
+                ' '.join(sorted(bad_keys)),
+            )
+        else:
+            error(
+                f'Unknown parameters in toml at level: {".".join(context)}',
+                ' '.join(sorted(bad_keys)),
+            )
     return ret_d
