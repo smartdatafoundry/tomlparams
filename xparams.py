@@ -24,6 +24,7 @@ class TypeChecking(Enum):
     WARN = 2
     ERROR = 3
 
+
 def flatten(
     o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = False
 ):
@@ -71,9 +72,7 @@ def flatten(
             )
 
 
-def selectively_update_dict(
-    d: Dict[str, Any], new_d: Dict[str, Any]
-) -> None:
+def selectively_update_dict(d: Dict[str, Any], new_d: Dict[str, Any]) -> None:
     """
     Selectively update dictionary d with any values that are in new_d,
     but being careful only to update keys in dictionaries that are present
@@ -125,17 +124,16 @@ class XParams:
 
     def __init__(
         self,
-        defaults,
-        name=None,
-        paramsname=DEFAULT_PARAMS_NAME,
-        env_var=None,
-        base_params_stem='base',
-        standard_params_dir=None,
-        user_params_dir=None,
-        verbose=True,
-        check_types=TypeChecking.WARN
+        defaults: dict,
+        name: str = None,
+        paramsname: str = DEFAULT_PARAMS_NAME,
+        env_var: str = None,
+        base_params_stem: str = 'base',
+        standard_params_dir: str = None,
+        user_params_dir: str = None,
+        verbose: Optional[bool] = True,
+        check_types: TypeChecking = TypeChecking.WARN,
     ):
-
         self._defaults = defaults
         self._env_var = nvl(env_var, paramsname.upper())  # XPARAMS
         self._base_params_stem = base_params_stem
@@ -243,7 +241,9 @@ class XParams:
                     if isinstance(include, list):
                         included_params = {}
                         for name in include:
-                            included_params |= self.read_toml_file(report, name)
+                            included_params |= self.read_toml_file(
+                                report, name
+                            )
                     else:
                         included_params = self.read_toml_file(report, include)
                     selectively_update_dict(included_params, outer_params)
@@ -271,7 +271,7 @@ class XParams:
                     hierarchy=[],
                     defaults=self._defaults,
                     overwrite=toml,
-                    check_types=self._check_types
+                    check_types=self._check_types,
                 )
             ).__dict__
         )
@@ -330,34 +330,45 @@ def overwrite_defaults_with_toml(
     overwrite: Optional[dict[str, Any]] = None,
 ) -> dict[str, Any]:
     ret_d = {}
-    hierarchy_level = "at root level" if not hierarchy else f'at level: {".".join(hierarchy)}'
+    hierarchy_level = (
+        f'at level: {".".join(hierarchy)} ' if hierarchy else "at root level "
+    )
 
     for dk, dv in defaults.items():
         if isinstance(dv, dict):
             ov = overwrite.get(dk) if overwrite is not None else None
             if ov is not None and type(ov) is not dict:
-                error(
-                    f'*** ERROR: {dk} should be a section '
-                    f'of the toml file'
-                )
+                error(f'*** ERROR: {dk} should be a section of the toml file')
             ret_d[dk] = overwrite_defaults_with_toml(
                 hierarchy + [dk],
                 check_types=check_types,
                 defaults=dv,
-                overwrite=ov
+                overwrite=ov,
             )
         else:
-            overwrite_v = overwrite.get(dk, dv) if overwrite is not None else dv
-            if check_types != TypeChecking.IGNORE and type(overwrite_v) != type(dv):
+            overwrite_v = (
+                overwrite.get(dk, dv) if overwrite is not None else dv
+            )
+            if check_types != TypeChecking.IGNORE and type(
+                overwrite_v
+            ) != type(dv):
                 if check_types == TypeChecking.WARN:
                     warn(
-                        f'Types mismatch in default and toml {hierarchy_level}',
-                        f'key: {dk}, default_type: {type(dv)}, toml_type: {type(overwrite_v)}'
+                        (
+                            'Types mismatch in default and toml'
+                            f' {hierarchy_level}'
+                            f'key: {dk}, default_type: {type(dv)}, toml_type:'
+                            f' {type(overwrite_v)}'
+                        ),
                     )
                 elif check_types == TypeChecking.ERROR:
                     error(
-                        f'Types mismatch in default and toml {hierarchy_level}',
-                        f'key: {dk}, default_type: {type(dv)}, toml_type: {type(overwrite_v)}'
+                        (
+                            'Types mismatch in default and toml'
+                            f' {hierarchy_level}'
+                            f'key: {dk}, default_type: {type(dv)}, toml_type:'
+                            f' {type(overwrite_v)}'
+                        ),
                     )
             ret_d[dk] = overwrite_v
 
