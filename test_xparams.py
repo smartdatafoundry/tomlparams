@@ -2,14 +2,13 @@ import datetime
 import os
 import tempfile
 import tomli
-from tdda.referencetest import ReferenceTestCase, tag
+from tdda.referencetest import ReferenceTestCase
+from pyxparams.captureoutput import CaptureOutput
+from pyxparams.xparams import XParams, TypeChecking
 
 UGDIR = os.path.dirname(__file__)
 XDIR = os.path.join('testdata')
 EXPECTEDDIR = os.path.join('testdata', 'expected')
-
-from pyxparams.captureoutput import CaptureOutput
-from pyxparams.xparams import XParams, TypeChecking
 
 
 class TestXParams(ReferenceTestCase):
@@ -58,10 +57,10 @@ class TestXParams(ReferenceTestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, defaults)
 
-    def test_write_consolidated_toml(self):
+    def test_write_consolidated_toml_with_hierarchies(self):
         # Tests writing of consolidated TOML file when
         # one.toml and two.toml both exist.
-        # two includes 1 and they have some conflicts
+        # two.toml includes one.toml and they have some conflicts
         defaults = {
             'n': 1,
             'f': 1.5,
@@ -93,6 +92,7 @@ class TestXParams(ReferenceTestCase):
         self.assertFileCorrect(
             consolidated_path, os.path.join(EXPECTEDDIR, 'two.toml')
         )
+
         expected = defaults  # Same object, but being updated
         expected['s'] = 'two'
         expected['subsection']['n'] = 2
@@ -101,36 +101,105 @@ class TestXParams(ReferenceTestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
-    # def test_write_consolidated_toml_deep_equals(self):
-    #     stddir = os.path.join(XDIR, 'xparams')
-    #     userdir = os.path.join(XDIR, 'userxparams')
-    #     outdir = tempfile.mkdtemp()
-    #     consolidated_path = os.path.join(outdir, 'params.toml')
-    #
-    #     defaults = {
-    #         "not_there_1": 2,
-    #         "z": 4,
-    #         "this": {
-    #             "was": {
-    #                 "pretty": {
-    #                     "deep": {"folks": {"x": 1, "y": 3, "not_there_2": 9}}
-    #                 }
-    #             }
-    #         },
-    #     }
-    #
-    #     params = XParams(
-    #         defaults,
-    #         name='deep',
-    #         standard_params_dir=stddir,
-    #         user_params_dir=userdir,
-    #         verbose=False,
-    #     )
-    #
-    #     params.write_consolidated_toml(consolidated_path, verbose=False)
-    #     self.assertFileCorrect(
-    #         consolidated_path, os.path.join(EXPECTEDDIR, 'deep.toml')
-    #     )
+    def test_write_consolidated_toml_deep_equals(self):
+        defaults = {
+            "not_there_1": 2,
+            "z": 4,
+            "this": {
+                "was": {
+                    "pretty": {
+                        "deep": {"folks": {"x": 1, "y": 3, "not_there_2": 9}}
+                    }
+                }
+            },
+        }
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        outdir = tempfile.mkdtemp()
+        consolidated_path = os.path.join(outdir, 'params.toml')
+
+        params = XParams(
+            defaults,
+            name='deep',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+
+        params.write_consolidated_toml(consolidated_path, verbose=False)
+        self.assertFileCorrect(
+            consolidated_path, os.path.join(EXPECTEDDIR, 'deep.toml')
+        )
+
+        expected = defaults  # Same object, but being updated
+        expected['z'] = 3
+        expected['this']['was']['pretty']['deep']['folks']['x'] = 2
+        expected['this']['was']['pretty']['deep']['folks']['y'] = 5
+        with open(consolidated_path, 'rb') as f:
+            loaded_params = tomli.load(f)
+        self.assertEqual(loaded_params, expected)
+
+
+    def test_user_params(self):
+        defaults = {
+            'x': 10
+        }
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        outdir = tempfile.mkdtemp()
+        consolidated_path = os.path.join(outdir, 'params.toml')
+
+        params = XParams(
+            defaults,
+            name='user_only',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+
+        params.write_consolidated_toml(consolidated_path, verbose=False)
+        self.assertFileCorrect(
+            consolidated_path, os.path.join(EXPECTEDDIR, 'user_only.toml')
+        )
+
+        expected = defaults  # Same object, but being updated
+        expected['x'] = 4
+        with open(consolidated_path, 'rb') as f:
+            loaded_params = tomli.load(f)
+        self.assertEqual(loaded_params, expected)
+
+
+    def test_reserved_user_raises(self):
+        defaults = {
+            'x': 10
+        }
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        outdir = tempfile.mkdtemp()
+        naughty_toml = os.path.join(XDIR, 'xparams', 'user_only.toml')
+        open(naughty_toml, "wt").close()
+
+        create_params = lambda: XParams(
+            defaults,
+            name='user_only',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+
+        try:
+            self.assertRaises(
+                SystemExit,
+                create_params
+            )
+
+            expected_error = (
+                '*** ERROR: path testdata/xparams/user_only.toml is reserved for user TOML files, but exists '
+                'in standardparams.\n'
+            )
+            self.assertEqual(str(self.co), expected_error)
+        finally:
+            os.remove(naughty_toml)
 
     def test_type_checking_root_level_warning(self):
         stddir = os.path.join(XDIR, 'xparams')
@@ -215,7 +284,7 @@ class TestXParams(ReferenceTestCase):
             'at root level key: z, default_type: <class \'int\'>, '
             'toml_type: <class \'str\'>\n'
         )
-        params = lambda: XParams(
+        create_params = lambda: XParams(
             defaults,
             name='type_check_root_level',
             standard_params_dir=stddir,
@@ -225,10 +294,9 @@ class TestXParams(ReferenceTestCase):
         )
         self.assertRaises(
             SystemExit,
-            params,
+            create_params,
         )
         self.assertEqual(str(self.co), expected_error)
-
 
 
 if __name__ == '__main__':
