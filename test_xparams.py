@@ -13,6 +13,13 @@ from pyxparams.xparams import XParams, TypeChecking
 
 
 class TestXParams(ReferenceTestCase):
+
+    def setUp(self):
+        self.co = CaptureOutput(stream='stderr')
+
+    def tearDown(self):
+        self.co.restore()
+
     def test_write_consolidated_toml_unchanged_from_defaults(self):
         # Tests writing of consolidated TOML file when
         # base.toml exists but is empty, so what's written
@@ -99,7 +106,7 @@ class TestXParams(ReferenceTestCase):
     #     userdir = os.path.join(XDIR, 'userxparams')
     #     outdir = tempfile.mkdtemp()
     #     consolidated_path = os.path.join(outdir, 'params.toml')
-
+    #
     #     defaults = {
     #         "not_there_1": 2,
     #         "z": 4,
@@ -111,7 +118,7 @@ class TestXParams(ReferenceTestCase):
     #             }
     #         },
     #     }
-
+    #
     #     params = XParams(
     #         defaults,
     #         name='deep',
@@ -119,7 +126,7 @@ class TestXParams(ReferenceTestCase):
     #         user_params_dir=userdir,
     #         verbose=False,
     #     )
-
+    #
     #     params.write_consolidated_toml(consolidated_path, verbose=False)
     #     self.assertFileCorrect(
     #         consolidated_path, os.path.join(EXPECTEDDIR, 'deep.toml')
@@ -129,7 +136,6 @@ class TestXParams(ReferenceTestCase):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         defaults = {"not_there_1": 2, "z": 4}
-        co = CaptureOutput(stream='stderr')
         params = XParams(
             defaults,
             name='type_check_root_level',
@@ -144,9 +150,8 @@ class TestXParams(ReferenceTestCase):
             'toml_type: <class \'str\'>\n'
         )
 
-        self.assertEqual(str(co), expected_warning)
+        self.assertEqual(str(self.co), expected_warning)
 
-        co.restore()
 
     def test_type_checking_deep_level_warning(self):
         stddir = os.path.join(XDIR, 'xparams')
@@ -162,7 +167,6 @@ class TestXParams(ReferenceTestCase):
                 }
             },
         }
-        co = CaptureOutput(stream='stderr')
         params = XParams(
             defaults,
             name='type_check_deeper_level',
@@ -176,9 +180,8 @@ class TestXParams(ReferenceTestCase):
             'at level: this.was.pretty.deep.folks key: x, '
             'default_type: <class \'int\'>, toml_type: <class \'str\'>\n'
         )
-        self.assertEqual(str(co), expected_warning)
+        self.assertEqual(str(self.co), expected_warning)
 
-        co.restore()
 
     def test_date_type_checking_warning(self):
         stddir = os.path.join(XDIR, 'xparams')
@@ -187,7 +190,6 @@ class TestXParams(ReferenceTestCase):
             "not_there_1": 2,
             "date": '1970-01-01',
         }
-        co = CaptureOutput(stream='stderr')
         params = XParams(
             defaults,
             name='type_check_dates',
@@ -201,15 +203,13 @@ class TestXParams(ReferenceTestCase):
             'at root level key: date, default_type: <class \'str\'>, '
             'toml_type: <class \'datetime.date\'>\n'
         )
-        self.assertEqual(str(co), expected_warning)
+        self.assertEqual(str(self.co), expected_warning)
 
-        co.restore()
 
     def test_type_checking_root_level_error(self):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         defaults = {"not_there_1": 2, "z": 4}
-        co = CaptureOutput(stream='stderr')
         expected_error = (
             '*** ERROR: Types mismatch in default and toml '
             'at root level key: z, default_type: <class \'int\'>, '
@@ -227,9 +227,8 @@ class TestXParams(ReferenceTestCase):
             SystemExit,
             params,
         )
-        self.assertEqual(str(co), expected_error)
+        self.assertEqual(str(self.co), expected_error)
 
-        co.restore()
 
 
 if __name__ == '__main__':
