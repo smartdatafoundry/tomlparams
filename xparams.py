@@ -219,7 +219,7 @@ class XParams:
                 path = custom_path
             else:
                 error(
-                    f'No readable file {pfile} exists at'
+                    f'*** ERROR: No readable file {pfile} exists at'
                     f' {std_path} or {custom_path}; abandoning all hope.'
                 )
             path = os.path.realpath(path)
