@@ -14,7 +14,7 @@ EXPECTEDDIR = os.path.join('testdata', 'expected')
 class TestXParams(ReferenceTestCase):
 
     def setUp(self):
-        self.co = CaptureOutput(stream='stderr')
+        self.co = CaptureOutput(echo=True, stream='stderr')
 
     def tearDown(self):
         self.co.restore()
@@ -57,7 +57,7 @@ class TestXParams(ReferenceTestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, defaults)
 
-    def test_write_consolidated_toml_with_hierarchies(self):
+    def test_write_consolidated_toml_with_hierarchy(self):
         # Tests writing of consolidated TOML file when
         # one.toml and two.toml both exist.
         # two.toml includes one.toml and they have some conflicts
@@ -96,6 +96,91 @@ class TestXParams(ReferenceTestCase):
         expected = defaults  # Same object, but being updated
         expected['s'] = 'two'
         expected['subsection']['n'] = 2
+        expected['section2']['n'] = 1
+        with open(consolidated_path, 'rb') as f:
+            loaded_params = tomli.load(f)
+        self.assertEqual(loaded_params, expected)
+
+    def test_write_consolidated_toml_list_hierarchy(self):
+        # Tests writing of consolidated TOML file when
+        # three.toml, four.toml and five.toml all exist.
+        # three.toml includes four.toml and five.toml in order with some conflicts
+        defaults = {
+            'n': 1,
+            'f': 1.5,
+            's': 'xparams',
+            'd': datetime.datetime(2000, 1, 1, 12, 34, 56),
+            'b': True,
+            'subsection': {
+                'n': 0,
+                'pi': 3.14159265,
+            },
+            'section2': {
+                'is_subsec': True,
+                'n': 2,
+            },
+        }
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        outdir = tempfile.mkdtemp()
+        consolidated_path = os.path.join(outdir, 'params.toml')
+
+        params = XParams(
+            defaults,
+            name='three',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+        params.write_consolidated_toml(consolidated_path, verbose=False)
+        self.assertFileCorrect(
+            consolidated_path, os.path.join(EXPECTEDDIR, 'three.toml')
+        )
+
+        expected = defaults  # Same object, but being updated
+        expected['s'] = 'three'
+        expected['subsection']['n'] = 5
+        expected['section2']['n'] = 4
+        with open(consolidated_path, 'rb') as f:
+            loaded_params = tomli.load(f)
+        self.assertEqual(loaded_params, expected)
+
+    def test_self_inclusion(self):
+        defaults = {
+            'n': 1,
+            'f': 1.5,
+            's': 'xparams',
+            'd': datetime.datetime(2000, 1, 1, 12, 34, 56),
+            'b': True,
+            'subsection': {
+                'n': 0,
+                'pi': 3.14159265,
+            },
+            'section2': {
+                'is_subsec': True,
+                'n': 2,
+            },
+        }
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        outdir = tempfile.mkdtemp()
+        consolidated_path = os.path.join(outdir, 'params.toml')
+
+        params = XParams(
+            defaults,
+            name='self',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+        params.write_consolidated_toml(consolidated_path, verbose=False)
+        self.assertFileCorrect(
+            consolidated_path, os.path.join(EXPECTEDDIR, 'self.toml')
+        )
+
+        expected = defaults  # Same object, but being updated
+        expected['s'] = 'self'
+        expected['subsection']['n'] = 1
         expected['section2']['n'] = 1
         with open(consolidated_path, 'rb') as f:
             loaded_params = tomli.load(f)
