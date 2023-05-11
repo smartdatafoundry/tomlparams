@@ -19,12 +19,6 @@ USER_RESERVED_NAMES_RE = re.compile(r'^(u|user)[-_].*$')
 DEFAULT_PARAMS_NAME = 'xparams'
 
 
-class TypeChecking(Enum):
-    IGNORE = 1
-    WARN = 2
-    ERROR = 3
-
-
 def flatten(
     o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = False
 ):
@@ -118,6 +112,11 @@ class XParams:
     and the values in defaults are used where nothing is specified
     in the toml file.
     """
+
+    class TypeChecking(Enum):
+        IGNORE = 1
+        WARN = 2
+        ERROR = 3
 
     json_indent = 0
     json_test_indent = 4
@@ -320,7 +319,7 @@ def create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
 def overwrite_defaults_with_toml(
     hierarchy: list[str],
     defaults: dict[str, Any],
-    check_types: TypeChecking,
+    check_types: XParams.TypeChecking,
     overwrite: Optional[dict[str, Any]] = None,
 ) -> dict[str, Any]:
     ret_d = {}
@@ -343,10 +342,10 @@ def overwrite_defaults_with_toml(
             overwrite_v = (
                 overwrite.get(dk, dv) if overwrite is not None else dv
             )
-            if check_types != TypeChecking.IGNORE and type(
+            if check_types != XParams.TypeChecking.IGNORE and type(
                 overwrite_v
             ) != type(dv):
-                if check_types == TypeChecking.WARN:
+                if check_types == XParams.TypeChecking.WARN:
                     warn(
                         (
                             'Types mismatch in default and toml'
@@ -355,7 +354,7 @@ def overwrite_defaults_with_toml(
                             f' {type(overwrite_v)}'
                         ),
                     )
-                elif check_types == TypeChecking.ERROR:
+                elif check_types == XParams.TypeChecking.ERROR:
                     error(
                         (
                             'Types mismatch in default and toml'

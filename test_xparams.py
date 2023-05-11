@@ -4,7 +4,7 @@ import tempfile
 import tomli
 from tdda.referencetest import ReferenceTestCase
 from pyxparams.captureoutput import CaptureOutput
-from pyxparams.xparams import XParams, TypeChecking
+from pyxparams.xparams import XParams
 
 UGDIR = os.path.dirname(__file__)
 XDIR = os.path.join('testdata')
@@ -14,7 +14,7 @@ EXPECTEDDIR = os.path.join('testdata', 'expected')
 class TestXParams(ReferenceTestCase):
 
     def setUp(self):
-        self.co = CaptureOutput(echo=True, stream='stderr')
+        self.co = CaptureOutput(stream='stderr')
 
     def tearDown(self):
         self.co.restore()
@@ -401,7 +401,7 @@ class TestXParams(ReferenceTestCase):
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=TypeChecking.WARN,
+            check_types=XParams.TypeChecking.WARN,
         )
         expected_warning = (
             '*** WARNING  Types mismatch in default and toml '
@@ -432,7 +432,7 @@ class TestXParams(ReferenceTestCase):
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=TypeChecking.WARN,
+            check_types=XParams.TypeChecking.WARN,
         )
         expected_warning = (
             '*** WARNING  Types mismatch in default and toml '
@@ -455,7 +455,7 @@ class TestXParams(ReferenceTestCase):
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=TypeChecking.WARN,
+            check_types=XParams.TypeChecking.WARN,
         )
         expected_warning = (
             '*** WARNING  Types mismatch in default and toml '
@@ -480,7 +480,7 @@ class TestXParams(ReferenceTestCase):
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=TypeChecking.ERROR,
+            check_types=XParams.TypeChecking.ERROR,
         )
         self.assertRaises(
             SystemExit,
