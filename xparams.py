@@ -246,11 +246,6 @@ class XParams:
                             new_params |= self.read_toml_file(report, name)
                     else:
                         new_params = self.read_toml_file(report, include)
-
-                    # Does this overwrite new_params with params values, if same key?
-                    # (Eric and Victor are confused)
-                    # selectively_update_dict_only_new_keys adds key-value pairs from
-                    # params to new_params without overwriting existing stuff
                     selectively_update_dict(new_params, params)
                     params = new_params
             if report:
@@ -274,8 +269,6 @@ class XParams:
             if isinstance(v, dict):
                 self.__dict__[k] = d = ParamsGroup()
                 pp = p.get(k)
-                selectively_update_dict_only_new_keys(pp, self._defaults[k])
-
                 if pp is not None and type(pp) is not dict:
                     error(
                         f'*** ERROR: {k} should be a section '
@@ -363,37 +356,3 @@ def recursive_create_params_groups(d: Dict[str, Any], pg: ParamsGroup):
             recursive_create_params_groups(value, new_pg)
         else:
             pg.__dict__[key] = value
-
-def selectively_update_dict_only_new_keys(
-    d: Dict[str, Any], new_d: Dict[str, Any], show_warnings: bool = True
-) -> int:
-    """
-    Selectively update dictionary d with any values that are in new_d,
-    but being careful only to update keys in dictionaries that are present
-    in new_d.
-
-    CHANGE: only updates d with values in new_d that do not exist in d
-
-    Args:
-        d: dictionary with string keys
-        new_d: dictionary with string keys
-        show_warnings: chattier if true
-    """
-    warnings = []
-    for k, v in new_d.items():
-        if isinstance(v, dict) and k in d:
-            if isinstance(d[k], dict):
-                selectively_update_dict_only_new_keys(d[k], v)
-            else:
-                msg = (
-                    f'Replacing value for {k}, of type {type(d[k])} '
-                    f'with dictionary {v}.'
-                )
-                warn(msg, show=show_warnings)
-                warnings.append(msg)
-                if k not in d:
-                    d[k] = v
-        else:
-            if k not in d:
-                d[k] = v
-    return warnings
