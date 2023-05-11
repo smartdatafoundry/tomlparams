@@ -182,9 +182,6 @@ class XParams:
         # directories organization for results dir
         self.compute_internals()
 
-    def compute_internals(self):
-        return
-
     def read_toml_file(self, report: bool = False, name=None):
         """
         Reads parameters from toml file
