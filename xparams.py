@@ -6,15 +6,23 @@ import datetime
 import os
 import re
 import sys
+from enum import Enum
+
 import tomli
 import tomli_w
 
 from pprint import pformat
-from typing import Optional, Any, Dict
+from typing import Optional, Any, Dict, NoReturn
 
 USER_RESERVED_NAMES_RE = re.compile(r'^(u|user)[-_].*$')
 
 DEFAULT_PARAMS_NAME = 'xparams'
+
+
+class TypeChecking(Enum):
+    IGNORE = 1
+    WARN = 2
+    ERROR = 3
 
 
 def flatten(
@@ -64,9 +72,7 @@ def flatten(
             )
 
 
-def selectively_update_dict(
-    d: Dict[str, Any], new_d: Dict[str, Any], show_warnings: bool = True
-) -> int:
+def selectively_update_dict(d: Dict[str, Any], new_d: Dict[str, Any]) -> None:
     """
     Selectively update dictionary d with any values that are in new_d,
     but being careful only to update keys in dictionaries that are present
@@ -75,36 +81,27 @@ def selectively_update_dict(
     Args:
         d: dictionary with string keys
         new_d: dictionary with string keys
-        show_warnings: chattier if true
     """
-    warnings = []
     for k, v in new_d.items():
         if isinstance(v, dict) and k in d:
             if isinstance(d[k], dict):
                 selectively_update_dict(d[k], v)
             else:
-                msg = (
-                    f'Replacing value for {k}, of type {type(d[k])} '
-                    f'with dictionary {v}.'
-                )
-                warn(msg, show=show_warnings)
-                warnings.append(msg)
                 d[k] = v
         else:
             d[k] = v
-    return warnings
 
 
 def nvl(v: Any, default: Any) -> Any:
     return default if v is None else v
 
 
-def error(*msg, exit_code=1):
+def error(*msg, exit_code=1) -> NoReturn:
     print('*** ERROR:', *msg, file=sys.stderr)
     sys.exit(exit_code)
 
 
-def warn(*msg, exit_code=1):
+def warn(*msg):
     print('*** WARNING ', *msg, file=sys.stderr)
 
 
@@ -127,16 +124,16 @@ class XParams:
 
     def __init__(
         self,
-        defaults,
-        name=None,
-        paramsname=DEFAULT_PARAMS_NAME,
-        env_var=None,
-        base_params_stem='base',
-        standard_params_dir=None,
-        user_params_dir=None,
-        verbose=True,
+        defaults: dict,
+        name: str = None,
+        paramsname: str = DEFAULT_PARAMS_NAME,
+        env_var: str = None,
+        base_params_stem: str = 'base',
+        standard_params_dir: str = None,
+        user_params_dir: str = None,
+        verbose: Optional[bool] = True,
+        check_types: TypeChecking = TypeChecking.WARN,
     ):
-
         self._defaults = defaults
         self._env_var = nvl(env_var, paramsname.upper())  # XPARAMS
         self._base_params_stem = base_params_stem
@@ -148,6 +145,7 @@ class XParams:
             user_params_dir, os.path.expanduser(f'~/user{paramsname}')
         )
         self._verbose = verbose
+        self._check_types = check_types
         self.set_params(name, report_load=self._verbose)
 
     @classmethod
@@ -197,7 +195,7 @@ class XParams:
         Returns:
             dictionary of parameters from toml file.
         """
-        params = {}
+        outer_params = {}
         if name := name or self.name:
             base, ext = os.path.splitext(name)
             if ext == '.toml':
@@ -233,25 +231,27 @@ class XParams:
                 )
             path = os.path.realpath(path)
             if path in self.toml_files_used:
-                return params
+                return outer_params
 
             with open(path, 'rb') as f:
-                params = tomli.load(f)
+                outer_params = tomli.load(f)
                 self.toml_files_used = [path] + self.toml_files_used
 
-                if include := params.get('include', None):
+                if include := outer_params.get('include', None):
                     if isinstance(include, list):
-                        new_params = {}
+                        included_params = {}
                         for name in include:
-                            new_params |= self.read_toml_file(report, name)
+                            included_params |= self.read_toml_file(
+                                report, name
+                            )
                     else:
-                        new_params = self.read_toml_file(report, include)
-                    selectively_update_dict(new_params, params)
-                    params = new_params
+                        included_params = self.read_toml_file(report, include)
+                    selectively_update_dict(included_params, outer_params)
+                    outer_params = included_params
             if report:
                 print(f'Parameters set from: {path}')
 
-        return params
+        return outer_params
 
     def load(self, report: bool = False):
         """
@@ -264,34 +264,17 @@ class XParams:
         Args:
             report: print loading status
         """
-        p = self.read_toml_file(report)
-        for k, v in self._defaults.items():
-            if isinstance(v, dict):
-                self.__dict__[k] = d = ParamsGroup()
-                pp = p.get(k)
-                if pp is not None and type(pp) is not dict:
-                    error(
-                        f'*** ERROR: {k} should be a section '
-                        f'of the toml file {self.toml_files_str()}'
-                    )
-
-                recursive_create_params_groups(pp, d)
-                # for key, value in v.items():
-                #     if isinstance(value, dict):
-                #         recursive_create_params_groups(value, d)
-                #     else:
-                #         d.__dict__[key] = pp.get(key, value) if pp else value
-            else:
-                self.__dict__[k] = p.get(k, v)
-        if (
-            bad_keys := set(p.keys())
-            - set(self._defaults.keys())
-            - {'include'}
-        ):
-            error(
-                f'Unknown parameters in {self.toml_files_str()}: ',
-                ' '.join(sorted(bad_keys)),
-            )
+        toml = self.read_toml_file(report)
+        self.__dict__.update(
+            create_params_groups(
+                overwrite_defaults_with_toml(
+                    hierarchy=[],
+                    defaults=self._defaults,
+                    overwrite=toml,
+                    check_types=self._check_types,
+                )
+            ).__dict__
+        )
 
     def toml_files_str(self):
         return ', '.join(self.toml_files_used) or ''
@@ -312,47 +295,89 @@ class XParams:
 
 
 class ParamsGroup:
-    def __str__(self):
-        return f'ParamsGroup(**{pformat(self.__dict__, indent=4)})'
+    def __init__(self, depth: int = 0):
+        self._depth = depth
+
+    def __str__(self) -> str:
+        indent = "\t" * self._depth
+        desc = 'ParamsGroup(\n'
+        for k, v in self.__dict__.items():
+            if k != "_depth":
+                desc += f"{indent}\t{k}: {str(v)},\n"
+        desc = f"{desc[:-2]}\n{indent})"
+        return desc
 
     def as_saveable_object(self):
         return flatten(self.__dict__)
 
     __repr__ = __str__
 
-# This will favour tables from the toml over those from the default, replacing
-# whole tables in the default with those from the toml
-# Motivating example: toml -
-# z = 4
-#
-# [this.was.pretty.deep.folks]
-# x = 2
-# y = 5
-#
-# defaults = {
-#             "not_there_1": 2,
-#             "z": 4,
-#             "this": {
-#                 "was": {
-#                     "pretty": {
-#                         "deep": {
-#                             "folks": {
-#                                 "x": 1,
-#                                 "y": 3,
-#                                 "not_there_2": 9
-#                             }
-#                         }
-#                     }
-#                 }
-#             }
-#         }
-#
-# toml table preferred - is this desired behaviour?
 
-def recursive_create_params_groups(d: Dict[str, Any], pg: ParamsGroup):
-    for key, value in d.items():
-        if isinstance(value, dict):
-            pg.__dict__[key] = new_pg = ParamsGroup()
-            recursive_create_params_groups(value, new_pg)
+def create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
+    pg = ParamsGroup(depth)
+    for k, v in d.items():
+        if isinstance(v, dict):
+            pg.__dict__[k] = create_params_groups(v, depth + 1)
         else:
-            pg.__dict__[key] = value
+            pg.__dict__[k] = v
+    return pg
+
+
+def overwrite_defaults_with_toml(
+    hierarchy: list[str],
+    defaults: dict[str, Any],
+    check_types: TypeChecking,
+    overwrite: Optional[dict[str, Any]] = None,
+) -> dict[str, Any]:
+    ret_d = {}
+    hierarchy_level = (
+        f'at level: {".".join(hierarchy)} ' if hierarchy else "at root level "
+    )
+
+    for dk, dv in defaults.items():
+        if isinstance(dv, dict):
+            ov = overwrite.get(dk) if overwrite is not None else None
+            if ov is not None and type(ov) is not dict:
+                error(f'*** ERROR: {dk} should be a section of the toml file')
+            ret_d[dk] = overwrite_defaults_with_toml(
+                hierarchy + [dk],
+                check_types=check_types,
+                defaults=dv,
+                overwrite=ov,
+            )
+        else:
+            overwrite_v = (
+                overwrite.get(dk, dv) if overwrite is not None else dv
+            )
+            if check_types != TypeChecking.IGNORE and type(
+                overwrite_v
+            ) != type(dv):
+                if check_types == TypeChecking.WARN:
+                    warn(
+                        (
+                            'Types mismatch in default and toml'
+                            f' {hierarchy_level}'
+                            f'key: {dk}, default_type: {type(dv)}, toml_type:'
+                            f' {type(overwrite_v)}'
+                        ),
+                    )
+                elif check_types == TypeChecking.ERROR:
+                    error(
+                        (
+                            'Types mismatch in default and toml'
+                            f' {hierarchy_level}'
+                            f'key: {dk}, default_type: {type(dv)}, toml_type:'
+                            f' {type(overwrite_v)}'
+                        ),
+                    )
+            ret_d[dk] = overwrite_v
+
+    if overwrite is not None and (
+        bad_keys := set(overwrite.keys()) - set(defaults.keys()) - {'include'}
+    ):
+        error(
+            f'Unknown parameters in toml {hierarchy_level}',
+            ' '.join(sorted(bad_keys)),
+        )
+
+    return ret_d

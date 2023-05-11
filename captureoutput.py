@@ -43,6 +43,9 @@ class CaptureOutput(object):
         if self.echo:
             self.saved.flush()
 
+    def getvalue(self):
+        self.saved.flush()
+
     def restore(self):
         if self.stream == 'stdout':
             sys.stdout = self.saved
