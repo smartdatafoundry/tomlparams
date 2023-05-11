@@ -140,7 +140,7 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(loaded_params, expected)
 
 
-    def test_user_params(self):
+    def test_userparams_not_in_stdparams(self):
         defaults = {
             'x': 10
         }
@@ -175,7 +175,6 @@ class TestXParams(ReferenceTestCase):
         }
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
-        outdir = tempfile.mkdtemp()
         naughty_toml = os.path.join(XDIR, 'xparams', 'user_only.toml')
         open(naughty_toml, "wt").close()
 
@@ -186,7 +185,6 @@ class TestXParams(ReferenceTestCase):
             user_params_dir=userdir,
             verbose=False,
         )
-
         try:
             self.assertRaises(
                 SystemExit,
@@ -200,6 +198,113 @@ class TestXParams(ReferenceTestCase):
             self.assertEqual(str(self.co), expected_error)
         finally:
             os.remove(naughty_toml)
+
+    def test_reserved_u_raises(self):
+        defaults = {
+            'x': 10
+        }
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        naughty_toml = os.path.join(XDIR, 'xparams', 'u_only.toml')
+        open(naughty_toml, "wt").close()
+
+        create_params = lambda: XParams(
+            defaults,
+            name='u_only',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+        try:
+            self.assertRaises(
+                SystemExit,
+                create_params
+            )
+
+            expected_error = (
+                '*** ERROR: path testdata/xparams/u_only.toml is reserved for user TOML files, but exists '
+                'in standardparams.\n'
+            )
+            self.assertEqual(str(self.co), expected_error)
+        finally:
+            os.remove(naughty_toml)
+
+    def test_default_env_param_used_no_name(self):
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        outdir = tempfile.mkdtemp()
+        consolidated_path = os.path.join(outdir, 'params.toml')
+        defaults = {
+            's': 'none',
+            'subsection': {
+                'n': 0
+            },
+            'section2': {
+                'n': 0
+            }
+        }
+        os.environ['XPARAMS'] = 'one'
+
+        params = XParams(
+            defaults,
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+
+        params.write_consolidated_toml(consolidated_path, verbose=False)
+        self.assertFileCorrect(
+            consolidated_path, os.path.join(EXPECTEDDIR, 'one.toml')
+        )
+
+        expected = defaults
+        expected['s'] = 'one'
+        expected['subsection']['n'] = 1
+        expected['section2']['n'] = 1
+        with open(consolidated_path, 'rb') as f:
+            loaded_params = tomli.load(f)
+        self.assertEqual(loaded_params, expected)
+
+        os.environ.pop('XPARAMS', None)
+
+    def test_defined_env_param_used_no_name(self):
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        outdir = tempfile.mkdtemp()
+        consolidated_path = os.path.join(outdir, 'params.toml')
+        defaults = {
+            's': 'none',
+            'subsection': {
+                'n': 0
+            },
+            'section2': {
+                'n': 0
+            }
+        }
+        os.environ['MYXPARAMS'] = 'one'
+
+        params = XParams(
+            defaults,
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            env_var='MYXPARAMS',
+            verbose=False,
+        )
+
+        params.write_consolidated_toml(consolidated_path, verbose=False)
+        self.assertFileCorrect(
+            consolidated_path, os.path.join(EXPECTEDDIR, 'one.toml')
+        )
+
+        expected = defaults
+        expected['s'] = 'one'
+        expected['subsection']['n'] = 1
+        expected['section2']['n'] = 1
+        with open(consolidated_path, 'rb') as f:
+            loaded_params = tomli.load(f)
+        self.assertEqual(loaded_params, expected)
+
+        os.environ.pop('MYXPARAMS', None)
 
     def test_type_checking_root_level_warning(self):
         stddir = os.path.join(XDIR, 'xparams')
