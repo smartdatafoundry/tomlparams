@@ -291,33 +291,34 @@ class XParams:
 
 class ParamsGroup:
     def __init__(self, depth: int = 0):
-        self.__depth = depth
+        self._depth = depth
 
     def __str__(self) -> str:
-        indent = "\t" * self.__depth
+        indent = "\t" * self._depth
         desc = 'ParamsGroup(\n'
         for k, v in self.__dict__.items():
-            if k != "__depth":
+            if k != "_depth":
                 desc += f"{indent}\t{k}: {str(v)},\n"
         return f"{desc[:-2]}\n{indent})"
-
-    # def __str__(self):
-    #     return f'ParamsGroup(**{pformat(self.__dict__, indent=4)})'
 
     def as_saveable_object(self):
         return flatten(self.__dict__)
 
     def values(self):
-        return [v for k, v in self.__dict__.items() if '__' not in k]
+        return [v for k, v in self.__dict__.items() if not k.startswith('_')]
 
     def keys(self):
-        return [k for k in self.__dict__ if '__' not in k]
+        return [k for k in self.__dict__ if not k.startswith('_')]
 
     def items(self):
-        return [(k, v) for k, v in self.__dict__.items() if '__' not in k]
+        return [
+            (k, v) for k, v in self.__dict__.items() if not k.startswith('_')
+        ]
 
     def get_params(self) -> dict:
-        return {k: v for k, v in self.__dict__.items() if '__' not in k}
+        return {
+            k: v for k, v in self.__dict__.items() if not k.startswith('_')
+        }
 
     __repr__ = __str__
 
