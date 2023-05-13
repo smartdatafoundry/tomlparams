@@ -86,7 +86,7 @@ def selectively_update_dict(d: Dict[str, Any], new_d: Dict[str, Any]) -> None:
             d[k] = v
 
 
-def nvl(v: Any, default: Any) -> Any:
+def nvl(v, default):
     return default if v is None else v
 
 
@@ -99,7 +99,7 @@ def warn(*msg):
     print('*** WARNING ', *msg, file=sys.stderr)
 
 
-def is_user_reserved_path(path):
+def is_user_reserved_path(path: str) -> bool:
     name = os.path.basename(path)
     return bool(re.match(USER_RESERVED_NAMES_RE, name))
 
@@ -148,7 +148,7 @@ class XParams:
         self.set_params(name, report_load=self._verbose)
 
     @classmethod
-    def indent(cls, is_test):
+    def indent(cls, is_test: bool) -> int:
         """
         Returns amount to indent JSON, which depends on whether
         this is a test run or not.
@@ -158,7 +158,7 @@ class XParams:
     def set_params(self, name: str, report_load: bool = False):
         """
         Sets the name for the run, which is used as
-          - the subdirectory of glenresults for results
+          - the subdirectory for results
           - the parameter file for setting other run parameters
 
         Args:
@@ -251,8 +251,8 @@ class XParams:
         Loads parameters from .toml file.
 
         The TOML file's name is the stem in self.name + '.toml'
-        It is located either in ./standardparams or ../glenparams.
-        If both exist, the one in glenparams "wins".
+        It is located either in ./standardparams or ../userparams.
+        If both exist, the one in usernparams "wins".
 
         Args:
             report: print loading status
@@ -278,30 +278,46 @@ class XParams:
     def as_saveable_object(self):
         return flatten(self.__dict__)
 
-    def write_consolidated_toml(self, path: str, verbose=None):
+    def write_consolidated_toml(
+        self, path: str, verbose: Optional[bool] = None
+    ):
         verbose = nvl(verbose, self._verbose)
         d = flatten(self.__dict__, self._defaults)
         with open(path, 'wb') as f:
             tomli_w.dump(d, f)
-        if self._verbose:
+        if verbose:
             print(f'Consolidated TOML file written to {path}.')
 
 
 class ParamsGroup:
     def __init__(self, depth: int = 0):
-        self._depth = depth
+        self.__depth = depth
 
     def __str__(self) -> str:
-        indent = "\t" * self._depth
+        indent = "\t" * self.__depth
         desc = 'ParamsGroup(\n'
         for k, v in self.__dict__.items():
-            if k != "_depth":
+            if k != "__depth":
                 desc += f"{indent}\t{k}: {str(v)},\n"
-        desc = f"{desc[:-2]}\n{indent})"
-        return desc
+        return f"{desc[:-2]}\n{indent})"
+
+    # def __str__(self):
+    #     return f'ParamsGroup(**{pformat(self.__dict__, indent=4)})'
 
     def as_saveable_object(self):
         return flatten(self.__dict__)
+
+    def values(self):
+        return [v for k, v in self.__dict__.items() if '__' not in k]
+
+    def keys(self):
+        return [k for k in self.__dict__ if '__' not in k]
+
+    def items(self):
+        return [(k, v) for k, v in self.__dict__.items() if '__' not in k]
+
+    def get_params(self) -> dict:
+        return {k: v for k, v in self.__dict__.items() if '__' not in k}
 
     __repr__ = __str__
 
