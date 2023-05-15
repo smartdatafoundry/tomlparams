@@ -305,21 +305,19 @@ class ParamsGroup:
     def as_saveable_object(self):
         return flatten(self.__dict__)
 
-    def values(self):
-        return [v for k, v in self.__dict__.items() if not k.startswith('_')]
-
-    def keys(self):
-        return [k for k in self.__dict__ if not k.startswith('_')]
-
-    def items(self):
-        return [
-            (k, v) for k, v in self.__dict__.items() if not k.startswith('_')
-        ]
-
     def get_params(self) -> dict:
         return {
             k: v for k, v in self.__dict__.items() if not k.startswith('_')
         }
+
+    def values(self):
+        return self.get_params().values()
+
+    def keys(self):
+        return self.get_params().keys()
+
+    def items(self):
+        return self.get_params().items()
 
     __repr__ = __str__
 
