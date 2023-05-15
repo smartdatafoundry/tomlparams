@@ -6,11 +6,12 @@ import datetime
 import os
 import re
 import sys
-from enum import Enum
 
 import tomli
 import tomli_w
 
+
+from enum import StrEnum
 from pprint import pformat
 from typing import Optional, Any, Dict, NoReturn
 
@@ -113,10 +114,10 @@ class XParams:
     in the toml file.
     """
 
-    class TypeChecking(Enum):
-        IGNORE = 1
-        WARN = 2
-        ERROR = 3
+    class TypeChecking(StrEnum):
+        IGNORE = 'ignore'
+        WARN = 'warn'
+        ERROR = 'strict'
 
     json_indent = 0
     json_test_indent = 4
