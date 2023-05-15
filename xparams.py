@@ -11,13 +11,16 @@ import tomli
 import tomli_w
 
 
-from enum import StrEnum
+from enum import Enum
 from pprint import pformat
 from typing import Optional, Any, Dict, NoReturn
 
 USER_RESERVED_NAMES_RE = re.compile(r'^(u|user)[-_].*$')
 
 DEFAULT_PARAMS_NAME = 'xparams'
+
+
+TypeChecking = Enum('TypeChecking', ['IGNORE', 'WARN', 'ERROR'])
 
 
 def flatten(
@@ -114,10 +117,9 @@ class XParams:
     in the toml file.
     """
 
-    class TypeChecking(StrEnum):
-        IGNORE = 'ignore'
-        WARN = 'warn'
-        ERROR = 'strict'
+    ERROR = TypeChecking.ERROR
+    WARN = TypeChecking.WARN
+    IGNORE = TypeChecking.IGNORE
 
     json_indent = 0
     json_test_indent = 4
@@ -132,7 +134,7 @@ class XParams:
         standard_params_dir: str = None,
         user_params_dir: str = None,
         verbose: Optional[bool] = True,
-        check_types: TypeChecking = TypeChecking.WARN,
+        check_types: TypeChecking = WARN,
     ):
         self._defaults = defaults
         self._env_var = nvl(env_var, paramsname.upper())  # XPARAMS
@@ -335,7 +337,7 @@ def create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
 def overwrite_defaults_with_toml(
     hierarchy: list[str],
     defaults: dict[str, Any],
-    check_types: XParams.TypeChecking,
+    check_types: TypeChecking,
     overwrite: Optional[dict[str, Any]] = None,
 ) -> dict[str, Any]:
     ret_d = {}
@@ -358,10 +360,8 @@ def overwrite_defaults_with_toml(
             overwrite_v = (
                 overwrite.get(dk, dv) if overwrite is not None else dv
             )
-            if check_types != XParams.TypeChecking.IGNORE and type(
-                overwrite_v
-            ) != type(dv):
-                if check_types == XParams.TypeChecking.WARN:
+            if check_types != XParams.IGNORE and type(overwrite_v) != type(dv):
+                if check_types == XParams.WARN:
                     warn(
                         (
                             'Types mismatch in default and toml'
@@ -370,7 +370,7 @@ def overwrite_defaults_with_toml(
                             f' {type(overwrite_v)}'
                         ),
                     )
-                elif check_types == XParams.TypeChecking.ERROR:
+                elif check_types == XParams.ERROR:
                     error(
                         (
                             'Types mismatch in default and toml'
