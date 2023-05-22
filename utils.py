@@ -138,18 +138,18 @@ def overwrite_defaults_with_toml(
                     warn(
                         (
                             "Types mismatch in default and toml"
-                            f" {hierarchy_level}"
-                            f"key: {dk}, default_type: {type(dv)}, toml_type:"
-                            f" {type(overwrite_v)}"
+                            f" {hierarchy_level}key: {dk}, default_type:"
+                            f" {type(dv).__name__}, toml_type:"
+                            f" {type(overwrite_v).__name__}"
                         ),
                     )
                 elif check_types == TypeChecking.ERROR:
                     error(
                         (
                             "Types mismatch in default and toml"
-                            f" {hierarchy_level}"
-                            f"key: {dk}, default_type: {type(dv)}, toml_type:"
-                            f" {type(overwrite_v)}"
+                            f" {hierarchy_level}key: {dk}, default_type:"
+                            f" {type(dv).__name__}, toml_type:"
+                            f" {type(overwrite_v).__name__}"
                         ),
                     )
             ret_d[dk] = overwrite_v
