@@ -378,8 +378,7 @@ class TestXParams(ReferenceTestCase):
         )
         expected_warning = (
             '*** WARNING: The following issues were found:\n'
-            ' Type mismatch at root level - key: z, default_type: int, toml_type: str\n'
-            '\n'
+            ' Type mismatch at root level - key: z, default_type: int, toml_type: str\n\n'
         )
 
         self.assertEqual(str(self.co), expected_warning)
@@ -399,9 +398,7 @@ class TestXParams(ReferenceTestCase):
         expected_warning = (
             '*** WARNING: The following issues were found:\n'
             ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n'
-            ' Type mismatch at level: section.subsection - key: n, default_type: str, '
-            'toml_type: int\n'
-            '\n'
+            ' Type mismatch at level: section.subsection - key: n, default_type: str, toml_type: int\n\n'
         )
 
         self.assertEqual(str(self.co), expected_warning)
@@ -430,9 +427,7 @@ class TestXParams(ReferenceTestCase):
         )
         expected_warning = (
             '*** WARNING: The following issues were found:\n'
-            ' Type mismatch at level: this.was.pretty.deep.folks - key: x, default_type: '
-            'int, toml_type: str\n'
-            '\n'
+            ' Type mismatch at level: this.was.pretty.deep.folks - key: x, default_type: int, toml_type: str\n\n'
         )
         self.assertEqual(str(self.co), expected_warning)
 
@@ -453,8 +448,7 @@ class TestXParams(ReferenceTestCase):
         )
         expected_warning = (
             '*** WARNING: The following issues were found:\n'
-            ' Type mismatch at root level - key: date, default_type: str, toml_type: date\n'
-            '\n'
+            ' Type mismatch at root level - key: date, default_type: str, toml_type: date\n\n'
         )
         self.assertEqual(str(self.co), expected_warning)
 
@@ -478,8 +472,7 @@ class TestXParams(ReferenceTestCase):
 
         expected_error = (
             '*** ERROR: The following issues were found:\n'
-            ' Type mismatch at root level - key: z, default_type: int, toml_type: str\n'
-            '\n'
+            ' Type mismatch at root level - key: z, default_type: int, toml_type: str\n\n'
         )
         self.assertEqual(str(self.co), expected_error)
 
@@ -504,9 +497,7 @@ class TestXParams(ReferenceTestCase):
         expected_error = (
             '*** ERROR: The following issues were found:\n'
             ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n'
-            ' Type mismatch at level: section.subsection - key: n, default_type: str, '
-            'toml_type: int\n'
-            '\n'
+            ' Type mismatch at level: section.subsection - key: n, default_type: str, toml_type: int\n\n'
         )
         self.assertEqual(str(self.co), expected_error)
 
@@ -530,8 +521,7 @@ class TestXParams(ReferenceTestCase):
 
         expected_error = (
             '*** ERROR: The following issues were found:\n'
-            ' Bad key at level: section.subsection - key: n\n'
-            '\n'
+            ' Bad key at level: section.subsection - key: n\n\n'
         )
         self.assertEqual(str(self.co), expected_error)
 
@@ -556,8 +546,7 @@ class TestXParams(ReferenceTestCase):
         expected_error = (
             '*** ERROR: The following issues were found:\n'
             ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n'
-            ' Bad key at level: section.subsection - key: n\n'
-            '\n'
+            ' Bad key at level: section.subsection - key: n\n\n'
         )
         self.assertEqual(str(self.co), expected_error)
 
@@ -581,11 +570,9 @@ class TestXParams(ReferenceTestCase):
 
         expected_warning_error = (
             '*** WARNING: The following issues were found:\n'
-            ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n'
-            '\n'
+            ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n\n'
             '*** ERROR: The following issues were found:\n'
-            ' Bad key at level: section.subsection - key: n\n'
-            '\n'
+            ' Bad key at level: section.subsection - key: n\n\n'
         )
         self.assertEqual(str(self.co), expected_warning_error)
 
