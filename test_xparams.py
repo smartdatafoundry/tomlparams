@@ -13,7 +13,7 @@ EXPECTEDDIR = os.path.join('testdata', 'expected')
 
 class TestXParams(ReferenceTestCase):
     def setUp(self):
-        self.co = CaptureOutput(echo=True, stream='stderr')
+        self.co = CaptureOutput(stream='stderr')
 
     def tearDown(self):
         self.co.restore()
