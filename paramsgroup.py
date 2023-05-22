@@ -4,9 +4,10 @@ Parameters Groups
 
 Container for parameters.
 """
-from typing import Any, Dict
+from typing import Any, Dict, TYPE_CHECKING
 
-from pyxparams.utils import flatten
+if TYPE_CHECKING:
+    from pyxparams.utils import flatten
 
 
 class ParamsGroup:

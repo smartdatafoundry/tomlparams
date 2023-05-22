@@ -12,12 +12,14 @@ from typing import Optional
 
 from pyxparams.paramsgroup import create_params_groups
 from pyxparams.utils import (
+    check_type_env_var_to_typechecking,
     DEFAULT_PARAMS_NAME,
     error,
     flatten,
     is_user_reserved_path,
     nvl,
     overwrite_defaults_with_toml,
+    selectively_update_dict,
     TypeChecking,
     warn,
 )
@@ -50,6 +52,7 @@ class XParams:
         user_params_dir: str = None,
         verbose: Optional[bool] = True,
         check_types: TypeChecking = WARN,
+        type_check_env_var: str = 'XPARAMSCHECKING',
     ):
         self._defaults = defaults
         self._env_var = nvl(env_var, paramsname.upper())  # XPARAMS
@@ -62,7 +65,12 @@ class XParams:
             user_params_dir, os.path.expanduser(f"~/user{paramsname}")
         )
         self._verbose = verbose
-        self._check_types = check_types
+
+        self._type_check_env_var = os.environ.get(type_check_env_var)
+        self._check_types = check_type_env_var_to_typechecking(
+            self._type_check_env_var, check_types
+        )
+
         self.set_params(name, report_load=self._verbose)
 
     @classmethod
@@ -115,7 +123,8 @@ class XParams:
                 pfile = f"{name}.toml"
             else:
                 error(
-                    "configuration files must use .toml extension\n" f"(unlike {name})."
+                    "configuration files must use .toml extension\n"
+                    f"(unlike {name})."
                 )
 
             std_path = os.path.join(self._standard_params_dir, pfile)
@@ -151,7 +160,9 @@ class XParams:
                     if isinstance(include, list):
                         included_params = {}
                         for name in include:
-                            included_params |= self.read_toml_file(report, name)
+                            included_params |= self.read_toml_file(
+                                report, name
+                            )
                     else:
                         included_params = self.read_toml_file(report, include)
                     selectively_update_dict(included_params, outer_params)
@@ -193,7 +204,9 @@ class XParams:
     def as_saveable_object(self):
         return flatten(self.__dict__)
 
-    def write_consolidated_toml(self, path: str, verbose: Optional[bool] = None):
+    def write_consolidated_toml(
+        self, path: str, verbose: Optional[bool] = None
+    ):
         verbose = nvl(verbose, self._verbose)
         d = flatten(self.__dict__, self._defaults)
         with open(path, "wb") as f:

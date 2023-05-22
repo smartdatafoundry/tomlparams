@@ -8,11 +8,9 @@ import re
 import sys
 
 from enum import Enum
-from typing import Any, Dict, NoReturn, Optional, TYPE_CHECKING
+from typing import Any, Dict, NoReturn, Optional
 
-
-if TYPE_CHECKING:
-    from pyxparams.paramsgroup import ParamsGroup
+from pyxparams.paramsgroup import ParamsGroup
 
 USER_RESERVED_NAMES_RE = re.compile(r"^(u|user)[-_].*$")
 
@@ -22,7 +20,9 @@ DEFAULT_PARAMS_NAME = "xparams"
 TypeChecking = Enum("TypeChecking", ["IGNORE", "WARN", "ERROR"])
 
 
-def flatten(o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = False):
+def flatten(
+    o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = False
+):
     if isinstance(o, dict):
         return {
             k: flatten(v, ref[k], key=k)
@@ -36,7 +36,9 @@ def flatten(o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = Fa
             if k in ref and (v is not None or not exclude_none)
         }
     elif isinstance(o, (list, tuple)):
-        return [flatten(v, w, key=str(i)) for i, (v, w) in enumerate(zip(o, ref))]
+        return [
+            flatten(v, w, key=str(i)) for i, (v, w) in enumerate(zip(o, ref))
+        ]
     elif o is None or type(o) in (
         bool,
         str,
@@ -57,7 +59,10 @@ def flatten(o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = Fa
             )
         else:
             print(
-                (f"Cannot flatten object type {type(o)} for" f" {key}\n\nSkipping!!"),
+                (
+                    f"Cannot flatten object type {type(o)} for"
+                    f" {key}\n\nSkipping!!"
+                ),
                 file=sys.stderr,
             )
 
@@ -123,8 +128,12 @@ def overwrite_defaults_with_toml(
                 overwrite=ov,
             )
         else:
-            overwrite_v = overwrite.get(dk, dv) if overwrite is not None else dv
-            if check_types != TypeChecking.IGNORE and type(overwrite_v) != type(dv):
+            overwrite_v = (
+                overwrite.get(dk, dv) if overwrite is not None else dv
+            )
+            if check_types != TypeChecking.IGNORE and type(
+                overwrite_v
+            ) != type(dv):
                 if check_types == TypeChecking.WARN:
                     warn(
                         (
@@ -154,3 +163,21 @@ def overwrite_defaults_with_toml(
         )
 
     return ret_d
+
+
+def check_type_env_var_to_typechecking(
+    env_var: str, default_value: TypeChecking
+) -> TypeChecking:
+    if env_var is None:
+        return default_value
+    elif env_var == 'warn':
+        return TypeChecking.WARN
+    elif env_var == 'ignore':
+        return TypeChecking.IGNORE
+    elif env_var == 'error':
+        return TypeChecking.ERROR
+    else:
+        error(
+            "Not a valid TypeChecking value. Values: 'warn',"
+            " 'error', or 'ignore'"
+        )
