@@ -2,110 +2,25 @@
 Parameters
 ==========
 """
-import datetime
 import os
-import re
-import sys
 
 import tomli
 import tomli_w
 
-
-from enum import Enum
 from pprint import pformat
-from typing import Optional, Any, Dict, NoReturn
+from typing import Optional
 
-USER_RESERVED_NAMES_RE = re.compile(r'^(u|user)[-_].*$')
-
-DEFAULT_PARAMS_NAME = 'xparams'
-
-
-TypeChecking = Enum('TypeChecking', ['IGNORE', 'WARN', 'ERROR'])
-
-
-def flatten(
-    o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = False
-):
-    if isinstance(o, dict):
-        return {
-            k: flatten(v, ref[k], key=k)
-            for k, v in o.items()
-            if k in ref and (v is not None or not exclude_none)
-        }
-    elif isinstance(o, ParamsGroup):
-        return {
-            k: flatten(v, ref[k], key=k)
-            for k, v in o.__dict__.items()
-            if k in ref and (v is not None or not exclude_none)
-        }
-    elif isinstance(o, (list, tuple)):
-        return [
-            flatten(v, w, key=str(i)) for i, (v, w) in enumerate(zip(o, ref))
-        ]
-    elif o is None or type(o) in (
-        bool,
-        str,
-        int,
-        float,
-        datetime.date,
-        datetime.time,
-        datetime.datetime,
-    ):
-        return o
-    elif hasattr(o, 'as_saveable_object'):
-        return o.as_saveable_object()
-    else:
-        if key is None:
-            print(
-                f'Cannot flatten object type {type(o)}:\n{str(o)}\nSkipping!!',
-                file=sys.stderr,
-            )
-        else:
-            print(
-                (
-                    f'Cannot flatten object type {type(o)} for'
-                    f' {key}\n\nSkipping!!'
-                ),
-                file=sys.stderr,
-            )
-
-
-def selectively_update_dict(d: Dict[str, Any], new_d: Dict[str, Any]) -> None:
-    """
-    Selectively update dictionary d with any values that are in new_d,
-    but being careful only to update keys in dictionaries that are present
-    in new_d.
-
-    Args:
-        d: dictionary with string keys
-        new_d: dictionary with string keys
-    """
-    for k, v in new_d.items():
-        if isinstance(v, dict) and k in d:
-            if isinstance(d[k], dict):
-                selectively_update_dict(d[k], v)
-            else:
-                d[k] = v
-        else:
-            d[k] = v
-
-
-def nvl(v, default):
-    return default if v is None else v
-
-
-def error(*msg, exit_code=1) -> NoReturn:
-    print('*** ERROR:', *msg, file=sys.stderr)
-    sys.exit(exit_code)
-
-
-def warn(*msg):
-    print('*** WARNING ', *msg, file=sys.stderr)
-
-
-def is_user_reserved_path(path: str) -> bool:
-    name = os.path.basename(path)
-    return bool(re.match(USER_RESERVED_NAMES_RE, name))
+from pyxparams.paramsgroup import create_params_groups
+from pyxparams.utils import (
+    DEFAULT_PARAMS_NAME,
+    error,
+    flatten,
+    is_user_reserved_path,
+    nvl,
+    overwrite_defaults_with_toml,
+    TypeChecking,
+    warn,
+)
 
 
 class XParams:
@@ -130,7 +45,7 @@ class XParams:
         name: str = None,
         paramsname: str = DEFAULT_PARAMS_NAME,
         env_var: str = None,
-        base_params_stem: str = 'base',
+        base_params_stem: str = "base",
         standard_params_dir: str = None,
         user_params_dir: str = None,
         verbose: Optional[bool] = True,
@@ -141,10 +56,10 @@ class XParams:
         self._base_params_stem = base_params_stem
 
         self._standard_params_dir = nvl(
-            standard_params_dir, os.path.expanduser(f'~/{paramsname}')
+            standard_params_dir, os.path.expanduser(f"~/{paramsname}")
         )
         self._user_params_dir = nvl(
-            user_params_dir, os.path.expanduser(f'~/user{paramsname}')
+            user_params_dir, os.path.expanduser(f"~/user{paramsname}")
         )
         self._verbose = verbose
         self._check_types = check_types
@@ -194,14 +109,13 @@ class XParams:
         outer_params = {}
         if name := name or self.name:
             base, ext = os.path.splitext(name)
-            if ext == '.toml':
+            if ext == ".toml":
                 pfile = name
-            elif ext == '':
-                pfile = f'{name}.toml'
+            elif ext == "":
+                pfile = f"{name}.toml"
             else:
                 error(
-                    'configuration files must use .toml extension\n'
-                    f'(unlike {name}).'
+                    "configuration files must use .toml extension\n" f"(unlike {name})."
                 )
 
             std_path = os.path.join(self._standard_params_dir, pfile)
@@ -210,42 +124,40 @@ class XParams:
             if os.path.exists(std_path):
                 if is_user_reserved_path(path):
                     error(
-                        f'path {path} is reserved for user '
-                        'TOML files, but exists in standardparams.'
+                        f"path {path} is reserved for user "
+                        "TOML files, but exists in standardparams."
                     )
                 if os.path.exists(custom_path):
                     warn(
-                        f'{pfile} exists as {std_path} '
-                        f'and {custom_path}; using {custom_path}'
+                        f"{pfile} exists as {std_path} "
+                        f"and {custom_path}; using {custom_path}"
                     )
             elif os.path.exists(custom_path):
                 path = custom_path
             else:
                 error(
-                    f'*** ERROR: No readable file {pfile} exists at'
-                    f' {std_path} or {custom_path}; abandoning all hope.'
+                    f"*** ERROR: No readable file {pfile} exists at"
+                    f" {std_path} or {custom_path}; abandoning all hope."
                 )
             path = os.path.realpath(path)
             if path in self.toml_files_used:
                 return outer_params
 
-            with open(path, 'rb') as f:
+            with open(path, "rb") as f:
                 outer_params = tomli.load(f)
                 self.toml_files_used = [path] + self.toml_files_used
 
-                if include := outer_params.get('include', None):
+                if include := outer_params.get("include", None):
                     if isinstance(include, list):
                         included_params = {}
                         for name in include:
-                            included_params |= self.read_toml_file(
-                                report, name
-                            )
+                            included_params |= self.read_toml_file(report, name)
                     else:
                         included_params = self.read_toml_file(report, include)
                     selectively_update_dict(included_params, outer_params)
                     outer_params = included_params
             if report:
-                print(f'Parameters set from: {path}')
+                print(f"Parameters set from: {path}")
 
         return outer_params
 
@@ -273,7 +185,7 @@ class XParams:
         )
 
     def toml_files_str(self):
-        return ', '.join(self.toml_files_used) or ''
+        return ", ".join(self.toml_files_used) or ""
 
     def __str__(self):
         return pformat(self.__dict__, indent=4)
@@ -281,112 +193,10 @@ class XParams:
     def as_saveable_object(self):
         return flatten(self.__dict__)
 
-    def write_consolidated_toml(
-        self, path: str, verbose: Optional[bool] = None
-    ):
+    def write_consolidated_toml(self, path: str, verbose: Optional[bool] = None):
         verbose = nvl(verbose, self._verbose)
         d = flatten(self.__dict__, self._defaults)
-        with open(path, 'wb') as f:
+        with open(path, "wb") as f:
             tomli_w.dump(d, f)
         if verbose:
-            print(f'Consolidated TOML file written to {path}.')
-
-
-class ParamsGroup:
-    def __init__(self, depth: int = 0):
-        self._depth = depth
-
-    def __str__(self) -> str:
-        indent = "\t" * self._depth
-        desc = 'ParamsGroup(\n'
-        for k, v in self.__dict__.items():
-            if k != "_depth":
-                desc += f"{indent}\t{k}: {str(v)},\n"
-        return f"{desc[:-2]}\n{indent})"
-
-    def as_saveable_object(self):
-        return flatten(self.__dict__)
-
-    def get_params(self) -> dict:
-        return {
-            k: v for k, v in self.__dict__.items() if not k.startswith('_')
-        }
-
-    def values(self):
-        return self.get_params().values()
-
-    def keys(self):
-        return self.get_params().keys()
-
-    def items(self):
-        return self.get_params().items()
-
-    __repr__ = __str__
-
-
-def create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
-    pg = ParamsGroup(depth)
-    for k, v in d.items():
-        if isinstance(v, dict):
-            pg.__dict__[k] = create_params_groups(v, depth + 1)
-        else:
-            pg.__dict__[k] = v
-    return pg
-
-
-def overwrite_defaults_with_toml(
-    hierarchy: list[str],
-    defaults: dict[str, Any],
-    check_types: TypeChecking,
-    overwrite: Optional[dict[str, Any]] = None,
-) -> dict[str, Any]:
-    ret_d = {}
-    hierarchy_level = (
-        f'at level: {".".join(hierarchy)} ' if hierarchy else "at root level "
-    )
-
-    for dk, dv in defaults.items():
-        if isinstance(dv, dict):
-            ov = overwrite.get(dk) if overwrite is not None else None
-            if ov is not None and type(ov) is not dict:
-                error(f'*** ERROR: {dk} should be a section of the toml file')
-            ret_d[dk] = overwrite_defaults_with_toml(
-                hierarchy + [dk],
-                check_types=check_types,
-                defaults=dv,
-                overwrite=ov,
-            )
-        else:
-            overwrite_v = (
-                overwrite.get(dk, dv) if overwrite is not None else dv
-            )
-            if check_types != XParams.IGNORE and type(overwrite_v) != type(dv):
-                if check_types == XParams.WARN:
-                    warn(
-                        (
-                            'Types mismatch in default and toml'
-                            f' {hierarchy_level}'
-                            f'key: {dk}, default_type: {type(dv)}, toml_type:'
-                            f' {type(overwrite_v)}'
-                        ),
-                    )
-                elif check_types == XParams.ERROR:
-                    error(
-                        (
-                            'Types mismatch in default and toml'
-                            f' {hierarchy_level}'
-                            f'key: {dk}, default_type: {type(dv)}, toml_type:'
-                            f' {type(overwrite_v)}'
-                        ),
-                    )
-            ret_d[dk] = overwrite_v
-
-    if overwrite is not None and (
-        bad_keys := set(overwrite.keys()) - set(defaults.keys()) - {'include'}
-    ):
-        error(
-            f'Unknown parameters in toml {hierarchy_level}',
-            ' '.join(sorted(bad_keys)),
-        )
-
-    return ret_d
+            print(f"Consolidated TOML file written to {path}.")
