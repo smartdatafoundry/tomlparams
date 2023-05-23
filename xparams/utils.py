@@ -23,6 +23,52 @@ DEFAULT_PARAMS_TYPE_CHECKING_NAME = "XPARAMSCHECKING"
 TypeChecking = Enum("TypeChecking", ["IGNORE", "WARN", "ERROR"])
 
 
+def to_saveable_object(o: Any):
+    """
+    Convert an XParams Object, a ParamsGroup object, or a collection
+    type (dict, list, tuple) recursively to a TOML-dumpable object.
+    Typically called on either a XParams or ParamsGroup object as
+    top-level invocation.
+
+    Also accepts other objects with as_saveable_object methods,
+    which it will use to make TOML-compatible version of those.
+
+    Raises an exception using error if non-TOML-compatible data
+    is found.
+
+    Args:
+        o: object to be flattened
+
+    Returns:
+        TOML-dumpable object
+
+    """
+    if isinstance(o, dict):
+        return {
+            k: to_saveable_object(v)
+            for k, v in o.items()
+            if k in ref and (v is not None or not exclude_none)
+        }
+    elif isinstance(o, ParamsGroup):
+        return {k: to_saveable_object(v) for k, v in o.__dict__.items()}
+    elif isinstance(o, (list, tuple)):
+        return [to_saveable_object(v) for v in o]
+    elif o is None or type(o) in (
+        bool,
+        str,
+        int,
+        float,
+        datetime.date,
+        datetime.time,
+        datetime.datetime,
+    ):
+        return o
+    elif hasattr(o, 'as_saveable_object'):
+        return o.as_saveable_object()
+    else:
+        error(f'Cannot flatten object type {type(o)}:\n{str(o)}')
+
+
 def flatten(
     o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = False
 ):

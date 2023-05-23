@@ -17,7 +17,7 @@ from xparams.utils import (
     DEFAULT_PARAMS_NAME,
     DEFAULT_PARAMS_TYPE_CHECKING_NAME,
     error,
-    flatten,
+    to_saveable_object,
     is_user_reserved_path,
     nvl,
     overwrite_defaults_with_toml,
@@ -234,13 +234,13 @@ class XParams:
         return pformat(self.__dict__, indent=4)
 
     def as_saveable_object(self):
-        return flatten(self.__dict__)
+        return to_saveable_object(self.__dict__)
 
     def write_consolidated_toml(
         self, path: str, verbose: Optional[bool] = None
     ):
         verbose = nvl(verbose, self._verbose)
-        d = flatten(self.__dict__, self._defaults)
+        d = to_saveable_object(self.__dict__)
         with open(path, "wb") as f:
             tomli_w.dump(d, f)
         if verbose:
