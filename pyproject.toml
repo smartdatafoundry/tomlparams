@@ -3,9 +3,9 @@ name = "pyxparams"
 version = "0.1.0"
 description = ""
 authors = [
-  "Paola Arce <Paola.Arce@smartdatafoundry.com>",
-  "Victor Diaz <Victor.Diaz@smartdatafoundry.com>",
-  "Nick Radcliffe <Nick.Radcliffe@smartdatafoundry.com>",
+  "Paola Arce <paola.arce@smartdatafoundry.com>",
+  "Victor Diaz <victor.diaz@smartdatafoundry.com>",
+  "Nick Radcliffe <nick.radcliffe@smartdatafoundry.com>",
 ]
 readme = "README.md"
 

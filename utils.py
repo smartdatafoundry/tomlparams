@@ -11,6 +11,7 @@ from enum import Enum
 from typing import Any, Dict, NoReturn, Optional
 
 from pyxparams.paramsgroup import ParamsGroup
+from pyxparams.parsemismatch import ParseMismatch, ParseMismatchType
 
 USER_RESERVED_NAMES_RE = re.compile(r"^(u|user)[-_].*$")
 
@@ -18,8 +19,6 @@ DEFAULT_PARAMS_NAME = "xparams"
 
 
 TypeChecking = Enum("TypeChecking", ["IGNORE", "WARN", "ERROR"])
-
-ParseMismatchType = Enum('ParseMismatch', ['BADKEY', 'TYPING'])
 
 
 def flatten(
@@ -110,61 +109,48 @@ def is_user_reserved_path(path: str) -> bool:
 def overwrite_defaults_with_toml(
     hierarchy: list[str],
     defaults: dict[str, Any],
-    check_types: TypeChecking,
     overwrite: Optional[dict[str, Any]] = None,
-) -> dict[str, Any]:
+) -> tuple[dict[str, Any], list[ParseMismatch]]:
     ret_d = {}
-    hierarchy_level = (
-        f'at level: {".".join(hierarchy)} ' if hierarchy else "at root level "
-    )
+    parse_mismatches = []
 
     for dk, dv in defaults.items():
         if isinstance(dv, dict):
             ov = overwrite.get(dk) if overwrite is not None else None
             if ov is not None and type(ov) is not dict:
-                error(f"*** ERROR: {dk} should be a section of the toml file")
-            ret_d[dk] = overwrite_defaults_with_toml(
+                error(f'*** ERROR: {dk} should be a section of the toml file')
+            new_dict, new_type_mismatches = overwrite_defaults_with_toml(
                 hierarchy + [dk],
-                check_types=check_types,
                 defaults=dv,
                 overwrite=ov,
             )
+            ret_d[dk] = new_dict
+            parse_mismatches.extend(new_type_mismatches)
         else:
-            overwrite_v = (
-                overwrite.get(dk, dv) if overwrite is not None else dv
-            )
-            if check_types != TypeChecking.IGNORE and type(
-                overwrite_v
-            ) != type(dv):
-                if check_types == TypeChecking.WARN:
-                    warn(
-                        (
-                            "Types mismatch in default and toml"
-                            f" {hierarchy_level}key: {dk}, default_type:"
-                            f" {type(dv).__name__}, toml_type:"
-                            f" {type(overwrite_v).__name__}"
-                        ),
+            ov = overwrite.get(dk, dv) if overwrite is not None else dv
+            if type(ov) != type(dv):
+                parse_mismatches.append(
+                    ParseMismatch(
+                        ParseMismatchType.TYPING,
+                        hierarchy,
+                        dk,
+                        type(dv),
+                        type(ov),
                     )
-                elif check_types == TypeChecking.ERROR:
-                    error(
-                        (
-                            "Types mismatch in default and toml"
-                            f" {hierarchy_level}key: {dk}, default_type:"
-                            f" {type(dv).__name__}, toml_type:"
-                            f" {type(overwrite_v).__name__}"
-                        ),
-                    )
-            ret_d[dk] = overwrite_v
+                )
+            ret_d[dk] = ov
 
     if overwrite is not None and (
-        bad_keys := set(overwrite.keys()) - set(defaults.keys()) - {"include"}
+        bad_keys := set(overwrite.keys()) - set(defaults.keys()) - {'include'}
     ):
-        error(
-            f"Unknown parameters in toml {hierarchy_level}",
-            " ".join(sorted(bad_keys)),
+        parse_mismatches.extend(
+            [
+                ParseMismatch(ParseMismatchType.BADKEY, hierarchy, key)
+                for key in bad_keys
+            ]
         )
 
-    return ret_d
+    return ret_d, parse_mismatches
 
 
 def check_type_env_var_to_typechecking(

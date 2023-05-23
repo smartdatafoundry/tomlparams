@@ -9,9 +9,10 @@ import tomli
 import tomli_w
 
 from pprint import pformat
-from typing import Any, Dict, Optional
+from typing import Optional
 
-from pyxparams.paramsgroup import create_params_groups, ParamsGroup
+from pyxparams.paramsgroup import create_params_groups
+from pyxparams.parsemismatch import ParseMismatchType
 from pyxparams.utils import (
     check_type_env_var_to_typechecking,
     DEFAULT_PARAMS_NAME,
@@ -20,7 +21,6 @@ from pyxparams.utils import (
     is_user_reserved_path,
     nvl,
     overwrite_defaults_with_toml,
-    ParseMismatchType,
     selectively_update_dict,
     TypeChecking,
     warn,
@@ -242,99 +242,3 @@ class XParams:
             tomli_w.dump(d, f)
         if verbose:
             print(f'Consolidated TOML file written to {path}.')
-
-
-def create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
-    pg = ParamsGroup(depth)
-    for k, v in d.items():
-        if isinstance(v, dict):
-            pg.__dict__[k] = create_params_groups(v, depth + 1)
-        else:
-            pg.__dict__[k] = v
-    return pg
-
-
-class ParseMismatch:
-    def __init__(
-        self,
-        pm_type: ParseMismatchType,
-        position: list[str],
-        key: str,
-        default_type: Optional[type] = None,
-        toml_type: Optional[type] = None,
-    ):
-        self.pm_type = pm_type
-        self.position = position
-        self.key = key
-        self.default_type = default_type.__name__ if default_type else None
-        self.toml_type = toml_type.__name__ if toml_type else None
-
-    def __str__(self):
-        hierarchy = (
-            f'at level: {".".join(self.position)}'
-            if self.position
-            else "at root level"
-        )
-        match self.pm_type:
-            case ParseMismatchType.TYPING:
-                return (
-                    f'Type mismatch {hierarchy} - key: {self.key},'
-                    f' default_type: {self.default_type}, toml_type:'
-                    f' {self.toml_type}\n'
-                )
-            case ParseMismatchType.BADKEY:
-                return f'Bad key {hierarchy} - key: {self.key}\n'
-
-    def __repr__(self):
-        return (
-            f'ParseMismatch({self.pm_type} at'
-            f' {self.position if self.position else "root"}, {self.key}, '
-            + f'types: {self.default_type}, {self.toml_type})'
-        )
-
-
-def overwrite_defaults_with_toml(
-    hierarchy: list[str],
-    defaults: dict[str, Any],
-    overwrite: Optional[dict[str, Any]] = None,
-) -> tuple[dict[str, Any], list[ParseMismatch]]:
-    ret_d = {}
-    parse_mismatches = []
-
-    for dk, dv in defaults.items():
-        if isinstance(dv, dict):
-            ov = overwrite.get(dk) if overwrite is not None else None
-            if ov is not None and type(ov) is not dict:
-                error(f'*** ERROR: {dk} should be a section of the toml file')
-            new_dict, new_type_mismatches = overwrite_defaults_with_toml(
-                hierarchy + [dk],
-                defaults=dv,
-                overwrite=ov,
-            )
-            ret_d[dk] = new_dict
-            parse_mismatches.extend(new_type_mismatches)
-        else:
-            ov = overwrite.get(dk, dv) if overwrite is not None else dv
-            if type(ov) != type(dv):
-                parse_mismatches.append(
-                    ParseMismatch(
-                        ParseMismatchType.TYPING,
-                        hierarchy,
-                        dk,
-                        type(dv),
-                        type(ov),
-                    )
-                )
-            ret_d[dk] = ov
-
-    if overwrite is not None and (
-        bad_keys := set(overwrite.keys()) - set(defaults.keys()) - {'include'}
-    ):
-        parse_mismatches.extend(
-            [
-                ParseMismatch(ParseMismatchType.BADKEY, hierarchy, key)
-                for key in bad_keys
-            ]
-        )
-
-    return ret_d, parse_mismatches
