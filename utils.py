@@ -17,6 +17,8 @@ USER_RESERVED_NAMES_RE = re.compile(r"^(u|user)[-_].*$")
 
 DEFAULT_PARAMS_NAME = "xparams"
 
+DEFAULT_PARAMS_TYPE_CHECKING_NAME = "XPARAMSCHECKING"
+
 
 TypeChecking = Enum("TypeChecking", ["IGNORE", "WARN", "ERROR"])
 
@@ -151,21 +153,3 @@ def overwrite_defaults_with_toml(
         )
 
     return ret_d, parse_mismatches
-
-
-def check_type_env_var_to_typechecking(
-    env_var: str, default_value: TypeChecking
-) -> TypeChecking:
-    if env_var is None:
-        return default_value
-    elif env_var == 'warn':
-        return TypeChecking.WARN
-    elif env_var == 'ignore':
-        return TypeChecking.IGNORE
-    elif env_var == 'error':
-        return TypeChecking.ERROR
-    else:
-        error(
-            "Not a valid TypeChecking value. Values: 'warn',"
-            " 'error', or 'ignore'"
-        )

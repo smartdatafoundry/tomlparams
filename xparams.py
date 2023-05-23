@@ -14,8 +14,8 @@ from typing import Optional
 from pyxparams.paramsgroup import create_params_groups
 from pyxparams.parsemismatch import ParseMismatchType
 from pyxparams.utils import (
-    check_type_env_var_to_typechecking,
     DEFAULT_PARAMS_NAME,
+    DEFAULT_PARAMS_TYPE_CHECKING_NAME,
     error,
     flatten,
     is_user_reserved_path,
@@ -54,7 +54,7 @@ class XParams:
         user_params_dir: str = None,
         verbose: Optional[bool] = True,
         check_types: TypeChecking = WARN,
-        type_check_env_var: str = 'XPARAMSCHECKING',
+        type_check_env_var: str = None,
     ):
         self._defaults = defaults
         self._env_var = nvl(env_var, paramsname.upper())  # XPARAMS
@@ -68,9 +68,12 @@ class XParams:
         )
         self._verbose = verbose
 
-        self._type_check_env_var = os.environ.get(type_check_env_var)
-        self._check_types = check_type_env_var_to_typechecking(
-            self._type_check_env_var, check_types
+        self._type_check_env_var = nvl(
+            type_check_env_var, DEFAULT_PARAMS_TYPE_CHECKING_NAME
+        )
+        env_var = os.environ.get(self._type_check_env_var)
+        self._check_types = self.check_type_env_var_to_typechecking(
+            env_var, check_types
         )
 
         self.set_params(name, report_load=self._verbose)
@@ -242,3 +245,21 @@ class XParams:
             tomli_w.dump(d, f)
         if verbose:
             print(f'Consolidated TOML file written to {path}.')
+
+    def check_type_env_var_to_typechecking(
+        self, env_var, default_value
+    ) -> TypeChecking:
+        if env_var is None:
+            return default_value
+        elif env_var == 'warn':
+            return TypeChecking.WARN
+        elif env_var == 'ignore':
+            return TypeChecking.IGNORE
+        elif env_var == 'error':
+            return TypeChecking.ERROR
+        else:
+            error(
+                f"Not a valid {type(self).__name__}.TypeChecking value. Change"
+                f" {self._type_check_env_var} to one of: 'warn', 'error', or"
+                " 'ignore'."
+            )
