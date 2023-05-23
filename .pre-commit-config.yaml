@@ -1,0 +1,17 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+        stages: [commit, push]
+    -   id: check-toml
+        stages: [commit, push]
+    -   id: end-of-file-fixer
+        stages: [commit, push]
+    -   id: trailing-whitespace
+        stages: [commit, push]
+-   repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+    -   id: black
+        stages: [commit, push]

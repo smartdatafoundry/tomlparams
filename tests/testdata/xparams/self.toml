@@ -1,0 +1,9 @@
+include = 'self'
+
+s = 'self'
+
+[subsection]
+n = 1
+
+[section2]
+n = 1
