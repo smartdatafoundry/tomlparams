@@ -12,7 +12,6 @@ EXPECTEDDIR = os.path.join('testdata', 'expected')
 
 
 class TestXParams(ReferenceTestCase):
-
     def setUp(self):
         self.co = CaptureOutput(stream='stderr')
 
@@ -224,11 +223,8 @@ class TestXParams(ReferenceTestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
-
     def test_userparams_not_in_stdparams(self):
-        defaults = {
-            'x': 10
-        }
+        defaults = {'x': 10}
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
@@ -253,11 +249,8 @@ class TestXParams(ReferenceTestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
-
     def test_reserved_user_raises(self):
-        defaults = {
-            'x': 10
-        }
+        defaults = {'x': 10}
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         naughty_toml = os.path.join(XDIR, 'xparams', 'user_only.toml')
@@ -271,10 +264,7 @@ class TestXParams(ReferenceTestCase):
             verbose=False,
         )
         try:
-            self.assertRaises(
-                SystemExit,
-                create_params
-            )
+            self.assertRaises(SystemExit, create_params)
 
             expected_error = (
                 '*** ERROR: path testdata/xparams/user_only.toml is reserved for user TOML files, but exists '
@@ -285,9 +275,7 @@ class TestXParams(ReferenceTestCase):
             os.remove(naughty_toml)
 
     def test_reserved_u_raises(self):
-        defaults = {
-            'x': 10
-        }
+        defaults = {'x': 10}
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         naughty_toml = os.path.join(XDIR, 'xparams', 'u_only.toml')
@@ -301,10 +289,7 @@ class TestXParams(ReferenceTestCase):
             verbose=False,
         )
         try:
-            self.assertRaises(
-                SystemExit,
-                create_params
-            )
+            self.assertRaises(SystemExit, create_params)
 
             expected_error = (
                 '*** ERROR: path testdata/xparams/u_only.toml is reserved for user TOML files, but exists '
@@ -319,15 +304,9 @@ class TestXParams(ReferenceTestCase):
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
         consolidated_path = os.path.join(outdir, 'params.toml')
-        defaults = {
-            's': 'none',
-            'subsection': {
-                'n': 0
-            },
-            'section2': {
-                'n': 0
-            }
-        }
+        defaults = {'s': 'none', 'subsection': {'n': 0}, 'section2': {'n': 0}}
+
+        self.assertIsNone(os.environ.get('XPARAMS'))
         os.environ['XPARAMS'] = 'one'
 
         params = XParams(
@@ -357,15 +336,9 @@ class TestXParams(ReferenceTestCase):
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
         consolidated_path = os.path.join(outdir, 'params.toml')
-        defaults = {
-            's': 'none',
-            'subsection': {
-                'n': 0
-            },
-            'section2': {
-                'n': 0
-            }
-        }
+        defaults = {'s': 'none', 'subsection': {'n': 0}, 'section2': {'n': 0}}
+
+        self.assertIsNone(os.environ.get('MYXPARAMS'))
         os.environ['MYXPARAMS'] = 'one'
 
         params = XParams(
@@ -401,16 +374,34 @@ class TestXParams(ReferenceTestCase):
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.TypeChecking.WARN,
+            check_types=XParams.WARN,
         )
         expected_warning = (
-            '*** WARNING  Types mismatch in default and toml '
-            'at root level key: z, default_type: <class \'int\'>, '
-            'toml_type: <class \'str\'>\n'
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at root level - key: z, default_type: int, toml_type: str\n\n'
         )
 
         self.assertEqual(str(self.co), expected_warning)
 
+    def test_type_checking_shallow_warning(self):
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        defaults = {"s": "one", "section": {"subsection": {"n": "one"}}}
+        params = XParams(
+            defaults,
+            name='type_check_shallow',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+            check_types=XParams.WARN,
+        )
+        expected_warning = (
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n'
+            ' Type mismatch at level: section.subsection - key: n, default_type: str, toml_type: int\n\n'
+        )
+
+        self.assertEqual(str(self.co), expected_warning)
 
     def test_type_checking_deep_level_warning(self):
         stddir = os.path.join(XDIR, 'xparams')
@@ -432,15 +423,13 @@ class TestXParams(ReferenceTestCase):
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.TypeChecking.WARN,
+            check_types=XParams.WARN,
         )
         expected_warning = (
-            '*** WARNING  Types mismatch in default and toml '
-            'at level: this.was.pretty.deep.folks key: x, '
-            'default_type: <class \'int\'>, toml_type: <class \'str\'>\n'
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at level: this.was.pretty.deep.folks - key: x, default_type: int, toml_type: str\n\n'
         )
         self.assertEqual(str(self.co), expected_warning)
-
 
     def test_date_type_checking_warning(self):
         stddir = os.path.join(XDIR, 'xparams')
@@ -455,38 +444,137 @@ class TestXParams(ReferenceTestCase):
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.TypeChecking.WARN,
+            check_types=XParams.WARN,
         )
         expected_warning = (
-            '*** WARNING  Types mismatch in default and toml '
-            'at root level key: date, default_type: <class \'str\'>, '
-            'toml_type: <class \'datetime.date\'>\n'
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at root level - key: date, default_type: str, toml_type: date\n\n'
         )
         self.assertEqual(str(self.co), expected_warning)
-
 
     def test_type_checking_root_level_error(self):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         defaults = {"not_there_1": 2, "z": 4}
-        expected_error = (
-            '*** ERROR: Types mismatch in default and toml '
-            'at root level key: z, default_type: <class \'int\'>, '
-            'toml_type: <class \'str\'>\n'
-        )
+
         create_params = lambda: XParams(
             defaults,
             name='type_check_root_level',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.TypeChecking.ERROR,
+            check_types=XParams.ERROR,
         )
         self.assertRaises(
             SystemExit,
             create_params,
         )
+
+        expected_error = (
+            '*** ERROR: The following issues were found:\n'
+            ' Type mismatch at root level - key: z, default_type: int, toml_type: str\n\n'
+        )
         self.assertEqual(str(self.co), expected_error)
+
+    def test_type_checking_shallow_error(self):
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        defaults = {"s": "one", "section": {"subsection": {"n": "one"}}}
+
+        create_params = lambda: XParams(
+            defaults,
+            name='type_check_shallow',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+            check_types=XParams.ERROR,
+        )
+        self.assertRaises(
+            SystemExit,
+            create_params,
+        )
+
+        expected_error = (
+            '*** ERROR: The following issues were found:\n'
+            ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n'
+            ' Type mismatch at level: section.subsection - key: n, default_type: str, toml_type: int\n\n'
+        )
+        self.assertEqual(str(self.co), expected_error)
+
+    def test_bad_key_shallow_error(self):
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        defaults = {"s": 1, "section": {"subsection": {"m": "two"}}}
+
+        create_params = lambda: XParams(
+            defaults,
+            name='type_check_shallow',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+            check_types=XParams.ERROR,
+        )
+        self.assertRaises(
+            SystemExit,
+            create_params,
+        )
+
+        expected_error = (
+            '*** ERROR: The following issues were found:\n'
+            ' Bad key at level: section.subsection - key: n\n\n'
+        )
+        self.assertEqual(str(self.co), expected_error)
+
+    def test_type_checking_bad_key_shallow_error(self):
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        defaults = {"s": "one", "section": {"subsection": {"m": "two"}}}
+
+        create_params = lambda: XParams(
+            defaults,
+            name='type_check_shallow',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+            check_types=XParams.ERROR,
+        )
+        self.assertRaises(
+            SystemExit,
+            create_params,
+        )
+
+        expected_error = (
+            '*** ERROR: The following issues were found:\n'
+            ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n'
+            ' Bad key at level: section.subsection - key: n\n\n'
+        )
+        self.assertEqual(str(self.co), expected_error)
+
+    def test_type_checking_warn_bad_key_shallow_error(self):
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        defaults = {"s": "one", "section": {"subsection": {"m": "two"}}}
+
+        create_params = lambda: XParams(
+            defaults,
+            name='type_check_shallow',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+            check_types=XParams.WARN,
+        )
+        self.assertRaises(
+            SystemExit,
+            create_params,
+        )
+
+        expected_warning_error = (
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n\n'
+            '*** ERROR: The following issues were found:\n'
+            ' Bad key at level: section.subsection - key: n\n\n'
+        )
+        self.assertEqual(str(self.co), expected_warning_error)
 
 
 if __name__ == '__main__':

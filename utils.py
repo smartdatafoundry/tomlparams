@@ -19,6 +19,8 @@ DEFAULT_PARAMS_NAME = "xparams"
 
 TypeChecking = Enum("TypeChecking", ["IGNORE", "WARN", "ERROR"])
 
+ParseMismatchType = Enum('ParseMismatch', ['BADKEY', 'TYPING'])
+
 
 def flatten(
     o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = False
@@ -97,7 +99,7 @@ def error(*msg, exit_code=1) -> NoReturn:
 
 
 def warn(*msg):
-    print("*** WARNING ", *msg, file=sys.stderr)
+    print("*** WARNING:", *msg, file=sys.stderr)
 
 
 def is_user_reserved_path(path: str) -> bool:
