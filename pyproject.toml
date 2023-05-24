@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "xparams"
-version = "0.0.2"
+version = "0.0.3"
 description = ""
 authors = [
   "Paola Arce <paola.arce@smartdatafoundry.com>",
