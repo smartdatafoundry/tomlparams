@@ -1,16 +1,17 @@
 [tool.poetry]
-name = "pyxparams"
-version = "0.1.0"
+name = "xparams"
+version = "0.0.2"
 description = ""
 authors = [
   "Paola Arce <paola.arce@smartdatafoundry.com>",
   "Victor Diaz <victor.diaz@smartdatafoundry.com>",
+  "Del Middlemiss <derek.middlemiss@smartdatafoundry.com>",
   "Nick Radcliffe <nick.radcliffe@smartdatafoundry.com>",
 ]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 tomli = "^2.0.1"
 tomli-w = "^1.0.0"
 

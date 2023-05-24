@@ -11,13 +11,13 @@ import tomli_w
 from pprint import pformat
 from typing import Optional
 
-from pyxparams.paramsgroup import create_params_groups
-from pyxparams.parsemismatch import ParseMismatchType
-from pyxparams.utils import (
+from xparams.paramsgroup import create_params_groups
+from xparams.parsemismatch import ParseMismatchType
+from xparams.utils import (
     DEFAULT_PARAMS_NAME,
     DEFAULT_PARAMS_TYPE_CHECKING_NAME,
     error,
-    flatten,
+    to_saveable_object,
     is_user_reserved_path,
     nvl,
     overwrite_defaults_with_toml,
@@ -71,9 +71,9 @@ class XParams:
         self._type_check_env_var = nvl(
             type_check_env_var, DEFAULT_PARAMS_TYPE_CHECKING_NAME
         )
-        env_var = os.environ.get(self._type_check_env_var)
+        env_var_value = os.environ.get(self._type_check_env_var)
         self._check_types = self.check_type_env_var_to_typechecking(
-            env_var, check_types
+            env_var_value, check_types
         )
 
         self.set_params(name, report_load=self._verbose)
@@ -234,13 +234,13 @@ class XParams:
         return pformat(self.__dict__, indent=4)
 
     def as_saveable_object(self):
-        return flatten(self.__dict__)
+        return to_saveable_object(self.__dict__, self._defaults)
 
     def write_consolidated_toml(
         self, path: str, verbose: Optional[bool] = None
     ):
         verbose = nvl(verbose, self._verbose)
-        d = flatten(self.__dict__, self._defaults)
+        d = to_saveable_object(self.__dict__, self._defaults)
         with open(path, "wb") as f:
             tomli_w.dump(d, f)
         if verbose:

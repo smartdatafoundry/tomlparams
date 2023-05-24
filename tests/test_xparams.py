@@ -2,13 +2,13 @@ import datetime
 import os
 import tempfile
 import tomli
-from tdda.referencetest import ReferenceTestCase, tag
-from pyxparams.captureoutput import CaptureOutput
-from pyxparams.xparams import XParams
+from tdda.referencetest import ReferenceTestCase
+from tests.captureoutput import CaptureOutput
+from xparams.xparams import XParams
 
-UGDIR = os.path.dirname(__file__)
-XDIR = os.path.join('testdata')
-EXPECTEDDIR = os.path.join('testdata', 'expected')
+THISDIR = os.path.dirname(os.path.abspath(__file__))
+XDIR = os.path.join(THISDIR, 'testdata')
+EXPECTEDDIR = os.path.join(THISDIR, 'testdata', 'expected')
 
 
 class TestXParams(ReferenceTestCase):
@@ -267,8 +267,8 @@ class TestXParams(ReferenceTestCase):
             self.assertRaises(SystemExit, create_params)
 
             expected_error = (
-                '*** ERROR: path testdata/xparams/user_only.toml is reserved'
-                ' for user TOML files, but exists in standardparams.\n'
+                f'*** ERROR: path {THISDIR}/testdata/xparams/user_only.toml is reserved for user TOML '
+                'files, but exists in standardparams.\n'
             )
             self.assertEqual(str(self.co), expected_error)
         finally:
@@ -292,8 +292,8 @@ class TestXParams(ReferenceTestCase):
             self.assertRaises(SystemExit, create_params)
 
             expected_error = (
-                '*** ERROR: path testdata/xparams/u_only.toml is reserved for'
-                ' user TOML files, but exists in standardparams.\n'
+                f'*** ERROR: path {THISDIR}/testdata/xparams/u_only.toml is reserved for user TOML '
+                'files, but exists in standardparams.\n'
             )
             self.assertEqual(str(self.co), expected_error)
         finally:
@@ -377,8 +377,8 @@ class TestXParams(ReferenceTestCase):
             check_types=XParams.WARN,
         )
         expected_warning = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' root level - key: z, default_type: int, toml_type: str\n\n'
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at root level - key: z, default_type: int, toml_type: str\n\n'
         )
 
         self.assertEqual(str(self.co), expected_warning)
@@ -396,10 +396,9 @@ class TestXParams(ReferenceTestCase):
             check_types=XParams.WARN,
         )
         expected_warning = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' root level - key: s, default_type: str, toml_type: int\n Type'
-            ' mismatch at level: section.subsection - key: n, default_type:'
-            ' str, toml_type: int\n\n'
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n'
+            ' Type mismatch at level: section.subsection - key: n, default_type: str, toml_type: int\n\n'
         )
 
         self.assertEqual(str(self.co), expected_warning)
@@ -427,9 +426,8 @@ class TestXParams(ReferenceTestCase):
             check_types=XParams.WARN,
         )
         expected_warning = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' level: this.was.pretty.deep.folks - key: x, default_type: int,'
-            ' toml_type: str\n\n'
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at level: this.was.pretty.deep.folks - key: x, default_type: int, toml_type: str\n\n'
         )
         self.assertEqual(str(self.co), expected_warning)
 
@@ -449,8 +447,8 @@ class TestXParams(ReferenceTestCase):
             check_types=XParams.WARN,
         )
         expected_warning = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' root level - key: date, default_type: str, toml_type: date\n\n'
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at root level - key: date, default_type: str, toml_type: date\n\n'
         )
         self.assertEqual(str(self.co), expected_warning)
 
@@ -473,8 +471,8 @@ class TestXParams(ReferenceTestCase):
         )
 
         expected_error = (
-            '*** ERROR: The following issues were found:\n Type mismatch at'
-            ' root level - key: z, default_type: int, toml_type: str\n\n'
+            '*** ERROR: The following issues were found:\n'
+            ' Type mismatch at root level - key: z, default_type: int, toml_type: str\n\n'
         )
         self.assertEqual(str(self.co), expected_error)
 
@@ -497,10 +495,9 @@ class TestXParams(ReferenceTestCase):
         )
 
         expected_error = (
-            '*** ERROR: The following issues were found:\n Type mismatch at'
-            ' root level - key: s, default_type: str, toml_type: int\n Type'
-            ' mismatch at level: section.subsection - key: n, default_type:'
-            ' str, toml_type: int\n\n'
+            '*** ERROR: The following issues were found:\n'
+            ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n'
+            ' Type mismatch at level: section.subsection - key: n, default_type: str, toml_type: int\n\n'
         )
         self.assertEqual(str(self.co), expected_error)
 
@@ -547,9 +544,9 @@ class TestXParams(ReferenceTestCase):
         )
 
         expected_error = (
-            '*** ERROR: The following issues were found:\n Type mismatch at'
-            ' root level - key: s, default_type: str, toml_type: int\n Bad key'
-            ' at level: section.subsection - key: n\n\n'
+            '*** ERROR: The following issues were found:\n'
+            ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n'
+            ' Bad key at level: section.subsection - key: n\n\n'
         )
         self.assertEqual(str(self.co), expected_error)
 
@@ -572,10 +569,10 @@ class TestXParams(ReferenceTestCase):
         )
 
         expected_warning_error = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' root level - key: s, default_type: str, toml_type: int\n\n***'
-            ' ERROR: The following issues were found:\n Bad key at level:'
-            ' section.subsection - key: n\n\n'
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at root level - key: s, default_type: str, toml_type: int\n\n'
+            '*** ERROR: The following issues were found:\n'
+            ' Bad key at level: section.subsection - key: n\n\n'
         )
         self.assertEqual(str(self.co), expected_warning_error)
 
