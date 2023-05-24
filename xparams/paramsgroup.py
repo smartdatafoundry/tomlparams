@@ -7,7 +7,7 @@ Container for parameters.
 from typing import Any, Dict, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pyxparams.utils import flatten
+    from xparams.utils import to_saveable_object
 
 
 class ParamsGroup:
@@ -23,7 +23,7 @@ class ParamsGroup:
         return f"{desc[:-2]}\n{indent})"
 
     def as_saveable_object(self):
-        return flatten(self.__dict__)
+        return to_saveable_object(self.get_params())
 
     def get_params(self) -> dict:
         return {

@@ -234,13 +234,13 @@ class XParams:
         return pformat(self.__dict__, indent=4)
 
     def as_saveable_object(self):
-        return to_saveable_object(self.__dict__)
+        return to_saveable_object(self.__dict__, self._defaults)
 
     def write_consolidated_toml(
         self, path: str, verbose: Optional[bool] = None
     ):
         verbose = nvl(verbose, self._verbose)
-        d = to_saveable_object(self.__dict__)
+        d = to_saveable_object(self.__dict__, self._defaults)
         with open(path, "wb") as f:
             tomli_w.dump(d, f)
         if verbose:

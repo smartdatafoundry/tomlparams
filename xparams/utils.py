@@ -23,7 +23,7 @@ DEFAULT_PARAMS_TYPE_CHECKING_NAME = "XPARAMSCHECKING"
 TypeChecking = Enum("TypeChecking", ["IGNORE", "WARN", "ERROR"])
 
 
-def to_saveable_object(o: Any):
+def to_saveable_object(o: Any, ref: Optional[Any] = None):
     """
     Convert an XParams Object, a ParamsGroup object, or a collection
     type (dict, list, tuple) recursively to a TOML-dumpable object.
@@ -38,6 +38,7 @@ def to_saveable_object(o: Any):
 
     Args:
         o: object to be flattened
+        ref: object to compare keys of o against
 
     Returns:
         TOML-dumpable object
@@ -45,13 +46,15 @@ def to_saveable_object(o: Any):
     """
     if isinstance(o, dict):
         return {
-            k: to_saveable_object(v)
+            k: to_saveable_object(v, ref[k])
             for k, v in o.items()
-            if k in ref and (v is not None or not exclude_none)
+            if ref and k in ref
         }
     elif isinstance(o, ParamsGroup):
-        return {k: to_saveable_object(v) for k, v in o.__dict__.items()}
+        return {k: to_saveable_object(v, ref[k]) for k, v in o.__dict__.items() if ref and k in ref}
     elif isinstance(o, (list, tuple)):
+        if ref:
+            return [to_saveable_object(v, w) for (v, w) in zip(o, ref)]
         return [to_saveable_object(v) for v in o]
     elif o is None or type(o) in (
         bool,
@@ -67,53 +70,6 @@ def to_saveable_object(o: Any):
         return o.as_saveable_object()
     else:
         error(f'Cannot flatten object type {type(o)}:\n{str(o)}')
-
-
-def flatten(
-    o: Any, ref: Any, key: Optional[str] = None, exclude_none: bool = False
-):
-    if isinstance(o, dict):
-        return {
-            k: flatten(v, ref[k], key=k)
-            for k, v in o.items()
-            if k in ref and (v is not None or not exclude_none)
-        }
-    elif isinstance(o, ParamsGroup):
-        return {
-            k: flatten(v, ref[k], key=k)
-            for k, v in o.__dict__.items()
-            if k in ref and (v is not None or not exclude_none)
-        }
-    elif isinstance(o, (list, tuple)):
-        return [
-            flatten(v, w, key=str(i)) for i, (v, w) in enumerate(zip(o, ref))
-        ]
-    elif o is None or type(o) in (
-        bool,
-        str,
-        int,
-        float,
-        datetime.date,
-        datetime.time,
-        datetime.datetime,
-    ):
-        return o
-    elif hasattr(o, "as_saveable_object"):
-        return o.as_saveable_object()
-    else:
-        if key is None:
-            print(
-                f"Cannot flatten object type {type(o)}:\n{str(o)}\nSkipping!!",
-                file=sys.stderr,
-            )
-        else:
-            print(
-                (
-                    f"Cannot flatten object type {type(o)} for"
-                    f" {key}\n\nSkipping!!"
-                ),
-                file=sys.stderr,
-            )
 
 
 def selectively_update_dict(d: Dict[str, Any], new_d: Dict[str, Any]) -> None:
