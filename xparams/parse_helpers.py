@@ -31,12 +31,12 @@ class ParseMismatch:
         self.key = key
         if default_type:
             if isinstance(default_type, list):
-                self.default_type = ','.join(sorted([d.__name__ for d in default_type]))
+                self.default_type = '[' + ','.join(sorted([d.__name__ for d in default_type])) + ']'
             else:
                 self.default_type = default_type.__name__
         if toml_type:
             if isinstance(toml_type, list):
-                self.toml_type = ','.join(sorted([t.__name__ for t in toml_type]))
+                self.toml_type = '[' + ','.join(sorted([t.__name__ for t in toml_type])) + ']'
             else:
                 self.toml_type = toml_type.__name__
 

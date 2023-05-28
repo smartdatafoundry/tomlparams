@@ -417,7 +417,7 @@ class TestXParams(ReferenceTestCase):
         )
         expected_warning = (
             '*** WARNING: The following issues were found:\n'
-            ' Type mismatch at root level - key: s, default_type: int,str, toml_type: bool,int\n\n'
+            ' Type mismatch at root level - key: s, default_type: [int,str], toml_type: [bool,int]\n\n'
         )
 
         self.assertEqual(str(self.co), expected_warning)
