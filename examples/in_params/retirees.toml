@@ -1,0 +1,12 @@
+[demographics]
+age_range = [65, -1]
+working_hours = ['pt', 'none']
+
+[demographics.benefits.pension]
+active = 'true'
+
+[demographics.benefits.income_support]
+active = false
+
+[demographics.benefits.child_support]
+active = false

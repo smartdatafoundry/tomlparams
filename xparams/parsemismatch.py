@@ -4,6 +4,7 @@ Parse Mismatch
 """
 from enum import Enum
 from typing import Optional
+from xparams.errors_warnings import error
 
 ParseMismatchType = Enum('ParseMismatch', ['BADKEY', 'TYPING'])
 
@@ -29,15 +30,16 @@ class ParseMismatch:
             if self.position
             else "at root level"
         )
-        match self.pm_type:
-            case ParseMismatchType.TYPING:
-                return (
-                    f'Type mismatch {hierarchy} - key: {self.key},'
-                    f' default_type: {self.default_type}, toml_type:'
-                    f' {self.toml_type}\n'
-                )
-            case ParseMismatchType.BADKEY:
-                return f'Bad key {hierarchy} - key: {self.key}\n'
+        if self.pm_type is ParseMismatchType.TYPING:
+            return (
+                f'Type mismatch {hierarchy} - key: {self.key},'
+                f' default_type: {self.default_type}, toml_type:'
+                f' {self.toml_type}\n'
+            )
+        elif self.pm_type is ParseMismatchType.BADKEY:
+            return f'Bad key {hierarchy} - key: {self.key}\n'
+        else:
+            error(f'Unknown parse_mismatch type: {self.pm_type}')
 
     def __repr__(self):
         return (

@@ -20,7 +20,7 @@ class TestXParams(ReferenceTestCase):
 
     def test_write_consolidated_toml_unchanged_from_defaults(self):
         # Tests writing of consolidated TOML file when
-        # base.toml exists but is empty, so what's written
+        # uk_retirees.toml exists but is empty, so what's written
         # is in fact the defaults.
         defaults = {
             'n': 1,
@@ -40,7 +40,7 @@ class TestXParams(ReferenceTestCase):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'params.toml')
+        consolidated_path = os.path.join(outdir, 'in_params.toml')
 
         params = XParams(
             defaults,
@@ -78,7 +78,7 @@ class TestXParams(ReferenceTestCase):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'params.toml')
+        consolidated_path = os.path.join(outdir, 'in_params.toml')
 
         params = XParams(
             defaults,
@@ -122,7 +122,7 @@ class TestXParams(ReferenceTestCase):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'params.toml')
+        consolidated_path = os.path.join(outdir, 'in_params.toml')
 
         params = XParams(
             defaults,
@@ -163,7 +163,7 @@ class TestXParams(ReferenceTestCase):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'params.toml')
+        consolidated_path = os.path.join(outdir, 'in_params.toml')
 
         params = XParams(
             defaults,
@@ -200,7 +200,7 @@ class TestXParams(ReferenceTestCase):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'params.toml')
+        consolidated_path = os.path.join(outdir, 'in_params.toml')
 
         params = XParams(
             defaults,
@@ -228,7 +228,7 @@ class TestXParams(ReferenceTestCase):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'params.toml')
+        consolidated_path = os.path.join(outdir, 'in_params.toml')
 
         params = XParams(
             defaults,
@@ -303,7 +303,7 @@ class TestXParams(ReferenceTestCase):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'params.toml')
+        consolidated_path = os.path.join(outdir, 'in_params.toml')
         defaults = {'s': 'none', 'subsection': {'n': 0}, 'section2': {'n': 0}}
 
         self.assertIsNone(os.environ.get('XPARAMS'))
@@ -335,7 +335,7 @@ class TestXParams(ReferenceTestCase):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')
         outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'params.toml')
+        consolidated_path = os.path.join(outdir, 'in_params.toml')
         defaults = {'s': 'none', 'subsection': {'n': 0}, 'section2': {'n': 0}}
 
         self.assertIsNone(os.environ.get('MYXPARAMS'))

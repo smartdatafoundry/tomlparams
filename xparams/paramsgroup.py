@@ -5,9 +5,7 @@ Parameters Groups
 Container for parameters.
 """
 from typing import Any, Dict, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from xparams.utils import to_saveable_object
+from xparams.utils import to_saveable_object
 
 
 class ParamsGroup:

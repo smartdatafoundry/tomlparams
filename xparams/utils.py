@@ -5,13 +5,11 @@ Utils
 import datetime
 import os
 import re
-import sys
-
 from enum import Enum
-from typing import Any, Dict, NoReturn, Optional
-
-from xparams.paramsgroup import ParamsGroup
-from xparams.parsemismatch import ParseMismatch, ParseMismatchType
+from typing import Any, Dict, Optional
+from xparams.errors_warnings import error
+import xparams.paramsgroup as paramsgroup
+import xparams.parsemismatch as parsemismatch
 
 USER_RESERVED_NAMES_RE = re.compile(r"^(u|user)[-_].*$")
 
@@ -50,8 +48,12 @@ def to_saveable_object(o: Any, ref: Optional[Any] = None):
             for k, v in o.items()
             if ref and k in ref
         }
-    elif isinstance(o, ParamsGroup):
-        return {k: to_saveable_object(v, ref[k]) for k, v in o.__dict__.items() if ref and k in ref}
+    elif isinstance(o, paramsgroup.ParamsGroup):
+        return {
+            k: to_saveable_object(v, ref[k])
+            for k, v in o.__dict__.items()
+            if ref and k in ref
+        }
     elif isinstance(o, (list, tuple)):
         if ref:
             return [to_saveable_object(v, w) for (v, w) in zip(o, ref)]
@@ -96,15 +98,6 @@ def nvl(v, default):
     return default if v is None else v
 
 
-def error(*msg, exit_code=1) -> NoReturn:
-    print("*** ERROR:", *msg, file=sys.stderr)
-    sys.exit(exit_code)
-
-
-def warn(*msg):
-    print("*** WARNING:", *msg, file=sys.stderr)
-
-
 def is_user_reserved_path(path: str) -> bool:
     name = os.path.basename(path)
     return bool(re.match(USER_RESERVED_NAMES_RE, name))
@@ -114,7 +107,7 @@ def overwrite_defaults_with_toml(
     hierarchy: list[str],
     defaults: dict[str, Any],
     overwrite: Optional[dict[str, Any]] = None,
-) -> tuple[dict[str, Any], list[ParseMismatch]]:
+) -> tuple[dict[str, Any], list[parsemismatch.ParseMismatch]]:
     ret_d = {}
     parse_mismatches = []
 
@@ -134,8 +127,8 @@ def overwrite_defaults_with_toml(
             ov = overwrite.get(dk, dv) if overwrite is not None else dv
             if type(ov) != type(dv):
                 parse_mismatches.append(
-                    ParseMismatch(
-                        ParseMismatchType.TYPING,
+                    parsemismatch.ParseMismatch(
+                        parsemismatch.ParseMismatchType.TYPING,
                         hierarchy,
                         dk,
                         type(dv),
@@ -149,7 +142,7 @@ def overwrite_defaults_with_toml(
     ):
         parse_mismatches.extend(
             [
-                ParseMismatch(ParseMismatchType.BADKEY, hierarchy, key)
+                parsemismatch.ParseMismatch(parsemismatch.ParseMismatchType.BADKEY, hierarchy, key)
                 for key in bad_keys
             ]
         )

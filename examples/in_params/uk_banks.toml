@@ -1,0 +1,4 @@
+[banks]
+currency = 'gbp'
+depositor_insurer = 'fscs'
+account_types = ['current', 'savings', 'isa']

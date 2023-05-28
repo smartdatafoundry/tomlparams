@@ -3,27 +3,22 @@ Parameters
 ==========
 """
 import os
-
-
 import tomli
 import tomli_w
-
 from pprint import pformat
 from typing import Optional
-
-from xparams.paramsgroup import create_params_groups
 from xparams.parsemismatch import ParseMismatchType
+from xparams.paramsgroup import create_params_groups
+from xparams.errors_warnings import error, warn
 from xparams.utils import (
     DEFAULT_PARAMS_NAME,
     DEFAULT_PARAMS_TYPE_CHECKING_NAME,
-    error,
     to_saveable_object,
     is_user_reserved_path,
     nvl,
     overwrite_defaults_with_toml,
     selectively_update_dict,
     TypeChecking,
-    warn,
 )
 
 
@@ -105,7 +100,7 @@ class XParams:
         envparams = os.environ.get(self._env_var, self._base_params_stem)
         if name is None:
             name = envparams
-        self.name = name  # of the run/params/results subdir etc.
+        self.name = name  # of the run/in_params/results subdir etc.
 
         self.load(report=report_load)
 

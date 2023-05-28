@@ -1,0 +1,38 @@
+[locale]
+code = "uk"
+utc_tzs = [
+    0,
+]
+
+[banks]
+currency = "gbp"
+has_depositor_insurance = true
+depositor_insurer = "fscs"
+account_types = [
+    "current",
+    "savings",
+    "isa",
+]
+
+[demographics]
+age_range = [
+    65,
+    -1,
+]
+working_hours = [
+    "pt",
+    "none",
+]
+
+[demographics.benefits.pension]
+active = "true"
+types = [
+    "state",
+    "private",
+]
+
+[demographics.benefits.income_support]
+active = false
+
+[demographics.benefits.child_support]
+active = false
