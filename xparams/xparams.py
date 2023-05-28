@@ -43,7 +43,7 @@ class XParams:
         self,
         defaults: dict,
         name: str = None,
-        paramsname: str = DEFAULT_PARAMS_NAME,
+        params_name: str = DEFAULT_PARAMS_NAME,
         env_var: str = None,
         base_params_stem: str = "base",
         standard_params_dir: str = None,
@@ -53,20 +53,21 @@ class XParams:
         type_check_env_var: str = None,
     ):
         self._defaults = defaults
-        self._env_var = nvl(env_var, paramsname.upper())  # XPARAMS
+        self._env_var = nvl(env_var, params_name.upper())  # XPARAMS
         self._base_params_stem = base_params_stem
 
         self._standard_params_dir = nvl(
-            standard_params_dir, os.path.expanduser(f"~/{paramsname}")
+            standard_params_dir, os.path.expanduser(f"~/{params_name}")
         )
         self._user_params_dir = nvl(
-            user_params_dir, os.path.expanduser(f"~/user{paramsname}")
+            user_params_dir, os.path.expanduser(f"~/user{params_name}")
         )
         self._verbose = verbose
 
         self._type_check_env_var = nvl(
             type_check_env_var, DEFAULT_PARAMS_TYPE_CHECKING_NAME
         )
+
         env_var_value = os.environ.get(self._type_check_env_var)
         self._check_types = self.check_type_env_var_to_typechecking(
             env_var_value, check_types
@@ -98,9 +99,9 @@ class XParams:
             report_load: print loading status
         """
         self.toml_files_used = []
-        envparams = os.environ.get(self._env_var, self._base_params_stem)
+        env_params = os.environ.get(self._env_var, self._base_params_stem)
         if name is None:
-            name = envparams
+            name = env_params
         self.name = name  # of the run/in_params/results subdir etc.
 
         self.load(report=report_load)
