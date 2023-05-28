@@ -403,6 +403,25 @@ class TestXParams(ReferenceTestCase):
 
         self.assertEqual(str(self.co), expected_warning)
 
+    def test_type_checking_list(self):
+        stddir = os.path.join(XDIR, 'xparams')
+        userdir = os.path.join(XDIR, 'userxparams')
+        defaults = {"s": ["one", 2]}
+        params = XParams(
+            defaults,
+            name='type_check_list',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+            check_types=XParams.WARN,
+        )
+        expected_warning = (
+            '*** WARNING: The following issues were found:\n'
+            ' Type mismatch at root level - key: s, default_type: int,str, toml_type: bool,int\n\n'
+        )
+
+        self.assertEqual(str(self.co), expected_warning)
+
     def test_type_checking_deep_level_warning(self):
         stddir = os.path.join(XDIR, 'xparams')
         userdir = os.path.join(XDIR, 'userxparams')

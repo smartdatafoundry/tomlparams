@@ -13,7 +13,7 @@ defaults = {
         'account_types': ['current', 'savings', 'ira', 'roth_ira']
     },
     'demographics': {
-        'age_range': [18, 45],
+        'age_range': ['18', '45'],
         'working_hours': ['ft', 'pt', 'none'],
         'benefits': {
             'pension': {
