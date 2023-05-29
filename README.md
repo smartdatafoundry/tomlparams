@@ -13,7 +13,7 @@ pip install -U git+ssh://git@github.com/gofcoe/xparams.git
 # Sample Usage
 
 XParams requires a toml file and a dictionary with defaults values.
-If we have a file called `params.toml` with the following content:
+If we have a file called `myrun.toml` with the following content:
 
 ```
 [section.subsection1]
@@ -49,7 +49,7 @@ defaults = {
 }
 
 
-params = XParams(defaults=defaults, standard_params_dir='params.toml')
+params = XParams(defaults=defaults, name='myrun', user_params_dir='.')
 
 print(params.param)
 >> myparam
