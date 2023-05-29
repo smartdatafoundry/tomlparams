@@ -1,11 +1,79 @@
 # XParams
-## TOML-based parameter files made better
-
 
 [![XParams tests](https://github.com/gofcoe/xparams/actions/workflows/tests.yml/badge.svg)](https://github.com/gofcoe/xparams/actions/workflows/tests.yml)
 
-# Usage
+A flexible TOML-based parameter file reader
+
+## Installation
+
 ```
+pip install -U git+ssh://git@github.com/gofcoe/xparams.git
+```
+
+# Sample Usage
+
+XParams requires a toml file and a dictionary with defaults values.
+If we have a file called `params.toml` with the following content:
+
+```
+[section.subsection1]
+param1 = 1234
+param4 = [1, 3, 4]
+```
+
+```python
+from datetime import date∏
+from xparams import XParams
+from pprint import pprint
+
+defaults = {
+    'param': 'myparam',
+    'section':{
+        'subsection1': {
+            'param1': 500,
+            'param2': True,
+            'param3': 'foo'
+            'param4': [1, 2, 3]
+        },
+        'subsection2': {
+            'param1': False,
+            'param2': 2.0,
+            'param3': date(2023, 6, 3)
+            'param4': -1
+            'param5': {
+                'var1': 1,
+                'var2': '2'
+                }
+        }
+    }
+}
+
+
+params = XParams(defaults=defaults, standard_params_dir='params.toml')
+
+print(params.param)
+>> myparam
+print(params.section.subsection1.param1)
+>>1234
+print(params.section.subsection1.param4)
+>>[1, 3, 4]
+```
+```
+pprint(params.section.subsection2)
+>>ParamsGroup(
+			param1: False,
+			param2: 2.0,
+			param3: 2023-06-03,
+			param4: -1,
+			param5: ParamsGroup(
+				var1: 1,
+				var2: 2
+			)
+		)
+```
+
+## Additional Options
+```python
 XParams(
     defaults: dict,
     name: str = None, # name of the run, 
