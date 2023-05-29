@@ -22,7 +22,7 @@ param4 = [1, 3, 4]
 ```
 
 ```python
-from datetime import date∏
+from datetime import date
 from xparams import XParams
 from pprint import pprint
 
