@@ -57,6 +57,8 @@ print(params.section.subsection1.param1)
 >>1234
 print(params.section.subsection1.param4)
 >>[1, 3, 4]
+print(params.section.subsection2.param5.var1)
+>>1
 ```
 ```
 pprint(params.section.subsection2)
