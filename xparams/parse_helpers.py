@@ -1,20 +1,21 @@
 """
 Parse Helpers
-==============
+=============
 """
 import datetime
 import os
 import re
 from enum import Enum
 from typing import Any, Dict, Optional, Type
-from xparams.utils import error
-import xparams.params_group as params_group
+from tomlparams.utils import error
+import tomlparams.params_group as params_group
 
-USER_RESERVED_NAMES_RE = re.compile(r"^(u|user)[-_].*$")
-DEFAULT_PARAMS_NAME = "xparams"
-DEFAULT_PARAMS_TYPE_CHECKING_NAME = "XPARAMSCHECKING"
+USER_RESERVED_NAMES_RE = re.compile(r'^(u|user)[-_].*$')
+DEFAULT_PARAMS_NAME = 'tomlparams'
+DEFAULT_PARAMS_TYPE_CHECKING_NAME = 'TOMLPARAMSCHECKING'
+DEFAULTS_ONLY_NAMES = ['default', 'defaults']
 
-TypeChecking = Enum("TypeChecking", ["IGNORE", "WARN", "ERROR"])
+TypeChecking = Enum('TypeChecking', ['IGNORE', 'WARN', 'ERROR'])
 ParseMismatchType = Enum('ParseMismatch', ['BADKEY', 'TYPING'])
 
 class ParseMismatch:
@@ -31,7 +32,9 @@ class ParseMismatch:
         self.key = key
         if default_type:
             if isinstance(default_type, list):
-                self.default_type = '[' + ','.join(sorted([d.__name__ for d in default_type])) + ']'
+                self.default_type = (
+                    '[' + ','.join(sorted([d.__name__ for d in default_type])) + ']'
+                )
             else:
                 self.default_type = default_type.__name__
         if toml_type:
@@ -44,7 +47,7 @@ class ParseMismatch:
         hierarchy = (
             f'at level: {".".join(self.position)}'
             if self.position
-            else "at root level"
+            else 'at root level'
         )
         if self.pm_type is ParseMismatchType.TYPING:
             return (
@@ -66,9 +69,9 @@ class ParseMismatch:
 
 def to_saveable_object(o: Any, ref: Optional[Any] = None):
     """
-    Convert an XParams Object, a ParamsGroup object, or a collection
+    Convert a TOMLParams Object, a ParamsGroup object, or a collection
     type (dict, list, tuple) recursively to a TOML-dumpable object.
-    Typically called on either a XParams or ParamsGroup object as
+    Typically called on either a TOMLParams or ParamsGroup object as
     top-level invocation.
 
     Also accepts other objects with as_saveable_object methods,

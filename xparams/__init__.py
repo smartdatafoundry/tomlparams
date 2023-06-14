@@ -1,3 +1,3 @@
 __version__ = '0.0.5'
-from xparams.params_group import ParamsGroup
-from xparams.xparams import XParams
+from tomlparams.params_group import ParamsGroup
+from tomlparams.tomlparams import TOMLParams
