@@ -25,11 +25,11 @@ from xparams.parse_helpers import (
 
 class XParams:
     """
-    Collection of Simulation Parameters
+    Collection of Parameters
 
-    The keys for the toml file are the same as those in defaults,
+    The only allowed keys for the TOML file are those in defaults,
     and the values in defaults are used where nothing is specified
-    in the toml file.
+    in the TOML file.
     """
 
     ERROR = TypeChecking.ERROR

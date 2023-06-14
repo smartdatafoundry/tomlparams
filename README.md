@@ -22,8 +22,14 @@ TOML-based parameter files made better
 
 ## Installation
 
+From PyPI:
 ```
-pip install -U git+ssh://git@github.com/gofcoe/tomlparams.git
+python -m pip install -U tomlparams
+```
+
+Source installation from Github:
+```
+python -m pip install -U git+ssh://git@github.com/gofcoe/tomlparams.git
 ```
 
 # Sample Usage
