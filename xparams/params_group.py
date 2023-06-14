@@ -20,6 +20,9 @@ class ParamsGroup:
                 desc += f"{indent}\t{k}: {str(v)},\n"
         return f"{desc[:-2]}\n{indent})"
 
+    def __getitem__(self, item):
+        return self.__dict__[item]
+
     def as_saveable_object(self):
         return to_saveable_object(self.get_params())
 
