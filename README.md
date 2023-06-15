@@ -165,10 +165,10 @@ once at the earliest point of its inclusion in the hierarchy.
 Type checking is performed against the types of any values present in
 the passed-in `defaults`. Three levels of action are configurable:
 
-* `IGNORE` - not recommended
-* `WARN` (default) - a warning is sent to `stderr` but processing continues)
-* `ERROR` - processing stops, but all type checking and key checking error are collected
-   and shown before exit
+* `WARN` (default) — a warning is sent to `stderr` but processing continues)
+* `ERROR` — processing stops. All type-checking and key-checking errors are collected
+   and reported before exit
+* `OFF` — no type checking. (Useful when using polymorphic parameters.)
 
 Type checking of any collections (e.g. `list`, `set` and `tuple`)
 present in `defaults` is also performed and the selected action taken
@@ -178,8 +178,8 @@ corresponding collection in defaults.
 Action on a type checking mismatch can be configure in two ways:
 
 * Via the environment variable specified by the
-`type_check_env_var` setting (defaults to `XPARAMSCHECKING`) with allowed levels: `ignore`,
-`warn` and `error`
+`type_check_env_var` setting (defaults to `XPARAMSCHECKING`) with allowed levels:
+`warn`, `error`, and `off`.
 * Via the `check_types` setting
 
 The environment variable takes precedence over the setting where set.

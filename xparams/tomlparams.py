@@ -32,7 +32,7 @@ class TOMLParams:
 
     ERROR = TypeChecking.ERROR
     WARN = TypeChecking.WARN
-    IGNORE = TypeChecking.IGNORE
+    OFF = TypeChecking.OFF
 
     json_indent = 0
     json_test_indent = 4
@@ -110,12 +110,12 @@ class TOMLParams:
                          those in defaults generate a warning.
                          Set to ERROR (tomlparams.ERROR) to cause an exception
                          to be raised.
-                         Set to IGNORE (tomlparams.IGNORE) to disable type checking.
+                         Set to OFF (tomlparams.OFF) to disable type checking.
 
             type_check_env_var: The name of an environment variable to use to
                                 override check_types. Defaults to 'TOMLPARAMSCHECKING'.
                                 If this environment variable exists, it should be
-                                set to one of 'warn', 'error' or 'ignore', and that
+                                set to one of 'warn', 'error', or 'off', and that
                                 value will override the value of check_types
                                 passed in.
         """
@@ -355,13 +355,13 @@ class TOMLParams:
             return default_value
         elif env_var.lower() == 'warn':
             return TypeChecking.WARN
-        elif env_var.lower() == 'ignore':
-            return TypeChecking.IGNORE
+        elif env_var.lower() == 'off':
+            return TypeChecking.OFF
         elif env_var.lower() == 'error':
             return TypeChecking.ERROR
         else:
             error(
                 f"Not a valid {type(self).__name__}.TypeChecking value. Change"
                 f" {self._type_check_env_var} to one of: 'warn', 'error', or"
-                " 'ignore'."
+                " 'off'."
             )

@@ -15,7 +15,7 @@ DEFAULT_PARAMS_NAME = 'tomlparams'
 DEFAULT_PARAMS_TYPE_CHECKING_NAME = 'TOMLPARAMSCHECKING'
 DEFAULTS_ONLY_NAMES = ['default', 'defaults']
 
-TypeChecking = Enum('TypeChecking', ['IGNORE', 'WARN', 'ERROR'])
+TypeChecking = Enum('TypeChecking', ['OFF', 'WARN', 'ERROR'])
 ParseMismatchType = Enum('ParseMismatch', ['BADKEY', 'TYPING'])
 
 class ParseMismatch:
