@@ -6,16 +6,17 @@ TOML-based parameter files made better
 
 ## Key features
 
- * Designed to make it easy to externalize parameters one or more TOML files,
-   load them into Python, with defaulting, parameter name checking and optional
-   type checking.
- * Parameters available through attribute lookup or dictionary lookup
- * Supports hierarchical file inclusion and default values
- * Support for choosing parameter files using environment variables or setting
-   from API
- * Default values can be specified in code (as Python dictionaries) or in a TOML file
- * Full support for hierarchical values, still with attribute and dictionary lookup
+ * Simple externalization of parameters in one or more TOML files.
+ * Supports loading, saving, default values, parameter name checking
+   and optional parameter type checking.
+ * Parameters available through attribute lookup or dictionary lookup.
+ * Supports hierarchical file inclusion with overriding.
+ * Support for using environment variables to select parameter set (as well as API).
+ * Default values can be specified in code (as Python dictionaries) or in a TOML file.
+ * Full support for parameter hierarchy (using TOML Tables),
+   still with attribute and dictionary lookup.
  * Support for writing consolidated parameters as TOML after hierarchical inclusion
+   and resolution.
  * Can be subclassed and other attributes can be used without affecting TOML file writing.
 
 
@@ -97,6 +98,7 @@ pprint(params.section.subsection2)
 ```
 
 ## Additional Options
+
 ```python
 TOMLParams(
     defaults: dict,
@@ -111,6 +113,7 @@ TOMLParams(
     type_check_env_var: str = None,
 )
 ```
+
 [TODO] - fill out table. To be honest, I'm not sure I get the logic of
 precedence of env variable, then user directories, then instantiation
 variable for config of TOMLParams, I think this is quite specific for
@@ -163,8 +166,7 @@ Type checking is performed against the types of any values present in
 the passed-in `defaults`. Three levels of action are configurable:
 
 * `IGNORE` - not recommended
-* `WARN` (default) - a warning is sent to `stderr` but processing
-continues)
+* `WARN` (default) - a warning is sent to `stderr` but processing continues)
 * `ERROR` - processing stops, but all type checking and key checking error are collected
    and shown before exit
 
