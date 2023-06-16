@@ -41,7 +41,6 @@ The defaults can be supplied as a Python dictionary from a TOML file.
 ```python
 from datetime import date, datetime
 from tomlparams import TOMLParams
-from pprint import pprint
 
 defaults = {
     'start_date': datetime.date(2024, 1, 1),
