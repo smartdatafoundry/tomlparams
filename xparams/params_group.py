@@ -1,6 +1,6 @@
 """
-Parameters Groups
-=================
+ParamsGroup
+===========
 
 Container for parameters.
 """
@@ -9,16 +9,33 @@ from tomlparams.parse_helpers import to_saveable_object
 
 
 class ParamsGroup:
+    """
+    Container for parameters.
+    """
     def __init__(self, depth: int = 0, indent=4):
         self._depth = depth
-        self._indent = ' ' * indent * depth
+        self._param_indent = ' ' * indent * (depth + 1)
+        self._group_indent = ' ' * indent * depth
 
     def __str__(self) -> str:
-        desc = 'ParamsGroup(\n'
-        for k, v in ((k, v) for (k, v) in self.__dict__.items() if not k.startswith('_')):
-            if k != "_depth":
-                desc += f"{self._indent}\t{k}: {repr(v)},\n"
-        return f"{desc[:-2]}\n{self._indent})"
+        body = f',\n{self._param_indent}'.join(
+            f'{k}: {str(v)}'
+            for (k, v) in self.__dict__.items() if not k.startswith('_')
+        )
+        return (
+            f'ParamsGroup(\n{self._param_indent}'
+            f'{body}\n{self._group_indent})'
+        )
+
+    def __repr__(self) -> str:
+        body = f',\n{self._param_indent}'.join(
+            f'{k}={repr(v)}'
+            for (k, v) in self.__dict__.items() if not k.startswith('_')
+        )
+        return (
+            f'ParamsGroup(\n{self._param_indent}'
+            f'{body}\n{self._group_indent})'
+        )
 
     def __getitem__(self, item):
         return self.__dict__[item]
@@ -39,8 +56,6 @@ class ParamsGroup:
 
     def items(self):
         return self.get_params().items()
-
-    __repr__ = __str__
 
 
 def create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:

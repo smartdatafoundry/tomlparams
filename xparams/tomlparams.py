@@ -1,7 +1,7 @@
 """
-Parameters
-==========
+TOML-based parameter files made better (main class)
 """
+
 import os
 import tomli
 import tomli_w
@@ -27,7 +27,7 @@ from tomlparams.parse_helpers import (
 
 class TOMLParams:
     """
-    TOML-based Parameters
+    TOML-based parameter files made better
     """
 
     ERROR = TypeChecking.ERROR
@@ -51,73 +51,87 @@ class TOMLParams:
         type_check_env_var: str = None,
     ):
         """
+        TOML-based parameter files made better
+
         Args:
 
             defaults: Specifies the default values, and types of all parameters
                       to be allowed when reading TOML files.
-                      Can be a string-keyed Python dictionary (potentially nested)
-                      or a string, specifying the name of the TOML file containing
-                      the default values. Such a default TOML file may not include
-                      inclusions. If using a TOML file, absolute paths can be
-                      anywhere; relative paths will be taken to refer to the
-                      standard parameters directory.
+                      Can be a string-keyed Python dictionary (potentially
+                      nested) or a string, specifying the name of the TOML file
+                      containing the default values. Such a default TOML file
+                      may not include inclusions. If using a TOML file,
+                      absolute paths can be anywhere; relative paths will
+                      be taken to refer to the standard parameters directory.
 
             name: The (stem) name of the TOML file to use.
 
-                  If None (the default), 'base' (or any other base name provided
-                  as base_params_stem, see below) will be used.
+                  If `None` (the default), `'base'` (or any other base name
+                  provided as `base_params_stem`, see below) will be used.
 
-                  If 'default' or 'defaults', the default values will be used, i.e.
-                  no TOML files will be read other than (if using a file) the defaults file.
+                  If `'default'` or `'defaults'`, the default values will
+                  be used,
+                  i.e. no TOML files will be read other than (if using a file)
+                  the defaults file.
 
-                  If anything else, the name will be searched for in the standard_params_dir
-                  and the user_params_dir; it should only exist in one of those places.
+                  If anything else, the name will be searched for in the
+                  standard_params_dir and the user_params_dir; it should
+                  only exist in one of those places.
 
-            params_name: If standard params or user params directories are not provided,
-                         explicitly, they are based on this value, which defaults
-                         to 'tomlparams', meaning that if not specified the standard
-                         parameters directory will be ~/tomlparams, and the user
-                         parameters directory will be ~/usertomlparams.
+            params_name: If standard params or user params directories are
+                         not provided, explicitly, they are based on this
+                         value, which defaults to `'tomlparams'`, meaning that
+                         if not specified the standard
+                         parameters directory will be `~/tomlparams`,
+                         and the user parameters directory will be
+                         `~/usertomlparams`.
 
-            env_var: The name of an environment variable to look up if name is not set
-                     (i.e. is passed in as None). This defaults to TOMLPARAMS.
-                     If TOMLPARAMS is set, for example, 'foo', that will be used
-                     as the TOML file stem name for parameter loading.
+            env_var: The name of an environment variable to look up if
+                     name is not set (i.e. is passed in as None). This
+                     defaults to TOMLPARAMS.  If TOMLPARAMS is set,
+                     for example, 'foo', that will be used as the TOML
+                     file stem name for parameter loading.
 
             base_params_stem: value to use for name (the TOML file stem)
                               if name is passed as None. Defaults to 'base'.
 
             standard_params_dir: Absolute or relative path for the standard
-                                 parameters directory. If not set, ~/tomlparams
-                                 will be used, or '~/{params_name}' if params_name
-                                 has been set. This path will often be under
-                                 source control as part of the project using
-                                 TOMLParams.
+                                 parameters directory. If not set,
+                                 `~/tomlparams` will be used, or
+                                 `'~/{params_name}'` if params_name has
+                                 been set. This path will often be
+                                 under source control as part of the
+                                 project using TOMLParams.
 
             user_params_dir: Absolute or relative path for the user
-                             parameters directory. If not set, ~/usertomlparams
-                             will be used, or '~/user{params_name}' if params_name
-                             has been set. This path will usually *not* be under
-                             source control.
+                             parameters directory. If not set,
+                             `~/usertomlparams` will be used, or
+                             `'~/user{params_name}'` if params_name has
+                             been set. This path will usually *not* be
+                             under source control.
 
             verbose: Set to False to disable output to standard out
 
             check_types: Controls whether to do type checking of values from
-                         TOML files. When type checking is used, the expected
-                         type is determined by defaults (the default Python dictionary
-                         or TOML file), not by type hinting.
-                         By default (WARN = tomlparams.WARN), types not consistent
-                         those in defaults generate a warning.
-                         Set to ERROR (tomlparams.ERROR) to cause an exception
-                         to be raised.
-                         Set to OFF (tomlparams.OFF) to disable type checking.
+                         TOML files. When type checking is used, the
+                         expected type is determined by defaults (the
+                         default Python dictionary or TOML file), not
+                         by type hinting.  By default
+                         (`WARN = tomlparams.WARN`),
+                         types not consistent those
+                         in defaults generate a warning.  Set to `ERROR`
+                         (`tomlparams.ERROR`) to cause an exception to
+                         be raised.  Set to `OFF` (`tomlparams.OFF`) to
+                         disable type checking.
 
-            type_check_env_var: The name of an environment variable to use to
-                                override check_types. Defaults to 'TOMLPARAMSCHECKING'.
-                                If this environment variable exists, it should be
-                                set to one of 'warn', 'error', or 'off', and that
-                                value will override the value of check_types
-                                passed in.
+            type_check_env_var: The name of an environment variable to
+                                use to override check_types. Defaults
+                                to `'TOMLPARAMSCHECKING'`.  If this
+                                environment variable exists, it should
+                                be set to one of `'warn'`, `'error'`, or
+                                `'off'`, and that value will override
+                                the value of check_types passed in.
+
         """
         self._env_var = nvl(env_var, params_name.upper())  # TOMLPARAMS
         self._base_params_stem = base_params_stem
@@ -167,13 +181,14 @@ class TOMLParams:
             name: the name of the run, which is also the name for the
                   parameter file, the results subdirectory etc.
 
-                  If name is 'default' or 'defaults', only the default values
-                  will be used.
+                  If name is `'default'` or `'defaults'`, only the
+                  default values will be used.
 
                   If None, the system will try to use
                   the environment variable specified.
-                  and if that is not set, it will use self._base_params_stem, which
-                  is set from base_params_stem, which defaults to 'base'
+                  and if that is not set, it will use `self._base_params_stem`,
+                  which is set from `base_params_stem`,
+                  which defaults to `'base'`
 
             report_load: print loading status
         """
@@ -261,23 +276,27 @@ class TOMLParams:
         Loads defaults from TOML file at path provided.
         """
         fullpath = (
-            path if os.path.isabs(path) else os.path.join(self._standard_params_dir, path)
+            path
+            if os.path.isabs(path)
+            else os.path.join(self._standard_params_dir, path)
         )
         if os.path.exists(fullpath):
             with open(fullpath, 'rb') as f:
                 defaults = tomli.load(f)
             if 'include' in defaults:
-                error(f'Defaults TOML file {fullpath} includes key "include",\n'
-                      'which is not allow in defaults TOML files.')
+                error(
+                    f'Defaults TOML file {fullpath} includes key "include",\n'
+                    'which is not allow in defaults TOML files.'
+                )
             return defaults
         else:
             error(f'Defaults cannot be read from {fullpath}.')
 
     def load(self, report: bool = False):
         """
-        Loads parameters from .toml file.
+        Loads parameters from TOML file.
 
-        The TOML file's name is the stem in self._name + '.toml'.
+        The TOML file's name is the stem in `self._name + '.toml'`.
 
         It is located either in the standard parameters directory
         or the user parameters directory.
@@ -314,7 +333,9 @@ class TOMLParams:
                 warning_messages = ['The following issues were found:\n']
                 warning_messages.extend(type_mismatch_strings)
                 warn(*warning_messages)
-            elif type_mismatch_strings and self._check_types is TOMLParams.ERROR:
+            elif (
+                type_mismatch_strings and self._check_types is TOMLParams.ERROR
+            ):
                 error_messages.append('The following issues were found:\n')
                 error_messages.extend(type_mismatch_strings)
             if bad_key_strings:
@@ -332,13 +353,19 @@ class TOMLParams:
     def toml_files_str(self):
         return ', '.join(self._toml_files_used) or ''
 
-    def __str__(self):
-        desc = 'TOMLParams(\n'
-        for k, v in ((k, v) for (k, v) in self.__dict__.items() if not k.startswith('_')):
-            desc += f'    {k}: {repr(v)},\n'
-        return f'{desc[:-2]}\n)'
-    __repr__ = __str__
+    def __str__(self) -> str:
+        body = ',\n    '.join(
+            f'{k}: {str(v)}'
+            for (k, v) in self.__dict__.items() if not k.startswith('_')
+        )
+        return f'TOMLParams(\n    {body}\n)'
 
+    def __repr__(self) -> str:
+        body = ',\n    '.join(
+            f'{k}={repr(v)}'
+            for (k, v) in self.__dict__.items() if not k.startswith('_')
+        )
+        return f'TOMLParams(\n    {body}\n)'
 
     def as_saveable_object(self):
         return to_saveable_object(self.__dict__, self._defaults)

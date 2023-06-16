@@ -18,6 +18,7 @@ DEFAULTS_ONLY_NAMES = ['default', 'defaults']
 TypeChecking = Enum('TypeChecking', ['OFF', 'WARN', 'ERROR'])
 ParseMismatchType = Enum('ParseMismatch', ['BADKEY', 'TYPING'])
 
+
 class ParseMismatch:
     def __init__(
         self,
@@ -33,13 +34,19 @@ class ParseMismatch:
         if default_type:
             if isinstance(default_type, list):
                 self.default_type = (
-                    '[' + ','.join(sorted([d.__name__ for d in default_type])) + ']'
+                    '['
+                    + ','.join(sorted([d.__name__ for d in default_type]))
+                    + ']'
                 )
             else:
                 self.default_type = default_type.__name__
         if toml_type:
             if isinstance(toml_type, list):
-                self.toml_type = '[' + ','.join(sorted([t.__name__ for t in toml_type])) + ']'
+                self.toml_type = (
+                    '['
+                    + ','.join(sorted([t.__name__ for t in toml_type]))
+                    + ']'
+                )
             else:
                 self.toml_type = toml_type.__name__
 
@@ -66,6 +73,7 @@ class ParseMismatch:
             f' {self.position if self.position else "root"}, {self.key}, '
             + f'types: {self.default_type}, {self.toml_type})'
         )
+
 
 def to_saveable_object(o: Any, ref: Optional[Any] = None):
     """
@@ -174,7 +182,11 @@ def overwrite_defaults_with_toml(
             parse_mismatches.extend(new_type_mismatches)
         else:
             ov = overwrite.get(dk, dv) if overwrite is not None else dv
-            if isinstance(dv, list) or isinstance(dv, set) or isinstance(dv, tuple):
+            if (
+                isinstance(dv, list)
+                or isinstance(dv, set)
+                or isinstance(dv, tuple)
+            ):
                 default_types = get_collection_types(dv)
                 toml_types = get_collection_types(ov)
                 if default_types - toml_types:
@@ -184,7 +196,7 @@ def overwrite_defaults_with_toml(
                             hierarchy,
                             dk,
                             list(default_types),
-                            list(toml_types)
+                            list(toml_types),
                         )
                     )
             if type(ov) != type(dv):
@@ -210,6 +222,3 @@ def overwrite_defaults_with_toml(
         )
 
     return ret_d, parse_mismatches
-
-
-

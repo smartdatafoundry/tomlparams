@@ -19,8 +19,6 @@ TOML-based parameter files made better
    and resolution.
  * Can be subclassed and other attributes can be used without affecting TOML file writing.
 
-
-
 ## Installation
 
 From PyPI:
@@ -65,7 +63,7 @@ The special value for `'defaults'` for name specifies that the default values
 should be used and nothing should be read from a custom TOML parameters file.
 
 Parameters are stored as attributes and can be accessed using `.` style attribute
-lookup or dictionary-style lookup:
+lookup or dictionary-style lookup with `[]`:
 
 ```python
 >>> params.run_days
@@ -92,7 +90,6 @@ So if `base.toml` exists in the current working directory, and contains
 start_date = 2024-03-03
 
 [logging]
-
 format = '.json'
 ```
 
@@ -148,37 +145,48 @@ Inclusions are processed left-to-right, before the rest of the values in the
 file with the `include` statement, but each include is only processed once,
 the first time it is encountered, with newer values always overriding old ones.
 
+So if `base.toml` (or other named TOML file used)
+starts with this `include` line, and neither of `one` and `two`
+has any further inclusions, the order of parameter setting will be:
+
+  1. values from `defaults`
+  2. values from `one.toml`
+  3. values from `two.toml`
+  4. any other values
+
+If `one` and `two` both start with
+
+```toml
+include = 'three'
+```
+
+then the order of processing will be:
+
+  1. values from `defaults`
+  2. values from `three.toml` (from its inclusion by `one.toml`)
+  3. values from `one.toml`
+  4. values from `two.toml` (`three.toml` will is *not* included a second time)
+  5. any other values
+
+Circular inclusion does not cause a problem, because each file is only ever included once,
+but is potentially confusing for the reader, so is not recommended.
+
+Unless `verbose` is set to `False` when initializing `TOMLParams`, any TOML files processed
+are reported, in order of inclusion, listing full paths.
+
 ## Writing out the consolidated TOML file
 
+Hierarchical file inclusion is powerful, and allows different sets of parameters
+to be combined easily, but it can be hard for the reader to know what the final
+set of parameters used is without thinking through the inclusion hierarchy.
+TOMParams can write out a consolidated parameter values finally used as a single
+TOML file containing them all, without inclusions.
 
-# Type Checking
+
 
 
 # Environment Variables
 
-
-# Setting defaults from a TOML File
-
-
-
-[TODO] - fill out table. To be honest, I'm not sure I get the logic of
-precedence of env variable, then user directories, then instantiation
-variable for config of TOMLParams, I think this is quite specific for
-use in the Glen, and I'm not sure how useful the majority of users
-will find this. I don't really like the idea of an app config file
-looking at my home directory for further config files. The complexity
-level of where `TOMLParams` looks for TOMLs should perhaps be tunable
-somehow, perhaps with a `local_only` flag on instantiation which would
-lock down where it searches?
-
-| param     | description           | default  |
-|-----------|-----------------------|----------|
-| defaults  | see description below | required |
-| env_var   |                       | XPARAMS  |
-| name      | name of the run,      |
-
-
-Type checking will be performed against the `types` of values present in the defaults.
 
 # Type Checking
 
@@ -203,4 +211,7 @@ Action on a type checking mismatch can be configure in two ways:
 * Via the `check_types` setting
 
 The environment variable takes precedence over the setting where set.
+
+
+# Setting defaults from a TOML File
 

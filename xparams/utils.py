@@ -17,5 +17,3 @@ def warn(*msg):
 
 def nvl(v, default):
     return default if v is None else v
-
-
