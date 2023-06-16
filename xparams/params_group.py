@@ -9,16 +9,16 @@ from tomlparams.parse_helpers import to_saveable_object
 
 
 class ParamsGroup:
-    def __init__(self, depth: int = 0):
+    def __init__(self, depth: int = 0, indent=4):
         self._depth = depth
+        self._indent = ' ' * indent * depth
 
     def __str__(self) -> str:
-        indent = "\t" * self._depth
         desc = 'ParamsGroup(\n'
-        for k, v in self.__dict__.items():
+        for k, v in ((k, v) for (k, v) in self.__dict__.items() if not k.startswith('_')):
             if k != "_depth":
-                desc += f"{indent}\t{k}: {str(v)},\n"
-        return f"{desc[:-2]}\n{indent})"
+                desc += f"{self._indent}\t{k}: {repr(v)},\n"
+        return f"{desc[:-2]}\n{self._indent})"
 
     def __getitem__(self, item):
         return self.__dict__[item]

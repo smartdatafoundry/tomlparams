@@ -35,66 +35,87 @@ python -m pip install -U git+ssh://git@github.com/gofcoe/tomlparams.git
 
 # Sample Usage
 
-TOMLParams requires a toml file and a dictionary with defaults values.
-If we have a file called `myrun.toml` with the following content:
-
-```
-[section.subsection1]
-param1 = 1234
-param4 = [1, 3, 4]
-```
+A TOMLParams object is initialized with a set of default values for all parameters.
+The defaults can be supplied as a Python dictionary from a TOML file.
 
 ```python
-from datetime import date
+from datetime import date, datetime
 from tomlparams import TOMLParams
 from pprint import pprint
 
 defaults = {
-    'param': 'myparam',
-    'section':{
-        'subsection1': {
-            'param1': 500,
-            'param2': True,
-            'param3': 'foo'
-            'param4': [1, 2, 3]
-        },
-        'subsection2': {
-            'param1': False,
-            'param2': 2.0,
-            'param3': date(2023, 6, 3)
-            'param4': -1
-            'param5': {
-                'var1': 1,
-                'var2': '2'
-                }
-        }
+    'start_date': datetime.date(2024, 1, 1),
+    'run_days': 366,
+    'tolerance': 0.0001,
+    'logging': True,
+    'locale': 'en_GB',
+    'critical_event_time': datetime.datetime(2024, 7, 31, 3, 22, 22),
+    'logging': {
+        'format': '.csv',
+        'events': ['financial', 'telecoms']
     }
 }
 
-
-params = TOMLParams(defaults=defaults, name='myrun', user_params_dir='.')
-
-print(params.param)
->> myparam
-print(params.section.subsection1.param1)
->>1234
-print(params.section.subsection1.param4)
->>[1, 3, 4]
-print(params.section.subsection2.param5.var1)
->>1
+params = TOMLParams(defaults=defaults, name='defaults')
 ```
+
+The special value for `'defaults'` for name specifies that the default values
+should be used and nothing should be read from a custom TOML parameters file.
+
+Parameters are stored as attributes and can be accessed using `.` style attribute
+lookup or dictionary-style lookup:
+
 ```
-pprint(params.section.subsection2)
->>ParamsGroup(
-			param1: False,
-			param2: 2.0,
-			param3: 2023-06-03,
-			param4: -1,
-			param5: ParamsGroup(
-				var1: 1,
-				var2: 2
-			)
-		)
+>>> params.run_days
+366
+>>> params['start_date']
+datetime.date(2024, 1, 1)
+>>> params.logging.format
+'.csv'
+>>> params['logging']['events']
+['financial', 'telecoms']
+```
+
+If the `name` is set to anything other than `defaults` or `default`, that will be
+used as the stem name of TOML file in which to look for override parameters.
+This defaults to `base` (for `base.toml`). The directory in which the system
+looks for this TOML file can be set with `standard_params_dir`, and if not specified
+will default to `~/tomlparams` (i.e. `tomlparams` in the user's home directory).
+
+So if `base.toml` exists in the current working directory, and contains
+
+```
+start_date = 2024-03-03
+
+[logging]
+
+format = '.json'
+```
+
+Then we will have the following (using the same `defaults` dict as before)
+```
+>>> params = TOMLParams(defaults=defaults, name='defaults')
+>>> params.run_days
+366
+>>> params['start_date']
+datetime.date(2024, 3, 3)
+>>> params.logging.format
+'.json'
+>>> params['logging']['events']
+['financial', 'telecoms']
+
+>>> params
+TOMLParams(
+    start_date: datetime.date(2024, 3, 3),
+    run_days: 366,
+    tolerance: 0.0001,
+    logging: ParamsGroup(
+    	format: '.json',
+    	events: ['financial', 'telecoms']
+    ),
+    locale: 'en_GB',
+    critical_event_time: datetime.datetime(2024, 7, 31, 3, 22, 22)
+)
 ```
 
 ## Additional Options

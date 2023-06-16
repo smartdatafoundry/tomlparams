@@ -177,11 +177,11 @@ class TOMLParams:
 
             report_load: print loading status
         """
-        self.toml_files_used = []
+        self._toml_files_used = []
         env_params = os.environ.get(self._env_var, self._base_params_stem)
         if name is None:
             name = env_params
-        self.name = name  # of the run/in_params/results subdir etc.
+        self._name = name  # of the run/in_params/results subdir etc.
 
         self.load(report=report_load)
 
@@ -197,7 +197,7 @@ class TOMLParams:
             dictionary of parameters from toml file.
         """
         outer_params = {}
-        if name := name or self.name:
+        if name := name or self._name:
             base, ext = os.path.splitext(name)
             if ext == '.toml':
                 pfile = name
@@ -231,12 +231,12 @@ class TOMLParams:
                     f' {std_path} or {custom_path}; abandoning all hope.'
                 )
             path = os.path.realpath(path)
-            if path in self.toml_files_used:
+            if path in self._toml_files_used:
                 return outer_params
 
             with open(path, 'rb') as f:
                 outer_params = tomli.load(f)
-                self.toml_files_used = [path] + self.toml_files_used
+                self._toml_files_used = [path] + self._toml_files_used
 
                 if include := outer_params.get('include', None):
                     if isinstance(include, list):
@@ -277,7 +277,7 @@ class TOMLParams:
         """
         Loads parameters from .toml file.
 
-        The TOML file's name is the stem in self.name + '.toml'.
+        The TOML file's name is the stem in self._name + '.toml'.
 
         It is located either in the standard parameters directory
         or the user parameters directory.
@@ -287,7 +287,7 @@ class TOMLParams:
         Args:
             report: print loading status
         """
-        if self.name in DEFAULTS_ONLY_NAMES:
+        if self._name in DEFAULTS_ONLY_NAMES:
             toml = {}
         else:
             toml = self.read_toml_file(report)
@@ -330,10 +330,15 @@ class TOMLParams:
         )
 
     def toml_files_str(self):
-        return ', '.join(self.toml_files_used) or ''
+        return ', '.join(self._toml_files_used) or ''
 
     def __str__(self):
-        return pformat(self.__dict__, indent=4)
+        desc = 'TOMLParams(\n'
+        for k, v in ((k, v) for (k, v) in self.__dict__.items() if not k.startswith('_')):
+            desc += f'    {k}: {repr(v)},\n'
+        return f'{desc[:-2]}\n)'
+    __repr__ = __str__
+
 
     def as_saveable_object(self):
         return to_saveable_object(self.__dict__, self._defaults)
