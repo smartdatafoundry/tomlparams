@@ -65,7 +65,7 @@ should be used and nothing should be read from a custom TOML parameters file.
 Parameters are stored as attributes and can be accessed using `.` style attribute
 lookup or dictionary-style lookup:
 
-```
+```python
 >>> params.run_days
 366
 >>> params['start_date']
@@ -84,7 +84,7 @@ will default to `~/tomlparams` (i.e. `tomlparams` in the user's home directory).
 
 So if `base.toml` exists in the current working directory, and contains
 
-```
+```toml
 start_date = 2024-03-03
 
 [logging]
@@ -93,7 +93,7 @@ format = '.json'
 ```
 
 Then we will have the following (using the same `defaults` dict as before)
-```
+```python
 >>> params = TOMLParams(defaults=defaults, name='defaults')
 >>> params.run_days
 366
