@@ -3,7 +3,6 @@ TOML-based parameter files made better (main class)
 """
 
 import os
-import tomli
 import tomli_w
 import tomlparams.parse_helpers as parse_helpers
 
@@ -11,7 +10,7 @@ from pprint import pformat
 from typing import Optional, Union
 
 from tomlparams.params_group import create_params_groups
-from tomlparams.utils import error, warn, nvl
+from tomlparams.utils import error, warn, nvl, load_toml
 from tomlparams.parse_helpers import (
     DEFAULT_PARAMS_NAME,
     DEFAULT_PARAMS_TYPE_CHECKING_NAME,
@@ -249,21 +248,20 @@ class TOMLParams:
             if path in self._toml_files_used:
                 return outer_params
 
-            with open(path, 'rb') as f:
-                outer_params = tomli.load(f)
-                self._toml_files_used = [path] + self._toml_files_used
+            outer_params = load_toml(path)
+            self._toml_files_used = [path] + self._toml_files_used
 
-                if include := outer_params.get('include', None):
-                    if isinstance(include, list):
-                        included_params = {}
-                        for name in include:
-                            included_params |= self.read_toml_file(
-                                report, name
-                            )
-                    else:
-                        included_params = self.read_toml_file(report, include)
-                    selectively_update_dict(included_params, outer_params)
-                    outer_params = included_params
+            if include := outer_params.get('include', None):
+                if isinstance(include, list):
+                    included_params = {}
+                    for name in include:
+                        included_params |= self.read_toml_file(
+                            report, name
+                        )
+                else:
+                    included_params = self.read_toml_file(report, include)
+                selectively_update_dict(included_params, outer_params)
+                outer_params = included_params
             if report:
                 print(f'Parameters set from: {path}')
         else:
@@ -280,9 +278,10 @@ class TOMLParams:
             if os.path.isabs(path)
             else os.path.join(self._standard_params_dir, path)
         )
+        if not os.path.splitext(path)[1]:
+            fullpath += '.toml'
         if os.path.exists(fullpath):
-            with open(fullpath, 'rb') as f:
-                defaults = tomli.load(f)
+            defaults = load_toml(fullpath)
             if 'include' in defaults:
                 error(
                     f'Defaults TOML file {fullpath} includes key "include",\n'

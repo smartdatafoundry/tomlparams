@@ -1,0 +1,11 @@
+include = ['one', 'two']
+
+a = 'hier'
+
+[group]
+
+a = 'group hier'
+
+[group.subgroup]
+
+a = 'subgroup hier'

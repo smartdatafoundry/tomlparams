@@ -1,0 +1,18 @@
+a = 'three'
+b = 'three'
+c = 'three'
+d = 'three'
+
+[group]
+
+a = 'group three'
+b = 'group three'
+c = 'group three'
+d = 'group three'
+
+[group.subgroup]
+
+a = 'subgroup three'
+b = 'subgroup three'
+c = 'subgroup three'
+e = 'subgroup three'

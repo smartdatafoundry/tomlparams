@@ -1,0 +1,12 @@
+start_date = 2024-01-01
+run_days = 366
+tolerance = 0.0001
+locale = "en_GB"
+critical_event_time = 2024-07-31 03:22:22
+
+[logging]
+format = ".csv"
+events = [
+    "financial",
+    "telecoms",
+]

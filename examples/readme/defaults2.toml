@@ -1,0 +1,21 @@
+a = 'default'
+b = 'default'
+c = 'default'
+d = 'default'
+e = 'default'
+
+[group]
+
+a = 'group default'
+b = 'group default'
+c = 'group default'
+d = 'group default'
+e = 'group default'
+
+[group.subgroup]
+
+a = 'subgroup default'
+b = 'subgroup default'
+c = 'subgroup default'
+e = 'subgroup default'
+f = 'subgroup default'

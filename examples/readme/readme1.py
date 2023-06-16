@@ -27,6 +27,4 @@ print(repr(params['start_date']))
 print(repr(params.logging.format))
 print(repr(params['logging']['events']))
 
-
-
-
+params.write_consolidated_toml('defaults.toml')

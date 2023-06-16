@@ -1,0 +1,17 @@
+include = 'three'
+a = 'one'
+b = 'one'
+c = 'one'
+
+
+[group]
+
+a = 'group one'
+b = 'group one'
+c = 'group one'
+
+[group.subgroup]
+
+a = 'subgroup one'
+b = 'subgroup one'
+c = 'subgroup one'

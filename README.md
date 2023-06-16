@@ -123,12 +123,61 @@ Notice how the two values in `base.toml` have overridden the defaults (`start_da
 and `logging.format`), but that other parameters, including `logging.events`, retained
 their values.
 
-## Parameter (Key) Checking
+# Setting defaults from a TOML File
 
-Only parameters in `defaults` are allowed;
+We can set the defaults from a TOML file instead of a Python dictionary by
+simply giving the path to the TOML file as the value for `defaults` when initializing
+`TOMLParams`. If it's an absolute path, it will be read, but if it's a relative path,
+the system will look in the `standard_params_dir`.
+
+This TOML file:
+```toml
+start_date = 2024-01-01
+run_days = 366
+tolerance = 0.0001
+locale = "en_GB"
+critical_event_time = 2024-07-31 03:22:22
+
+[logging]
+format = ".csv"
+events = [
+    "financial",
+    "telecoms",
+]
+```
+is equivalent to the dict used above.
+
+and if stored in `./defaults.toml` can be used with
+```
+>>> params = TOMLParams(
+     defaults='defaults',
+     standard_params_dir='.'
+)
+
+```
+
+## Setting a custom TOML file name and Parameter (Key) Checking
+
+Only parameters in `defaults` are allowed to exist in other TOML parameter files.
 an exception is raised if any unexpected values are found in the TOML file.
 
-## Setting a custom TOML file name
+For example, if `newparams.toml` is:
+
+```toml
+new_param = 'this will go badly'
+```
+
+and we repeated the use the same defaults, passing `newparams` as the `name`
+we get the following error:
+```
+>>> params = TOMLParams(
+     defaults='defaults',
+     name='newparam',
+     standard_params_dir='.'
+)
+*** ERROR: The following issues were found:
+ Bad key at root level - key: new_param
+```
 
 # Hierarchical Inclusion
 
@@ -174,6 +223,9 @@ but is potentially confusing for the reader, so is not recommended.
 Unless `verbose` is set to `False` when initializing `TOMLParams`, any TOML files processed
 are reported, in order of inclusion, listing full paths.
 
+
+[readme4.py example: not working correctly?]
+
 ## Writing out the consolidated TOML file
 
 Hierarchical file inclusion is powerful, and allows different sets of parameters
@@ -181,8 +233,6 @@ to be combined easily, but it can be hard for the reader to know what the final
 set of parameters used is without thinking through the inclusion hierarchy.
 TOMParams can write out a consolidated parameter values finally used as a single
 TOML file containing them all, without inclusions.
-
-
 
 
 # Environment Variables
@@ -213,5 +263,4 @@ Action on a type checking mismatch can be configure in two ways:
 The environment variable takes precedence over the setting where set.
 
 
-# Setting defaults from a TOML File
 
