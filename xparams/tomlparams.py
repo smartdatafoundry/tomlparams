@@ -255,9 +255,8 @@ class TOMLParams:
                 if isinstance(include, list):
                     included_params = {}
                     for name in include:
-                        included_params |= self.read_toml_file(
-                            report, name
-                        )
+                        this_inclusion = self.read_toml_file(report, name)
+                        selectively_update_dict(included_params, this_inclusion)
                 else:
                     included_params = self.read_toml_file(report, include)
                 selectively_update_dict(included_params, outer_params)

@@ -4,14 +4,14 @@ import tempfile
 import tomli
 from tdda.referencetest import ReferenceTestCase
 from tests.captureoutput import CaptureOutput
-from xparams.xparams import XParams
+from tomlparams import TOMLParams
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))
 XDIR = os.path.join(THISDIR, 'testdata')
 EXPECTEDDIR = os.path.join(THISDIR, 'testdata', 'expected')
 
 
-class TestXParams(ReferenceTestCase):
+class TestTOMLParams(ReferenceTestCase):
     def setUp(self):
         self.co = CaptureOutput(stream='stderr')
 
@@ -25,7 +25,7 @@ class TestXParams(ReferenceTestCase):
         defaults = {
             'n': 1,
             'f': 1.5,
-            's': 'xparams',
+            's': 'tomlparams',
             'd': datetime.datetime(2000, 1, 1, 12, 34, 56),
             'b': True,
             'subsection': {
@@ -37,12 +37,12 @@ class TestXParams(ReferenceTestCase):
                 'n': 2,
             },
         }
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         outdir = tempfile.mkdtemp()
         consolidated_path = os.path.join(outdir, 'in_params.toml')
 
-        params = XParams(
+        params = TOMLParams(
             defaults,
             standard_params_dir=stddir,
             user_params_dir=userdir,
@@ -63,7 +63,7 @@ class TestXParams(ReferenceTestCase):
         defaults = {
             'n': 1,
             'f': 1.5,
-            's': 'xparams',
+            's': 'tomlparams',
             'd': datetime.datetime(2000, 1, 1, 12, 34, 56),
             'b': True,
             'subsection': {
@@ -75,12 +75,12 @@ class TestXParams(ReferenceTestCase):
                 'n': 2,
             },
         }
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         outdir = tempfile.mkdtemp()
         consolidated_path = os.path.join(outdir, 'in_params.toml')
 
-        params = XParams(
+        params = TOMLParams(
             defaults,
             name='two',
             standard_params_dir=stddir,
@@ -107,7 +107,7 @@ class TestXParams(ReferenceTestCase):
         defaults = {
             'n': 1,
             'f': 1.5,
-            's': 'xparams',
+            's': 'tomlparams',
             'd': datetime.datetime(2000, 1, 1, 12, 34, 56),
             'b': True,
             'subsection': {
@@ -119,12 +119,12 @@ class TestXParams(ReferenceTestCase):
                 'n': 2,
             },
         }
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         outdir = tempfile.mkdtemp()
         consolidated_path = os.path.join(outdir, 'in_params.toml')
 
-        params = XParams(
+        params = TOMLParams(
             defaults,
             name='three',
             standard_params_dir=stddir,
@@ -148,7 +148,7 @@ class TestXParams(ReferenceTestCase):
         defaults = {
             'n': 1,
             'f': 1.5,
-            's': 'xparams',
+            's': 'tomlparams',
             'd': datetime.datetime(2000, 1, 1, 12, 34, 56),
             'b': True,
             'subsection': {
@@ -160,12 +160,12 @@ class TestXParams(ReferenceTestCase):
                 'n': 2,
             },
         }
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         outdir = tempfile.mkdtemp()
         consolidated_path = os.path.join(outdir, 'in_params.toml')
 
-        params = XParams(
+        params = TOMLParams(
             defaults,
             name='self',
             standard_params_dir=stddir,
@@ -197,12 +197,12 @@ class TestXParams(ReferenceTestCase):
                 }
             },
         }
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         outdir = tempfile.mkdtemp()
         consolidated_path = os.path.join(outdir, 'in_params.toml')
 
-        params = XParams(
+        params = TOMLParams(
             defaults,
             name='deep',
             standard_params_dir=stddir,
@@ -225,12 +225,12 @@ class TestXParams(ReferenceTestCase):
 
     def test_userparams_not_in_stdparams(self):
         defaults = {'x': 10}
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         outdir = tempfile.mkdtemp()
         consolidated_path = os.path.join(outdir, 'in_params.toml')
 
-        params = XParams(
+        params = TOMLParams(
             defaults,
             name='user_only',
             standard_params_dir=stddir,
@@ -251,12 +251,12 @@ class TestXParams(ReferenceTestCase):
 
     def test_reserved_user_raises(self):
         defaults = {'x': 10}
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
-        naughty_toml = os.path.join(XDIR, 'xparams', 'user_only.toml')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+        naughty_toml = os.path.join(XDIR, 'tomlparams', 'user_only.toml')
         open(naughty_toml, "wt").close()
 
-        create_params = lambda: XParams(
+        create_params = lambda: TOMLParams(
             defaults,
             name='user_only',
             standard_params_dir=stddir,
@@ -267,7 +267,7 @@ class TestXParams(ReferenceTestCase):
             self.assertRaises(SystemExit, create_params)
 
             expected_error = (
-                f'*** ERROR: path {THISDIR}/testdata/xparams/user_only.toml is reserved for user TOML '
+                f'*** ERROR: path {THISDIR}/testdata/tomlparams/user_only.toml is reserved for user TOML '
                 'files, but exists in standardparams.\n'
             )
             self.assertEqual(str(self.co), expected_error)
@@ -276,12 +276,12 @@ class TestXParams(ReferenceTestCase):
 
     def test_reserved_u_raises(self):
         defaults = {'x': 10}
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
-        naughty_toml = os.path.join(XDIR, 'xparams', 'u_only.toml')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+        naughty_toml = os.path.join(XDIR, 'tomlparams', 'u_only.toml')
         open(naughty_toml, "wt").close()
 
-        create_params = lambda: XParams(
+        create_params = lambda: TOMLParams(
             defaults,
             name='u_only',
             standard_params_dir=stddir,
@@ -292,7 +292,7 @@ class TestXParams(ReferenceTestCase):
             self.assertRaises(SystemExit, create_params)
 
             expected_error = (
-                f'*** ERROR: path {THISDIR}/testdata/xparams/u_only.toml is reserved for user TOML '
+                f'*** ERROR: path {THISDIR}/testdata/tomlparams/u_only.toml is reserved for user TOML '
                 'files, but exists in standardparams.\n'
             )
             self.assertEqual(str(self.co), expected_error)
@@ -300,16 +300,16 @@ class TestXParams(ReferenceTestCase):
             os.remove(naughty_toml)
 
     def test_default_env_param_used_no_name(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         outdir = tempfile.mkdtemp()
         consolidated_path = os.path.join(outdir, 'in_params.toml')
         defaults = {'s': 'none', 'subsection': {'n': 0}, 'section2': {'n': 0}}
 
-        self.assertIsNone(os.environ.get('XPARAMS'))
-        os.environ['XPARAMS'] = 'one'
+        self.assertIsNone(os.environ.get('TOMLPARAMS'))
+        os.environ['TOMLPARAMS'] = 'one'
 
-        params = XParams(
+        params = TOMLParams(
             defaults,
             standard_params_dir=stddir,
             user_params_dir=userdir,
@@ -329,23 +329,23 @@ class TestXParams(ReferenceTestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
-        os.environ.pop('XPARAMS', None)
+        os.environ.pop('TOMLPARAMS', None)
 
     def test_defined_env_param_used_no_name(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         outdir = tempfile.mkdtemp()
         consolidated_path = os.path.join(outdir, 'in_params.toml')
         defaults = {'s': 'none', 'subsection': {'n': 0}, 'section2': {'n': 0}}
 
-        self.assertIsNone(os.environ.get('MYXPARAMS'))
-        os.environ['MYXPARAMS'] = 'one'
+        self.assertIsNone(os.environ.get('MYTOMLPARAMS'))
+        os.environ['MYTOMLPARAMS'] = 'one'
 
-        params = XParams(
+        params = TOMLParams(
             defaults,
             standard_params_dir=stddir,
             user_params_dir=userdir,
-            env_var='MYXPARAMS',
+            env_var='MYTOMLPARAMS',
             verbose=False,
         )
 
@@ -362,19 +362,19 @@ class TestXParams(ReferenceTestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
-        os.environ.pop('MYXPARAMS', None)
+        os.environ.pop('MYTOMLPARAMS', None)
 
     def test_type_checking_root_level_warning(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"not_there_1": 2, "z": 4}
-        params = XParams(
+        params = TOMLParams(
             defaults,
             name='type_check_root_level',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.WARN,
+            check_types=TOMLParams.WARN,
         )
         expected_warning = (
             '*** WARNING: The following issues were found:\n'
@@ -384,16 +384,16 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(str(self.co), expected_warning)
 
     def test_type_checking_shallow_warning(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": "one", "section": {"subsection": {"n": "one"}}}
-        params = XParams(
+        params = TOMLParams(
             defaults,
             name='type_check_shallow',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.WARN,
+            check_types=TOMLParams.WARN,
         )
         expected_warning = (
             '*** WARNING: The following issues were found:\n'
@@ -404,16 +404,16 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(str(self.co), expected_warning)
 
     def test_type_checking_list(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": ["one", 2]}
-        params = XParams(
+        params = TOMLParams(
             defaults,
             name='type_check_list',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.WARN,
+            check_types=TOMLParams.WARN,
         )
         expected_warning = (
             '*** WARNING: The following issues were found:\n'
@@ -423,8 +423,8 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(str(self.co), expected_warning)
 
     def test_type_checking_deep_level_warning(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {
             "not_there_1": 2,
             "z": 4,
@@ -436,13 +436,13 @@ class TestXParams(ReferenceTestCase):
                 }
             },
         }
-        params = XParams(
+        params = TOMLParams(
             defaults,
             name='type_check_deeper_level',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.WARN,
+            check_types=TOMLParams.WARN,
         )
         expected_warning = (
             '*** WARNING: The following issues were found:\n'
@@ -451,19 +451,19 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(str(self.co), expected_warning)
 
     def test_date_type_checking_warning(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {
             "not_there_1": 2,
             "date": '1970-01-01',
         }
-        params = XParams(
+        params = TOMLParams(
             defaults,
             name='type_check_dates',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.WARN,
+            check_types=TOMLParams.WARN,
         )
         expected_warning = (
             '*** WARNING: The following issues were found:\n'
@@ -472,17 +472,17 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(str(self.co), expected_warning)
 
     def test_type_checking_root_level_error(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"not_there_1": 2, "z": 4}
 
-        create_params = lambda: XParams(
+        create_params = lambda: TOMLParams(
             defaults,
             name='type_check_root_level',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.ERROR,
+            check_types=TOMLParams.ERROR,
         )
         self.assertRaises(
             SystemExit,
@@ -496,17 +496,17 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(str(self.co), expected_error)
 
     def test_type_checking_shallow_error(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": "one", "section": {"subsection": {"n": "one"}}}
 
-        create_params = lambda: XParams(
+        create_params = lambda: TOMLParams(
             defaults,
             name='type_check_shallow',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.ERROR,
+            check_types=TOMLParams.ERROR,
         )
         self.assertRaises(
             SystemExit,
@@ -521,17 +521,17 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(str(self.co), expected_error)
 
     def test_bad_key_shallow_error(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": 1, "section": {"subsection": {"m": "two"}}}
 
-        create_params = lambda: XParams(
+        create_params = lambda: TOMLParams(
             defaults,
             name='type_check_shallow',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.ERROR,
+            check_types=TOMLParams.ERROR,
         )
         self.assertRaises(
             SystemExit,
@@ -545,17 +545,17 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(str(self.co), expected_error)
 
     def test_type_checking_bad_key_shallow_error(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": "one", "section": {"subsection": {"m": "two"}}}
 
-        create_params = lambda: XParams(
+        create_params = lambda: TOMLParams(
             defaults,
             name='type_check_shallow',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.ERROR,
+            check_types=TOMLParams.ERROR,
         )
         self.assertRaises(
             SystemExit,
@@ -570,17 +570,17 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(str(self.co), expected_error)
 
     def test_type_checking_warn_bad_key_shallow_error(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": "one", "section": {"subsection": {"m": "two"}}}
 
-        create_params = lambda: XParams(
+        create_params = lambda: TOMLParams(
             defaults,
             name='type_check_shallow',
             standard_params_dir=stddir,
             user_params_dir=userdir,
             verbose=False,
-            check_types=XParams.WARN,
+            check_types=TOMLParams.WARN,
         )
         self.assertRaises(
             SystemExit,
@@ -596,17 +596,17 @@ class TestXParams(ReferenceTestCase):
         self.assertEqual(str(self.co), expected_warning_error)
 
     def test_type_check_env_var_fail(self):
-        stddir = os.path.join(XDIR, 'xparams')
-        userdir = os.path.join(XDIR, 'userxparams')
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {'s': 'none', 'subsection': {'n': 0}, 'section2': {'n': 0}}
 
-        self.assertIsNone(os.environ.get('XPARAMSCHECKING'))
-        os.environ['XPARAMSCHECKING'] = 'pp'
-        create_params = lambda: XParams(
+        self.assertIsNone(os.environ.get('TOMLPARAMSCHECKING'))
+        os.environ['TOMLPARAMSCHECKING'] = 'pp'
+        create_params = lambda: TOMLParams(
             defaults,
             standard_params_dir=stddir,
             user_params_dir=userdir,
-            env_var='MYXPARAMS',
+            env_var='MYTOMLPARAMS',
             verbose=False,
         )
         self.assertRaises(
@@ -614,12 +614,12 @@ class TestXParams(ReferenceTestCase):
             create_params,
         )
         expected_error = (
-            "*** ERROR: Not a valid XParams.TypeChecking value. Change"
-            " XPARAMSCHECKING to one of: 'warn', 'error', or 'ignore'.\n"
+            "*** ERROR: Not a valid TOMLParams.TypeChecking value. Change"
+            " TOMLPARAMSCHECKING to one of: 'warn', 'error', or 'off'.\n"
         )
         self.assertEqual(str(self.co), expected_error)
 
-        os.environ.pop('XPARAMSCHECKING', None)
+        os.environ.pop('TOMLPARAMSCHECKING', None)
 
 
 if __name__ == '__main__':
