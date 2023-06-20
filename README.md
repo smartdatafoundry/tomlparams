@@ -217,11 +217,13 @@ then the order of processing will be:
   4. values from `two.toml` (`three.toml` will is *not* included a second time)
   5. any other values
 
-Circular inclusion does not cause a problem, because each file is only ever included once,
-but is potentially confusing for the reader, so is not recommended.
+Circular inclusion does not cause a problem, because each file is only
+ever included once, but is potentially confusing for the reader, so is
+not recommended.
 
-Unless `verbose` is set to `False` when initializing `TOMLParams`, any TOML files processed
-are reported, in order of inclusion, listing full paths.
+Unless `verbose` is set to `False` when initializing `TOMLParams`, any
+TOML files processed are reported, in order of inclusion, listing full
+paths.
 
 
 [readme4.py example: not working correctly?]
