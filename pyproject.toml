@@ -1,8 +1,9 @@
 [tool.poetry]
-name = "xparams"
+name = "tomlparams"
 version = "0.0.5"
 description = ""
 authors = [
+  "Smart Data Foundry <datascience@smartdataffoundry.com>
   "Paola Arce <paola.arce@smartdatafoundry.com>",
   "Victor Diaz <victor.diaz@smartdatafoundry.com>",
   "Del Middlemiss <derek.middlemiss@smartdatafoundry.com>",

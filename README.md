@@ -1,6 +1,6 @@
 # TOMLParams
 
-[![TOMLParams tests](https://github.com/gofcoe/xparams/actions/workflows/tests.yml/badge.svg)](https://github.com/gofcoe/xparams/actions/workflows/tests.yml)
+[![TOMLParams tests](https://github.com/gofcoe/tomlparams/actions/workflows/tests.yml/badge.svg)](https://github.com/gofcoe/tomlparams/actions/workflows/tests.yml)
 
 TOML-based parameter files made better
 
@@ -242,10 +242,10 @@ print(repr(params))
 we see the following output:
 ```none
 $ python readme4.py
-Parameters set from: /Users/njr/sdf/xparams/examples/readme/three.toml
-Parameters set from: /Users/njr/sdf/xparams/examples/readme/one.toml
-Parameters set from: /Users/njr/sdf/xparams/examples/readme/two.toml
-Parameters set from: /Users/njr/sdf/xparams/examples/readme/hier.toml
+Parameters set from: /Users/njr/sdf/tomlparams/examples/readme/three.toml
+Parameters set from: /Users/njr/sdf/tomlparams/examples/readme/one.toml
+Parameters set from: /Users/njr/sdf/tomlparams/examples/readme/two.toml
+Parameters set from: /Users/njr/sdf/tomlparams/examples/readme/hier.toml
 TOMLParams(
     a='hier',
     b='two',
@@ -383,11 +383,99 @@ a = 'subgroup hier'
 
 ## Writing out the consolidated TOML file
 
-Hierarchical file inclusion is powerful, and allows different sets of parameters
-to be combined easily, but it can be hard for the reader to know what the final
-set of parameters used is without thinking through the inclusion hierarchy.
-TOMParams can write out a consolidated parameter values finally used as a single
-TOML file containing them all, without inclusions.
+Hierarchical file inclusion is powerful, and allows different sets of
+parameters to be combined easily, but it can be hard for the reader to
+know what the final set of parameters used is without thinking through
+the inclusion hierarchy.  TOMParams can write out a consolidated
+parameter values finally used as a single TOML file containing them
+all, without inclusions. The method `write_consolidated_toml` on
+a `TOMLParams` object will do this:
+
+```python
+param.write_consolidated_toml('consolidated_params.toml')
+```
+
+# Determination of Name of TOML Parameters File
+
+When a `TOMLParams` object is instantiated, the second
+argument---`name`---determines which set of parameters is used.
+Many options for setting this are supported. In determining which
+parameters file to use, there are two relevant directories:
+
+ * the _standard parameters directory_ can be set by passing in
+   a path as `standard_params_dir`. If this is not specified,
+   explicitly, `~/{params_name}` will be used if the `params_name`
+   argument has been set on instantiating TOMLParams,
+   or `~/tomlparams` otherwise.
+ * the _user parameters directory_ can be set by passing in a
+   path as `user_params_dir`. If this is not specified,
+   explicitly, `~/user{params_name}` will be used if the `params_name`
+   argument has been set on instantiating TOMLParams,
+   or `~/usertomlparams` otherwise.
+
+1. If `name` is set to `foo`, TOMLParams will search for `foo.toml`
+   in both the standard parameters directory and the user parameters
+   directory. If it is found in either it will be used. If it is not
+   found at all, an exception will be raised. If it is found in both
+   places, an exception will also be raised.
+
+   (This behaviour is designed to allow code to supply standard
+   parameters, possibly in a read-only directory and for users
+   also to have their own parameters in another directory, while
+   not allowing either to take priority over the other, so that
+   which parameters are used is unambiguous.)
+
+2. If `name` is set to either of the special values `default` or
+   `defaults`, the default values will be used for all parameters,
+   whether those were supplied as a Python dictionary or in a
+   TOML file (specified by the `defaults` argument).
+
+3. If `name` is not supplied, or is passed as `None`, TOMLParams
+   will look the value in an environment variable. That variable
+   defaults to `TOMLPARAMS`, but can be set by setting the argument
+   `env_var` when instantiating a `TOMLParams` object.
+   If this environment variable is set to `foo`, `foo.toml` will
+   be searched for in both parameters directories exactly as if it
+   had been provided as the value of `name`.
+
+   THe environment variable is particularly convenient when several
+   programs need to share a set of parameters. Most commonly, the
+   environment variable will be specified on the command line before
+   the Python command, e.g.
+
+       TOMLPARAMS=bar python simulate.py
+
+   if the Python program using `TOMLParams` is `simulate.py`.
+   Alternatively, a value may be  export a shell start-up file,
+   or in a script, using `export TOMLPARAMS=bar`.
+
+4. If `name` is not supplied, and the relevant environment variable
+   is not set, the value of the argument `base_params_dir` will be
+   used; this defaults to `base`.
+
+
+## Idiomatic command-line use
+
+If you want to use `base.toml` as the standard parameters, but allow
+people to list the parameters file (stem) on the command line for a program
+`simulate.py`, with `~/simparams` as the standard parameters directory,
+and defaults being read from `defaults.toml` in that directory,
+the usual procedure would be to use code like this:
+
+```
+import sys
+from tomlparams import TOMLParams
+
+class Simulate:
+    def __init__(params, ...)
+
+
+if __name__ == '__main__:
+    name = sys.argv[1] if len(sys.argv) > 1 else 'base'
+    params = TOMLParams('defaults.toml', name, params_name='simparams')
+    sim = Simulate(params, ...)
+
+```
 
 
 # Environment Variables
@@ -411,9 +499,9 @@ corresponding collection in the defaults.
 Action on a type checking mismatch can be configure in two ways:
 
 * Via the environment variable specified by the
-`type_check_env_var` setting (defaults to `XPARAMSCHECKING`) with allowed levels:
-`warn`, `error`, and `off`.
-* Via the `check_types` setting
+  `type_check_env_var` setting (defaults to `TOMLPARAMSCHECKING`)
+  with allowed levels `warn`, `error`, and `off`.
+* Via the `check_types` setting.
 
 The environment variable takes precedence over the setting where set.
 
