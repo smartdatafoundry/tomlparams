@@ -361,8 +361,10 @@ b = 'group two'
 
 a = 'subgroup two'
 b = 'subgroup two'
+```
 
 Finally, the parameters set in `hier.toml` over-ride all others:
+
 ```
 # hier.toml
 
