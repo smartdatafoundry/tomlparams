@@ -1,3 +1,5 @@
+# defaults2.toml
+
 a = 'default'
 b = 'default'
 c = 'default'
@@ -17,5 +19,5 @@ e = 'group default'
 a = 'subgroup default'
 b = 'subgroup default'
 c = 'subgroup default'
+d = 'subgroup default'
 e = 'subgroup default'
-f = 'subgroup default'

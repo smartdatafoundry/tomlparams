@@ -198,7 +198,7 @@ So if `base.toml` (or other named TOML file used)
 starts with this `include` line, and neither of `one` and `two`
 has any further inclusions, the order of parameter setting will be:
 
-  1. values from `defaults`
+  1. values from defaults
   2. values from `one.toml`
   3. values from `two.toml`
   4. any other values
@@ -211,7 +211,7 @@ include = 'three'
 
 then the order of processing will be:
 
-  1. values from `defaults`
+  1. values from defaults
   2. values from `three.toml` (from its inclusion by `one.toml`)
   3. values from `one.toml`
   4. values from `two.toml` (`three.toml` will is *not* included a second time)
@@ -226,7 +226,158 @@ TOML files processed are reported, in order of inclusion, listing full
 paths.
 
 
-[readme4.py example: not working correctly?]
+So running this code (available in the source repo
+as `examples/readme/readme4.py`):
+```python
+from tomlparams import TOMLParams
+
+params = TOMLParams(
+     defaults='defaults2',
+     name='hier',
+     standard_params_dir='.'
+)
+
+print(repr(params))
+```
+we see the following output:
+```none
+$ python readme4.py
+Parameters set from: /Users/njr/sdf/xparams/examples/readme/three.toml
+Parameters set from: /Users/njr/sdf/xparams/examples/readme/one.toml
+Parameters set from: /Users/njr/sdf/xparams/examples/readme/two.toml
+Parameters set from: /Users/njr/sdf/xparams/examples/readme/hier.toml
+TOMLParams(
+    a='hier',
+    b='two',
+    c='one',
+    d='three',
+    e='default',
+    group=ParamsGroup(
+        a='group hier',
+        b='group two',
+        c='group one',
+        d='group three',
+        e='group default',
+        subgroup=ParamsGroup(
+            a='subgroup hier',
+            b='subgroup two',
+            c='subgroup one',
+            d='subgroup three',
+            e='subgroup default'
+        )
+    )
+)
+```
+where (in order of parameter setting):
+`defaults2.toml` (used to specify defaults) is:
+```toml
+# defaults2.toml
+
+a = 'default'
+b = 'default'
+c = 'default'
+d = 'default'
+e = 'default'
+
+[group]
+
+a = 'group default'
+b = 'group default'
+c = 'group default'
+d = 'group default'
+e = 'group default'
+
+[group.subgroup]
+
+a = 'subgroup default'
+b = 'subgroup default'
+c = 'subgroup default'
+d = 'subgroup default'
+e = 'subgroup default'
+```
+These settings are overridden first by `three.toml`:
+```toml
+# three.toml
+
+a = 'three'
+b = 'three'
+c = 'three'
+d = 'three'
+
+[group]
+
+a = 'group three'
+b = 'group three'
+c = 'group three'
+d = 'group three'
+
+[group.subgroup]
+
+a = 'subgroup three'
+b = 'subgroup three'
+c = 'subgroup three'
+d = 'subgroup three'
+```
+
+These are next overridden by `one.toml`:
+
+```
+# one.toml
+
+include = 'three'
+a = 'one'
+b = 'one'
+c = 'one'
+
+
+[group]
+
+a = 'group one'
+b = 'group one'
+c = 'group one'
+
+[group.subgroup]
+
+a = 'subgroup one'
+b = 'subgroup one'
+c = 'subgroup one'
+```
+
+In turn, these are overridsen by `two.toml`:
+
+```
+# two.toml
+
+include = 'three'
+a = 'two'
+b = 'two'
+
+[group]
+
+a = 'group two'
+b = 'group two'
+
+[group.subgroup]
+
+a = 'subgroup two'
+b = 'subgroup two'
+
+Finally, the parameters set in `hier.toml` over-ride all others:
+```
+# hier.toml
+
+include = ['one', 'two']
+
+a = 'hier'
+
+[group]
+
+a = 'group hier'
+
+[group.subgroup]
+
+a = 'subgroup hier'
+```
 
 ## Writing out the consolidated TOML file
 

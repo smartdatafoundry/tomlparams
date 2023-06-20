@@ -12,7 +12,7 @@ params = TOMLParams(
      standard_params_dir='.'
 )
 
-print(params)
+print(repr(params))
 
 
 
