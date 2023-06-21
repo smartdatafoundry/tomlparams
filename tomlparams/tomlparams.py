@@ -26,30 +26,6 @@ from tomlparams.parse_helpers import (
 
 class TOMLParams:
     """
-    TOML-based parameter files made better
-    """
-
-    ERROR = TypeChecking.ERROR
-    WARN = TypeChecking.WARN
-    OFF = TypeChecking.OFF
-
-    json_indent = 0
-    json_test_indent = 4
-
-    def __init__(
-        self,
-        defaults: Union[dict, str],
-        name: str = None,
-        params_name: str = DEFAULT_PARAMS_NAME,
-        env_var: str = None,
-        base_params_stem: str = 'base',
-        standard_params_dir: str = None,
-        user_params_dir: str = None,
-        verbose: Optional[bool] = True,
-        check_types: TypeChecking = WARN,
-        type_check_env_var: str = None,
-    ):
-        """
         TOML-based parameter files made better
 
         Args:
@@ -131,6 +107,29 @@ class TOMLParams:
                                 `'off'`, and that value will override
                                 the value of check_types passed in.
 
+    """
+
+    ERROR = TypeChecking.ERROR
+    WARN = TypeChecking.WARN
+    OFF = TypeChecking.OFF
+
+    json_indent = 0
+    json_test_indent = 4
+
+    def __init__(
+        self,
+        defaults: Union[dict, str],
+        name: str = None,
+        params_name: str = DEFAULT_PARAMS_NAME,
+        env_var: str = None,
+        base_params_stem: str = 'base',
+        standard_params_dir: str = None,
+        user_params_dir: str = None,
+        verbose: Optional[bool] = True,
+        check_types: TypeChecking = WARN,
+        type_check_env_var: str = None,
+    ):
+        """
         """
         self._env_var = nvl(env_var, params_name.upper())  # TOMLPARAMS
         self._base_params_stem = base_params_stem

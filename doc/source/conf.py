@@ -16,6 +16,7 @@ release = __version__
 
 extensions = [
     'myst_parser',
+    'sphinx.ext.autodoc',
 ]
 
 myst_enable_extensions = [

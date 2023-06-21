@@ -19,6 +19,7 @@ numbered: True
 maxdepth: 2
 ---
 README.md
+tomlparams.md
 :::
 
 :::{only} html
