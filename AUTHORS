@@ -1,0 +1,12 @@
+Copyright (c) 2023 Smart Data Foundry Limited
+
+Incorporates captureoutput.py (in tests directory),
+by Stochastic Solutions Limited (MIT Licensed).
+
+CONTRIBUTORS:
+
+Paola Arce <paola.arce@smartdatafoundry.com>
+Victor Alfonzo Diaz de Rienzo <victor.diaz@smartdatafoundry.com>
+Eric Janto <eric.janto@smartdatafoundry.com>
+Derek Middlemiss <derek.middlemiss@smartdatafoundry.com>
+Nick Radcliffe <njr@stochasticsolutions.com>
