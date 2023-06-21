@@ -1,6 +1,6 @@
 # TOMLParams
 
-[![TOMLParams tests](https://github.com/gofcoe/tomlparams/actions/workflows/tests.yml/badge.svg)](https://github.com/gofcoe/tomlparams/actions/workflows/tests.yml)
+[![TOMLParams tests](https://github.com/smartdatafoundry/tomlparams/actions/workflows/tests.yml/badge.svg)](https://github.com/smartdatafoundry/tomlparams/actions/workflows/tests.yml)
 
 TOML-based parameter files made better
 
