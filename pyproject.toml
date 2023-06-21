@@ -3,7 +3,7 @@ name = "tomlparams"
 version = "0.0.6"
 description = ""
 authors = [
-  "Smart Data Foundry <datascience@smartdataffoundry.com>
+  "Smart Data Foundry <datascience@smartdatafoundry.com>",
   "Paola Arce <paola.arce@smartdatafoundry.com>",
   "Victor Diaz <victor.diaz@smartdatafoundry.com>",
   "Del Middlemiss <derek.middlemiss@smartdatafoundry.com>",
