@@ -148,7 +148,7 @@ events = [
 is equivalent to the dict used above.
 
 and if stored in `./defaults.toml` can be used with
-```
+```python
 >>> params = TOMLParams(
      defaults='defaults',
      standard_params_dir='.'
@@ -242,10 +242,10 @@ print(repr(params))
 we see the following output:
 ```none
 $ python readme4.py
-Parameters set from: /Users/njr/sdf/tomlparams/examples/readme/three.toml
-Parameters set from: /Users/njr/sdf/tomlparams/examples/readme/one.toml
-Parameters set from: /Users/njr/sdf/tomlparams/examples/readme/two.toml
-Parameters set from: /Users/njr/sdf/tomlparams/examples/readme/hier.toml
+Parameters set from: /home/sdf/tomlparams/examples/readme/three.toml
+Parameters set from: /home/sdf/tomlparams/examples/readme/one.toml
+Parameters set from: /home/sdf/tomlparams/examples/readme/two.toml
+Parameters set from: /home/sdf/tomlparams/examples/readme/hier.toml
 TOMLParams(
     a='hier',
     b='two',
@@ -321,7 +321,7 @@ d = 'subgroup three'
 
 These are next overridden by `one.toml`:
 
-```
+```toml
 # one.toml
 
 include = 'three'
@@ -345,7 +345,7 @@ c = 'subgroup one'
 
 In turn, these are overridsen by `two.toml`:
 
-```
+```toml
 # two.toml
 
 include = 'three'
@@ -365,7 +365,7 @@ b = 'subgroup two'
 
 Finally, the parameters set in `hier.toml` over-ride all others:
 
-```
+```toml
 # hier.toml
 
 include = ['one', 'two']
@@ -462,7 +462,7 @@ people to list the parameters file (stem) on the command line for a program
 and defaults being read from `defaults.toml` in that directory,
 the usual procedure would be to use code like this:
 
-```
+```python
 import sys
 from tomlparams import TOMLParams
 
