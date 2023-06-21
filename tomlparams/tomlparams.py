@@ -129,8 +129,6 @@ class TOMLParams:
         check_types: TypeChecking = WARN,
         type_check_env_var: str = None,
     ):
-        """
-        """
         self._env_var = nvl(env_var, params_name.upper())  # TOMLPARAMS
         self._base_params_stem = base_params_stem
 

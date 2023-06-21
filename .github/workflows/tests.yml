@@ -1,4 +1,4 @@
-name: XParams tests
+name: TOMLParams tests
 
 on: pull_request
 
