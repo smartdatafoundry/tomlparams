@@ -4,7 +4,7 @@
 ---
 Version {sub-ref}`release`
 
-*TOMLParams: TOML-based parameter files made better*
+*TOML-based parameter files made better*
 
 **Authors**
 

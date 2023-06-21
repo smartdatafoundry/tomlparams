@@ -480,6 +480,19 @@ if __name__ == '__main__:
 
 # Environment Variables
 
+As noted above, there are two environment variables that can affect
+the behaviour of TOMLParams.
+
+ * If the `name` argument is not passed to`TOMLParams` (or is passed as `None`)
+   the environment variable `TOMLPARAMS` will be consulted (by default).
+   The name of the environment variable to consult can be changed by
+   passing a different value for `env_var`.
+
+ * Any value for the variable `check_types` can be overridden by setting
+   the environment variable `TOMLPARAMSCHECKING` to `warn`, `error` or `off`.
+   A variable other than `TOMLPARAMSCHECKING` can be specified using
+   the argument `type_check_env_var` when initializing `TOMLParams`.
+
 
 # Type Checking
 
