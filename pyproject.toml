@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tomlparams"
-version = "0.0.6"
+version = "0.0.8"
 description = ""
 authors = [
   "Smart Data Foundry <datascience@smartdatafoundry.com>",
@@ -39,6 +39,9 @@ exclude = '''
   | dist
 )/
 '''
+
+[tool.poetry.scripts]
+tomlparams = "tomlparams.console:main"
 
 [build-system]
 requires = ["poetry-core"]
