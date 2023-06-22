@@ -4,7 +4,7 @@ TOML-based parameter files made better (main class)
 
 import os
 import tomli_w
-import tomlparams.parse_helpers as parse_helpers
+from tomlparams import parse_helpers
 
 from pprint import pformat
 from typing import Optional, Union

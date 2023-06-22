@@ -3,7 +3,7 @@ import os
 import tempfile
 import tomli
 from tdda.referencetest import ReferenceTestCase
-from tests.captureoutput import CaptureOutput
+from tomlparams.captureoutput import CaptureOutput
 from tomlparams import TOMLParams
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))

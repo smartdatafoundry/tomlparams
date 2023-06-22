@@ -8,7 +8,7 @@ import re
 from enum import Enum
 from typing import Any, Dict, Optional, Type
 from tomlparams.utils import error
-import tomlparams.params_group as params_group
+from tomlparams import params_group
 
 USER_RESERVED_NAMES_RE = re.compile(r'^(u|user)[-_].*$')
 DEFAULT_PARAMS_NAME = 'tomlparams'
