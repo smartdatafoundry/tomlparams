@@ -48,9 +48,9 @@ def main():
             try:
                 from tomlparams.tests.test_tomlparams import TestTOMLParams
             except ImportError:
-                print('To run the tests, please pip install tdda',
+                print('*** To run the tests, please pip install tdda',
                       file=sys.stderr)
-                raise
+                sys.exit(1)
             suite = unittest.TestSuite()
             testloader = unittest.TestLoader()
             s = testloader.loadTestsFromTestCase(TestTOMLParams)
