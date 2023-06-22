@@ -40,6 +40,9 @@ exclude = '''
 )/
 '''
 
+[tool.poetry.scripts]
+tomlparams = "tomlparams.console:main"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
