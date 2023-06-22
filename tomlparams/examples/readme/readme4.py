@@ -9,7 +9,7 @@ from tomlparams import TOMLParams
 params = TOMLParams(
      defaults='defaults2',
      name='hier',
-     standard_params_dir='.'
+     standard_params_dir=''
 )
 
 print(repr(params))

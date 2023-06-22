@@ -9,6 +9,6 @@ from tomlparams import TOMLParams
 params = TOMLParams(
      defaults='defaults',
      name='newparam',
-     standard_params_dir='.'
+     standard_params_dir=''
 )
 
