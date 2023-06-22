@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tomlparams"
-version = "0.0.9"
+version = "0.0.10"
 description = ""
 authors = [
   "Smart Data Foundry <datascience@smartdatafoundry.com>",
@@ -15,9 +15,9 @@ readme = "README.md"
 python = "^3.9"
 tomli = "^2.0.1"
 tomli-w = "^1.0.0"
+tdda = "^2.0.9"
 
 [tool.poetry.group.dev.dependencies]
-tdda = "^2.0.9"
 pre-commit = "^3.3.1"
 black = "^23.3.0"
 pytest = "^7.3.2"
