@@ -4,8 +4,6 @@ import sys
 import unittest
 
 from tomlparams import __version__
-from tomlparams.tests.test_tomlparams import TestTOMLParams
-
 
 
 DIR = os.path.dirname(os.path.realpath(os.path.abspath(__file__)))
@@ -32,7 +30,8 @@ Installation:
 
 
 
-def main(args):
+def main():
+    args = sys.argv
     if len(args) < 2:
         print(USAGE)
     else:
@@ -47,6 +46,12 @@ def main(args):
             shutil.copytree(EXAMPLES_DIR, dest_path)
             print(f'Examples copied to {dest_path}.')
         elif cmd == 'test':
+            try:
+                from tomlparams.tests.test_tomlparams import TestTOMLParams
+            except:
+                print('To run the tests, please pip install tdda',
+                      file=sys.stderr)
+                sys.exit(1)
             suite = unittest.TestSuite()
             testloader = unittest.TestLoader()
             s = testloader.loadTestsFromTestCase(TestTOMLParams)
@@ -61,4 +66,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    main(sys.srgv)
+    main()
