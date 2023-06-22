@@ -4,7 +4,10 @@ import sys
 import unittest
 
 from tomlparams import __version__
-from tomlparams.tests.test_tomlparams import TestTOMLParams
+try:
+    from tomlparams.tests.test_tomlparams import TestTOMLParams
+except ImportError:
+    pass
 
 
 
