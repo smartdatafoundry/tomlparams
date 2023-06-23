@@ -7,8 +7,7 @@ from tomlparams import __version__
 
 
 DIR = os.path.dirname(os.path.realpath(os.path.abspath(__file__)))
-PARENT_DIR = os.path.dirname(DIR)
-EXAMPLES_DIR = os.path.join(PARENT_DIR, 'examples')
+EXAMPLES_DIR = os.path.join(DIR, 'examples')
 
 
 USAGE = '''TOMLParams
@@ -48,10 +47,10 @@ def main():
         elif cmd == 'test':
             try:
                 from tomlparams.tests.test_tomlparams import TestTOMLParams
-            except:
+            except ImportError:
                 print('To run the tests, please pip install tdda',
                       file=sys.stderr)
-                sys.exit(1)
+                raise
             suite = unittest.TestSuite()
             testloader = unittest.TestLoader()
             s = testloader.loadTestsFromTestCase(TestTOMLParams)

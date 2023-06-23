@@ -19,7 +19,7 @@ defaults = {
 }
 
 
-params = TOMLParams(defaults=defaults, standard_params_dir='.')
+params = TOMLParams(defaults=defaults, standard_params_dir='')
 
 print(repr(params.run_days))
 print(repr(params['start_date']))

@@ -1,11 +1,12 @@
 [tool.poetry]
 name = "tomlparams"
-version = "0.0.10"
+version = "0.0.12"
 description = ""
 authors = [
   "Smart Data Foundry <datascience@smartdatafoundry.com>",
   "Paola Arce <paola.arce@smartdatafoundry.com>",
   "Victor Diaz <victor.diaz@smartdatafoundry.com>",
+  "Eric Janto <eric.janto@smartdatafoundry.com>",
   "Del Middlemiss <derek.middlemiss@smartdatafoundry.com>",
   "Nick Radcliffe <njr@stochasticsolutions.com>",
 ]
@@ -20,7 +21,6 @@ tomli-w = "^1.0.0"
 pre-commit = "^3.3.1"
 black = "^23.3.0"
 pytest = "^7.3.2"
-tdda = "^2.0.9"
 
 [tool.black]
 line-length = 79
