@@ -2,7 +2,8 @@ import datetime
 import os
 import tempfile
 import tomli
-from tdda.referencetest import ReferenceTestCase
+import unittest
+
 from tomlparams.captureoutput import CaptureOutput
 from tomlparams import TOMLParams
 
@@ -11,12 +12,19 @@ XDIR = os.path.join(THISDIR, 'testdata')
 EXPECTEDDIR = os.path.join(THISDIR, 'testdata', 'expected')
 
 
-class TestTOMLParams(ReferenceTestCase):
+class TestTOMLParams(unittest.TestCase):
     def setUp(self):
         self.co = CaptureOutput(stream='stderr')
 
     def tearDown(self):
         self.co.restore()
+
+    def assertFileCorrect(self, path, refpath):
+        with open(path) as f:
+            orig = f.read()
+        with open(refpath) as f:
+            ref = f.read()
+        self.assertEqual(orig, ref)
 
     def test_write_consolidated_toml_unchanged_from_defaults(self):
         # Tests writing of consolidated TOML file when
@@ -623,4 +631,4 @@ class TestTOMLParams(ReferenceTestCase):
 
 
 if __name__ == '__main__':
-    ReferenceTestCase.main()
+    unittest.main()
