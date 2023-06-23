@@ -36,3 +36,7 @@ exclude_patterns = [
 html_theme = 'alabaster'
 html_static_path = ['_static']
 html_logo = 'img/tomlparams-logo.png'
+
+latex_logo = 'img/tomlparams-logo.png'
+
+
