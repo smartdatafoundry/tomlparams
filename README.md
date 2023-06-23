@@ -518,5 +518,58 @@ Action on a type checking mismatch can be configure in two ways:
 
 The environment variable takes precedence over the setting where set.
 
+# Command line tool tomlparams
 
+As part of installing the TOMLParams library, a command line tool
+called tomlparams is made available. This provides a few functions,
+the most important of which is the abilty to copy usage examples
+to your current working directory.
+
+Running the command by itself prints usage information:
+
+```bash
+$ tomlparams
+TOMLParams
+
+USAGE:
+    tomlparams help      --- show this message
+    tomlparams version   --- report version number
+    tomlparams examples  --- copy the examples to ./tomlparams_examples
+    tomlparams test      --- run the tomlparams tests
+
+Documentation: https://tomlparams.readthedocs.io/
+Source code:   https://github.com/smartdatafoundry.com/tomlparams
+Website:       https://tomlparams.com
+
+Installation:
+
+    python -m pip install -U tomlparams
+
+```
+
+The examples can be copied as follows:
+
+```
+$ pwd
+/home/sdf/tomlparams
+
+$ tomlparams examples
+Examples copied to /home/sdf/tomlparams/tomlparams_examples.
+```
+
+The `readme` subdirectory of the resulting `tomlparams_examples`
+contains all the examples from this `README.md` file.
+
+# Documentation and API Help
+
+The documentation for `tomlparams` is available at
+[tomlparams.readthedocs.io](https://tomlparams.readthedocs.io).
+More detailed help on all the arguments available when initializing
+`TOMLParams` is available from the documentation,
+and also from the help system within Python using:
+
+```python
+>>> import tomlparams
+>>> help(tomlparams.TOMLParams)
+```
 
