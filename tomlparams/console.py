@@ -42,20 +42,15 @@ def main():
         elif cmd == 'examples':
             dest_dir = os.path.abspath('.')
             dest_path = os.path.join(dest_dir, 'tomlparams_examples')
-            shutil.copytree(EXAMPLES_DIR, dest_path)
+            shutil.copytree(EXAMPLES_DIR, dest_path, ignore=shutil.ignore_patterns('__pycache__'))
             print(f'Examples copied to {dest_path}.')
         elif cmd == 'test':
-            try:
-                from tomlparams.tests.test_tomlparams import TestTOMLParams
-            except ImportError:
-                print('*** To run the tests, please pip install tdda',
-                      file=sys.stderr)
-                sys.exit(1)
+            from tomlparams.tests.test_tomlparams import TestTOMLParams
             suite = unittest.TestSuite()
-            testloader = unittest.TestLoader()
-            s = testloader.loadTestsFromTestCase(TestTOMLParams)
+            test_loader = unittest.TestLoader()
+            s = test_loader.loadTestsFromTestCase(TestTOMLParams)
             suite.addTest(s)
-            tester = unittest.TextTestRunner()
+            tester = unittest.TextTestRunner(verbosity=2)
             tester.run(suite)
 
         else:
