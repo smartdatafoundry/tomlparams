@@ -2,8 +2,7 @@ import os
 import shutil
 import sys
 import unittest
-
-from tomlparams import __version__
+from importlib.metadata import version
 
 
 DIR = os.path.dirname(os.path.realpath(os.path.abspath(__file__)))
@@ -38,7 +37,7 @@ def main():
         if cmd in ('help', '--help', '-h'):
             print(USAGE)
         elif cmd in ('version', '--version', '-v'):
-            print(__version__)
+            print(version('tomlparams'))
         elif cmd == 'examples':
             dest_dir = os.path.abspath('.')
             dest_path = os.path.join(dest_dir, 'tomlparams_examples')
