@@ -26,7 +26,7 @@ flake8 = "^6.0.0"
 [tool.black]
 line-length = 79
 skip-string-normalization = true
-experimental-string-processing = true
+preview = true
 include = '\.pyi?$'
 exclude = '''
 /(

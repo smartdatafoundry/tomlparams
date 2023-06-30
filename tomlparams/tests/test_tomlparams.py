@@ -111,7 +111,8 @@ class TestTOMLParams(unittest.TestCase):
     def test_write_consolidated_toml_list_hierarchy(self):
         # Tests writing of consolidated TOML file when
         # three.toml, four.toml and five.toml all exist.
-        # three.toml includes four.toml and five.toml in order with some conflicts
+        # three.toml includes four.toml and five.toml in order
+        # with some conflicts
         defaults = {
             'n': 1,
             'f': 1.5,
@@ -264,13 +265,15 @@ class TestTOMLParams(unittest.TestCase):
         naughty_toml = os.path.join(XDIR, 'tomlparams', 'user_only.toml')
         open(naughty_toml, "wt").close()
 
-        create_params = lambda: TOMLParams(
-            defaults,
-            name='user_only',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-        )
+        def create_params():
+            TOMLParams(
+                defaults,
+                name='user_only',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+            )
+
         try:
             self.assertRaises(SystemExit, create_params)
 
@@ -290,13 +293,15 @@ class TestTOMLParams(unittest.TestCase):
         naughty_toml = os.path.join(XDIR, 'tomlparams', 'u_only.toml')
         open(naughty_toml, "wt").close()
 
-        create_params = lambda: TOMLParams(
-            defaults,
-            name='u_only',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-        )
+        def create_params():
+            TOMLParams(
+                defaults,
+                name='u_only',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+            )
+
         try:
             self.assertRaises(SystemExit, create_params)
 
@@ -489,14 +494,16 @@ class TestTOMLParams(unittest.TestCase):
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"not_there_1": 2, "z": 4}
 
-        create_params = lambda: TOMLParams(
-            defaults,
-            name='type_check_root_level',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-            check_types=TOMLParams.ERROR,
-        )
+        def create_params():
+            TOMLParams(
+                defaults,
+                name='type_check_root_level',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+                check_types=TOMLParams.ERROR,
+            )
+
         self.assertRaises(
             SystemExit,
             create_params,
@@ -513,14 +520,16 @@ class TestTOMLParams(unittest.TestCase):
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": "one", "section": {"subsection": {"n": "one"}}}
 
-        create_params = lambda: TOMLParams(
-            defaults,
-            name='type_check_shallow',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-            check_types=TOMLParams.ERROR,
-        )
+        def create_params():
+            TOMLParams(
+                defaults,
+                name='type_check_shallow',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+                check_types=TOMLParams.ERROR,
+            )
+
         self.assertRaises(
             SystemExit,
             create_params,
@@ -539,14 +548,16 @@ class TestTOMLParams(unittest.TestCase):
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": 1, "section": {"subsection": {"m": "two"}}}
 
-        create_params = lambda: TOMLParams(
-            defaults,
-            name='type_check_shallow',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-            check_types=TOMLParams.ERROR,
-        )
+        def create_params():
+            TOMLParams(
+                defaults,
+                name='type_check_shallow',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+                check_types=TOMLParams.ERROR,
+            )
+
         self.assertRaises(
             SystemExit,
             create_params,
@@ -563,14 +574,16 @@ class TestTOMLParams(unittest.TestCase):
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": "one", "section": {"subsection": {"m": "two"}}}
 
-        create_params = lambda: TOMLParams(
-            defaults,
-            name='type_check_shallow',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-            check_types=TOMLParams.ERROR,
-        )
+        def create_params():
+            TOMLParams(
+                defaults,
+                name='type_check_shallow',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+                check_types=TOMLParams.ERROR,
+            )
+
         self.assertRaises(
             SystemExit,
             create_params,
@@ -588,14 +601,16 @@ class TestTOMLParams(unittest.TestCase):
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": "one", "section": {"subsection": {"m": "two"}}}
 
-        create_params = lambda: TOMLParams(
-            defaults,
-            name='type_check_shallow',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-            check_types=TOMLParams.WARN,
-        )
+        def create_params():
+            TOMLParams(
+                defaults,
+                name='type_check_shallow',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+                check_types=TOMLParams.WARN,
+            )
+
         self.assertRaises(
             SystemExit,
             create_params,
@@ -616,13 +631,16 @@ class TestTOMLParams(unittest.TestCase):
 
         self.assertIsNone(os.environ.get('TOMLPARAMSCHECKING'))
         os.environ['TOMLPARAMSCHECKING'] = 'pp'
-        create_params = lambda: TOMLParams(
-            defaults,
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            env_var='MYTOMLPARAMS',
-            verbose=False,
-        )
+
+        def create_params():
+            TOMLParams(
+                defaults,
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                env_var='MYTOMLPARAMS',
+                verbose=False,
+            )
+
         self.assertRaises(
             SystemExit,
             create_params,

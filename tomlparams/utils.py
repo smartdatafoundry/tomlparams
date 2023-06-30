@@ -29,7 +29,7 @@ def load_toml(path):
     with open(path, 'rb') as f:
         try:
             return tomli.load(f)
-        except:
+        except Exception:
             print(
                 f'\n***\n*** Problem parsing {path}:\n***\n', file=sys.stderr
             )
