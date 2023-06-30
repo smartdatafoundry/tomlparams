@@ -119,9 +119,9 @@ TOMLParams(
 )
 ```
 
-Notice how the two values in `base.toml` have overridden the defaults (`start_date`
-and `logging.format`), but that other parameters, including `logging.events`, retained
-their values.
+Notice how the two values in `base.toml` have overridden the defaults
+(`start_date` and `logging.format`), but that other parameters,
+including `logging.events`, retained their values.
 
 # Setting defaults from a TOML File
 
