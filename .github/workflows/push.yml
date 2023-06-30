@@ -1,0 +1,56 @@
+name: Create PR, quality checks
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Fetch repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: Merge ${{ github.ref_name }} -> main
+          branch: ${{ github.ref }}
+          base: main
+
+  quality:
+    runs-on: ubuntu-latest
+    permissions: read-all
+    needs: create-pr
+    steps:
+      - name: Fetch repo
+        uses: actions/checkout@v3
+
+      - name: Install poetry
+        shell: bash
+        run: pipx install poetry
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'poetry'
+
+      - name: Configure poetry
+        shell: bash
+        run: poetry config virtualenvs.in-project true
+
+      - name: Install dependencies
+        shell: bash
+        run: poetry install
+
+      - name: Linting
+        shell: bash
+        run: poetry run flake8 --exclude .git,__pycache__,build,dist,.venv --per-file-ignores="__init__.py:F401"
+
+      - name: Run unit tests
+        shell: bash
+        run: poetry run pytest

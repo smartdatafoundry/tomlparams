@@ -1,0 +1,116 @@
+name: Bump version, tag and release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    permissions: read-all
+    steps:
+      - name: Fetch repo
+        uses: actions/checkout@v3
+
+      - name: Install poetry
+        shell: bash
+        run: pipx install poetry
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'poetry'
+
+      - name: Configure poetry
+        shell: bash
+        run: poetry config virtualenvs.in-project true
+
+      - name: Install dependencies
+        shell: bash
+        run: poetry install
+
+      - name: Linting
+        shell: bash
+        run: poetry run flake8 --exclude .git,__pycache__,build,dist,.venv --per-file-ignores="__init__.py:F401"
+
+      - name: Run unit tests
+        shell: bash
+        run: poetry run pytest
+
+  bump-version-tag:
+    runs-on: ubuntu-latest
+    needs: quality
+    permissions:
+      contents: write
+    steps:
+      - name: Fetch repo
+        uses: actions/checkout@v3
+
+      - name: Install poetry
+        shell: bash
+        run: pipx install poetry
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'poetry'
+
+      - name: Configure poetry
+        shell: bash
+        run: poetry config virtualenvs.in-project true
+
+      - name: Install dependencies
+        shell: bash
+        run: poetry install
+
+      - name: Bump version
+        shell: bash
+        run: poetry version patch
+
+      - name: Get new version after bump
+        shell: bash
+        run: echo "bumped_version=$(grep 'version' pyproject.toml | cut -d ' ' -f3 | tr -d '"')" >> $GITHUB_ENV
+
+      - name: Tag and commit
+        shell: bash
+        run: |
+          git config user.name "githubactions"
+          git config user.email "githubactions@github.com"
+          git tag -a v${{ env.bumped_version }} -m "v${{ env.bumped_version }}"
+          git add pyproject.toml
+          git commit -m "bump version"
+          git push --follow-tags origin main
+
+  release:
+    runs-on: ubuntu-latest
+    needs: bump-version-tag
+    permissions:
+      contents: write
+    steps:
+      - name: Fetch repo
+        uses: actions/checkout@v3
+
+      - name: Install poetry
+        shell: bash
+        run: pipx install poetry
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'poetry'
+
+      - name: Configure poetry
+        shell: bash
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry config repositories.test-pypi https://test.pypi.org/legacy/
+          poetry config pypi-token.test-pypi  ${{ secrets.test_pypi_token }}
+
+      - name: Install dependencies
+        shell: bash
+        run: poetry install
+
+      - name: Build and publish
+        shell: bash
+        run: poetry publish --build -r test-pypi
