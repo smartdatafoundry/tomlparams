@@ -47,7 +47,7 @@ defaults = {
     'start_date': datetime.date(2024, 1, 1),
     'run_days': 366,
     'tolerance': 0.0001,
-    'logging': True,
+    'log': True,
     'locale': 'en_GB',
     'critical_event_time': datetime.datetime(2024, 7, 31, 3, 22, 22),
     'logging': {
