@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tomlparams"
-version = "0.0.21"
+version = "0.0.22"
 description = ""
 authors = [
   "Smart Data Foundry <datascience@smartdatafoundry.com>",
