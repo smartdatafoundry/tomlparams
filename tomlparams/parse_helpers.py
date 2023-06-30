@@ -6,7 +6,7 @@ import datetime
 import os
 import re
 from enum import Enum
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, Optional
 from tomlparams.utils import error
 from tomlparams import params_group
 

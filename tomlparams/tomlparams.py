@@ -4,9 +4,6 @@ TOML-based parameter files made better (main class)
 
 import os
 import tomli_w
-from tomlparams import parse_helpers
-
-from pprint import pformat
 from typing import Optional, Union
 
 from tomlparams.params_group import create_params_groups
@@ -253,7 +250,9 @@ class TOMLParams:
                     included_params = {}
                     for name in include:
                         this_inclusion = self.read_toml_file(report, name)
-                        selectively_update_dict(included_params, this_inclusion)
+                        selectively_update_dict(
+                            included_params, this_inclusion
+                        )
                 else:
                     included_params = self.read_toml_file(report, include)
                 selectively_update_dict(included_params, outer_params)
@@ -262,7 +261,7 @@ class TOMLParams:
                 print(f'Parameters set from: {path}')
         else:
             if report:
-                print(f'Using default parameters.')
+                print('Using default parameters.')
         return outer_params
 
     def load_defaults_toml_file(self, path):
@@ -351,14 +350,16 @@ class TOMLParams:
     def __str__(self) -> str:
         body = ',\n    '.join(
             f'{k}: {str(v)}'
-            for (k, v) in self.__dict__.items() if not k.startswith('_')
+            for (k, v) in self.__dict__.items()
+            if not k.startswith('_')
         )
         return f'TOMLParams(\n    {body}\n)'
 
     def __repr__(self) -> str:
         body = ',\n    '.join(
             f'{k}={repr(v)}'
-            for (k, v) in self.__dict__.items() if not k.startswith('_')
+            for (k, v) in self.__dict__.items()
+            if not k.startswith('_')
         )
         return f'TOMLParams(\n    {body}\n)'
 

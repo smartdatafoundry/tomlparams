@@ -7,8 +7,5 @@
 from tomlparams import TOMLParams
 
 params = TOMLParams(
-     defaults='defaults',
-     name='newparam',
-     standard_params_dir=''
+    defaults='defaults', name='newparam', standard_params_dir=''
 )
-

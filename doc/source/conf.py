@@ -38,5 +38,3 @@ html_static_path = ['_static']
 html_logo = 'img/tomlparams-logo-left.png'
 
 latex_logo = 'img/tomlparams-logo.png'
-
-

@@ -572,4 +572,3 @@ and also from the help system within Python using:
 >>> import tomlparams
 >>> help(tomlparams.TOMLParams)
 ```
-

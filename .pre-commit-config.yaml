@@ -4,8 +4,6 @@ repos:
         hooks:
             -   id: check-yaml
                 stages: [commit]
-            -   id: check-toml
-                stages: [commit]
             -   id: end-of-file-fixer
                 stages: [commit]
             -   id: trailing-whitespace

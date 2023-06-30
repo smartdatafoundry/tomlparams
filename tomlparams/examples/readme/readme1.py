@@ -13,10 +13,7 @@ defaults = {
     'logging': True,
     'locale': 'en_GB',
     'critical_event_time': datetime(2024, 7, 31, 3, 22, 22),
-    'logging': {
-        'format': '.csv',
-        'events': ['financial', 'telecoms']
-    }
+    'logging': {'format': '.csv', 'events': ['financial', 'telecoms']},
 }
 
 

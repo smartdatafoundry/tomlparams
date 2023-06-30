@@ -27,7 +27,6 @@ Installation:
 '''
 
 
-
 def main():
     args = sys.argv
     if len(args) < 2:
@@ -41,10 +40,15 @@ def main():
         elif cmd == 'examples':
             dest_dir = os.path.abspath('.')
             dest_path = os.path.join(dest_dir, 'tomlparams_examples')
-            shutil.copytree(EXAMPLES_DIR, dest_path, ignore=shutil.ignore_patterns('__pycache__'))
+            shutil.copytree(
+                EXAMPLES_DIR,
+                dest_path,
+                ignore=shutil.ignore_patterns('__pycache__'),
+            )
             print(f'Examples copied to {dest_path}.')
         elif cmd == 'test':
             from tomlparams.tests.test_tomlparams import TestTOMLParams
+
             suite = unittest.TestSuite()
             test_loader = unittest.TestLoader()
             s = test_loader.loadTestsFromTestCase(TestTOMLParams)

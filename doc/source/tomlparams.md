@@ -2,4 +2,3 @@
 ```{eval-rst}
 .. autoclass:: tomlparams.TOMLParams
 ```
-

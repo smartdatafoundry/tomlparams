@@ -30,7 +30,7 @@ def load_toml(path):
         try:
             return tomli.load(f)
         except:
-            print(f'\n***\n*** Problem parsing {path}:\n***\n',
-                  file=sys.stderr)
+            print(
+                f'\n***\n*** Problem parsing {path}:\n***\n', file=sys.stderr
+            )
             raise
-
