@@ -343,7 +343,7 @@ b = 'subgroup one'
 c = 'subgroup one'
 ```
 
-In turn, these are overridsen by `two.toml`:
+In turn, these are overridden by `two.toml`:
 
 ```toml
 # two.toml
