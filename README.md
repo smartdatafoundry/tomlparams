@@ -509,7 +509,7 @@ present in `defaults` is also performed and the selected action taken
 if a type appears in a TOML array that is not present in the
 corresponding collection in the defaults.
 
-Action on a type checking mismatch can be configure in two ways:
+Action on a type checking mismatch can be configured in two ways:
 
 * Via the environment variable specified by the
   `type_check_env_var` setting (defaults to `TOMLPARAMSCHECKING`)
