@@ -386,7 +386,7 @@ a = 'subgroup hier'
 Hierarchical file inclusion is powerful, and allows different sets of
 parameters to be combined easily, but it can be hard for the reader to
 know what the final set of parameters used is without thinking through
-the inclusion hierarchy.  TOMParams can write out a consolidated
+the inclusion hierarchy.  TOMLParams can write out a consolidated
 parameter values finally used as a single TOML file containing them
 all, without inclusions. The method `write_consolidated_toml` on
 a `TOMLParams` object will do this:
