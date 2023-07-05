@@ -522,7 +522,7 @@ The environment variable takes precedence over the setting where set.
 
 As part of installing the TOMLParams library, a command line tool
 called tomlparams is made available. This provides a few functions,
-the most important of which is the abilty to copy usage examples
+the most important of which is the ability to copy usage examples
 to your current working directory.
 
 Running the command by itself prints usage information:
