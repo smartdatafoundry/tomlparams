@@ -1,3 +1,3 @@
-__version__ = '0.0.31'
+__version__ = '0.0.32'
 from tomlparams.params_group import ParamsGroup
 from tomlparams.tomlparams import TOMLParams
