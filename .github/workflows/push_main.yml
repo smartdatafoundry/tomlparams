@@ -115,8 +115,7 @@ jobs:
         shell: bash
         run: |
           poetry config virtualenvs.in-project true
-          poetry config repositories.test-pypi https://test.pypi.org/legacy/
-          poetry config pypi-token.test-pypi  ${{ secrets.test_pypi_token }}
+          poetry config pypi-token.pypi  ${{ secrets.pypi_token }}
 
       - name: Install dependencies
         shell: bash
@@ -124,4 +123,4 @@ jobs:
 
       - name: Build and publish
         shell: bash
-        run: poetry publish --build -r test-pypi
+        run: poetry publish --build
