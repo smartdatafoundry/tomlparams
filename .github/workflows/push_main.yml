@@ -9,6 +9,9 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     permissions: read-all
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
     steps:
       - name: Fetch repo
         uses: actions/checkout@v3
