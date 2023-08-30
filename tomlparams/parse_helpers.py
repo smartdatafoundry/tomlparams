@@ -72,7 +72,7 @@ class ParseMismatch:
     def __repr__(self):
         return (
             f'ParseMismatch({self.pm_type} at'
-            f' {self.position if self.position else "root"}, {self.key}, '
+            f' {self.position or "root"}, {self.key}, '
             + f'types: {self.default_type}, {self.toml_type})'
         )
 
@@ -156,10 +156,7 @@ def is_user_reserved_path(path: str) -> bool:
 
 
 def get_collection_types(coll: list[Any] | set[Any] | tuple[Any]) -> set[type]:
-    types = set()
-    for item in coll:
-        types.add(type(item))
-    return types
+    return {type(item) for item in coll}
 
 
 def overwrite_defaults_with_toml(
@@ -184,11 +181,7 @@ def overwrite_defaults_with_toml(
             parse_mismatches.extend(new_type_mismatches)
         else:
             ov = overwrite.get(dk, dv) if overwrite is not None else dv
-            if (
-                isinstance(dv, list)
-                or isinstance(dv, set)
-                or isinstance(dv, tuple)
-            ):
+            if isinstance(dv, (list, set, tuple)):
                 default_types = get_collection_types(dv)
                 toml_types = get_collection_types(ov)
                 if default_types - toml_types:

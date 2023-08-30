@@ -2,6 +2,7 @@
 TOML-based parameter files made better (main class)
 """
 
+from glob import glob
 import os
 import tomli_w
 from typing import Optional, Union
@@ -137,7 +138,7 @@ class TOMLParams:
         )
         self._verbose = verbose
 
-        if type(defaults) == str:
+        if isinstance(defaults, str):
             self._defaults = self.load_defaults_toml_file(defaults)
         else:
             self._defaults = defaults
@@ -264,6 +265,36 @@ class TOMLParams:
                 print('Using default parameters.')
         return outer_params
 
+    def read_defaults_as_directory(self, fullpath: str) -> dict:
+        """
+        Reads defaults from a directory of TOML files.
+
+        Args:
+            fullpath: path to directory containing TOML files
+
+        Returns:
+            dictionary of defaults
+        """
+        defaults = {}
+        toml_dict = {}
+        all_tomls = sorted(glob(f'{fullpath}/**/*.toml', recursive=True))
+        for i, toml in enumerate(all_tomls):
+            toml_dict = load_toml(toml)
+            if 'include' in toml_dict:
+                error(
+                    f'TOML file {toml} includes key "include",\nwhich'
+                    ' is not allow in the consolidated defaults.'
+                )
+            for default_key in defaults:
+                if default_key in toml_dict:
+                    raise KeyError(
+                        f"Duplicated key '{default_key}' in {toml}. Check any"
+                        f" of the files in {all_tomls[:i]}"
+                    )
+            defaults |= toml_dict
+
+        return defaults
+
     def load_defaults_toml_file(self, path):
         """
         Loads defaults from TOML file at path provided.
@@ -274,15 +305,17 @@ class TOMLParams:
             else os.path.join(self._standard_params_dir, path)
         )
         if not os.path.splitext(path)[1]:
-            fullpath += '.toml'
-        if os.path.exists(fullpath):
-            defaults = load_toml(fullpath)
+            toml_path = f'{fullpath}.toml'
+        if os.path.exists(toml_path):
+            defaults = load_toml(toml_path)
             if 'include' in defaults:
                 error(
-                    f'Defaults TOML file {fullpath} includes key "include",\n'
+                    f'Defaults TOML file {toml_path} includes key "include",\n'
                     'which is not allow in defaults TOML files.'
                 )
             return defaults
+        elif os.path.isdir(fullpath):
+            return self.read_defaults_as_directory(fullpath)
         else:
             error(f'Defaults cannot be read from {fullpath}.')
 
