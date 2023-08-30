@@ -306,7 +306,7 @@ class TOMLParams:
                             f"Duplicated key '{default_key}' in {toml}. Check"
                             f" any of the files in {all_tomls[:i]}"
                         )
-            defaults |= toml_dict
+            selectively_update_dict(defaults, toml_dict)
 
         return defaults
 

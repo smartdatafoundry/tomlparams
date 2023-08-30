@@ -6,6 +6,7 @@ import unittest
 
 from tomlparams.captureoutput import CaptureOutput
 from tomlparams import TOMLParams
+from tomlparams.utils import concatenate_keys
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))
 XDIR = os.path.join(THISDIR, 'testdata')
@@ -652,6 +653,16 @@ class TestTOMLParams(unittest.TestCase):
         self.assertEqual(str(self.co), expected_error)
 
         os.environ.pop('TOMLPARAMSCHECKING', None)
+
+    def test_concatenate_keys(self):
+        d = {'a': {'b': 1, 'c': 2}, 'd': 3}
+        expected = (('a.b', 1), ('a.c', 2), ('d', 3))
+        self.assertEqual(tuple(concatenate_keys(d)), expected)
+
+    def test_read_de(self):
+        d = {'a': {'b': 1, 'c': 2}, 'd': 3}
+        expected = (('a.b', 1), ('a.c', 2), ('d', 3))
+        self.assertEqual(tuple(concatenate_keys(d)), expected)
 
 
 if __name__ == '__main__':
