@@ -660,19 +660,43 @@ class TestTOMLParams(unittest.TestCase):
         self.assertEqual(tuple(concatenate_keys(d)), expected)
 
     def test_read_defaults_as_directory(self):
-        defaults_as_dir = os.path.join(XDIR, 'tomlparams', 'defaults_as_dir')
-        defaults_as_file = os.path.join(XDIR, 'tomlparams', 'defaults_as_file')
-        params_default_as_dir = TOMLParams(defaults_as_dir, verbose=False)
-        params_default_as_file = TOMLParams(defaults_as_file, verbose=False)
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+        defaults_as_dir = os.path.join(stddir, 'defaults_as_dir')
+        defaults_as_file = os.path.join(stddir, 'defaults_as_file')
+        params_default_as_dir = TOMLParams(
+            defaults_as_dir,
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+        params_default_as_file = TOMLParams(
+            defaults_as_file,
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
         self.assertEqual(params_default_as_dir, params_default_as_file)
 
     def test_content_defaults_as_directory(self):
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
         # main keys of default as file
         main_keys = ['human', 'animals', 'fungi']
-        defaults_as_dir = os.path.join(XDIR, 'tomlparams', 'defaults_as_dir')
-        defaults_as_file = os.path.join(XDIR, 'tomlparams', 'defaults_as_file')
-        params_default_as_dir = TOMLParams(defaults_as_dir, verbose=False)
-        params_default_as_file = TOMLParams(defaults_as_file, verbose=False)
+        defaults_as_dir = os.path.join(stddir, 'defaults_as_dir')
+        defaults_as_file = os.path.join(stddir, 'defaults_as_file')
+        params_default_as_dir = TOMLParams(
+            defaults_as_dir,
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+        params_default_as_file = TOMLParams(
+            defaults_as_file,
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
         for key in main_keys:
             d_as_dir = tuple(
                 concatenate_keys(params_default_as_dir[key].get_params())
