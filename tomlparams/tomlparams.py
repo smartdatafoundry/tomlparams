@@ -5,10 +5,10 @@ TOML-based parameter files made better (main class)
 from glob import glob
 import os
 import tomli_w
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from tomlparams.params_group import create_params_groups
-from tomlparams.utils import error, warn, nvl, load_toml
+from tomlparams.utils import concatenate_keys, error, warn, nvl, load_toml
 from tomlparams.parse_helpers import (
     DEFAULT_PARAMS_NAME,
     DEFAULT_PARAMS_TYPE_CHECKING_NAME,
@@ -157,6 +157,13 @@ class TOMLParams:
     def __getitem__(self, item):
         return self.__dict__[item]
 
+    def __eq__(self, other: Any) -> bool:
+        return all(
+            self.as_saveable_object().get(k)
+            == other.as_saveable_object().get(k)
+            for k in self.as_saveable_object()
+        )
+
     @classmethod
     def indent(cls, is_test: bool) -> int:
         """
@@ -285,12 +292,20 @@ class TOMLParams:
                     f'TOML file {toml} includes key "include",\nwhich'
                     ' is not allow in the consolidated defaults.'
                 )
-            for default_key in defaults:
-                if default_key in toml_dict:
-                    raise KeyError(
-                        f"Duplicated key '{default_key}' in {toml}. Check any"
-                        f" of the files in {all_tomls[:i]}"
-                    )
+            if defaults:
+                defaults_concatenated_keys = (
+                    key for key, _ in concatenate_keys(defaults)
+                )
+                toml_dict_concatenated_keys = (
+                    key for key, _ in concatenate_keys(toml_dict)
+                )
+
+                for default_key in defaults_concatenated_keys:
+                    if default_key in toml_dict_concatenated_keys:
+                        raise KeyError(
+                            f"Duplicated key '{default_key}' in {toml}. Check"
+                            f" any of the files in {all_tomls[:i]}"
+                        )
             defaults |= toml_dict
 
         return defaults
