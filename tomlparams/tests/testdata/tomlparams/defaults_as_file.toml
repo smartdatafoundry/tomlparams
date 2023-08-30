@@ -7,11 +7,11 @@ average_n_eyes = 2
 [animals.fish.tuna]
 average_n_eyes = 2
 
-[funghi.ascomycota]
+[fungi.ascomycota]
 average_n_eyes = 0
 
-[funghi.chytridiomycota]
+[fungi.chytridiomycota]
 average_n_eyes = 0
 
-[humnan]
+[human]
 average_n_eyes = 2

@@ -38,6 +38,13 @@ class ParamsGroup:
             f'ParamsGroup(\n{self._param_indent}{body}\n{self._group_indent})'
         )
 
+    def __eq__(self, other: Any) -> bool:
+        return all(
+            self.as_saveable_object().get(k)
+            == other.as_saveable_object().get(k)
+            for k in self.as_saveable_object()
+        )
+
     def __getitem__(self, item):
         return self.__dict__[item]
 

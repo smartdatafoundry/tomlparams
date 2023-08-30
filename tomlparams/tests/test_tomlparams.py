@@ -659,10 +659,28 @@ class TestTOMLParams(unittest.TestCase):
         expected = (('a.b', 1), ('a.c', 2), ('d', 3))
         self.assertEqual(tuple(concatenate_keys(d)), expected)
 
-    def test_read_de(self):
-        d = {'a': {'b': 1, 'c': 2}, 'd': 3}
-        expected = (('a.b', 1), ('a.c', 2), ('d', 3))
-        self.assertEqual(tuple(concatenate_keys(d)), expected)
+    def test_read_defaults_as_directory(self):
+        defaults_as_dir = os.path.join(XDIR, 'tomlparams', 'defaults_as_dir')
+        defaults_as_file = os.path.join(XDIR, 'tomlparams', 'defaults_as_file')
+        params_default_as_dir = TOMLParams(defaults_as_dir, verbose=False)
+        params_default_as_file = TOMLParams(defaults_as_file, verbose=False)
+        self.assertEqual(params_default_as_dir, params_default_as_file)
+
+    def test_content_defaults_as_directory(self):
+        # main keys of default as file
+        main_keys = ['human', 'animals', 'fungi']
+        defaults_as_dir = os.path.join(XDIR, 'tomlparams', 'defaults_as_dir')
+        defaults_as_file = os.path.join(XDIR, 'tomlparams', 'defaults_as_file')
+        params_default_as_dir = TOMLParams(defaults_as_dir, verbose=False)
+        params_default_as_file = TOMLParams(defaults_as_file, verbose=False)
+        for key in main_keys:
+            d_as_dir = tuple(
+                concatenate_keys(params_default_as_dir[key].get_params())
+            )
+            d_as_file = tuple(
+                concatenate_keys(params_default_as_file[key].get_params())
+            )
+            self.assertEqual(d_as_dir, d_as_file)
 
 
 if __name__ == '__main__':
