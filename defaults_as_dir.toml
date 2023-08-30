@@ -1,0 +1,5952 @@
+[financial_accounts_open_days_ago]
+dist = "scaled_shifted_beta"
+
+[financial_accounts_open_days_ago.params]
+minv = 1
+medv = 1000
+maxv = 7000
+conc = 10
+
+[organization.max_credit_card_limit]
+dist = "scaled_shifted_beta"
+
+[organization.max_credit_card_limit.params]
+minv = 5000
+medv = 10000
+maxv = 20000
+conc = 9000
+
+[organization.min_credit_card_limit]
+dist = "scaled_shifted_beta"
+
+[organization.min_credit_card_limit.params]
+minv = 500
+medv = 1000
+maxv = 2000
+conc = 1000
+
+[organization.credit_card_limit]
+dist = "L_age"
+
+[organization.credit_card_limit.params]
+max_age = 130
+age_at_min = 1
+scale = 0.05
+sd = 0.1
+shift = -2
+dps = 2
+
+[organization.annual_percentage_rate]
+dist = "scaled_shifted_beta"
+
+[organization.annual_percentage_rate.params]
+minv = 5
+medv = 19
+maxv = 35
+conc = 15
+
+[organization.min_cash_deposit]
+dist = "scaled_shifted_beta"
+
+[organization.min_cash_deposit.params]
+minv = 500
+medv = 600
+maxv = 1000
+conc = 10
+
+[organization.founded_days_ago]
+dist = "scaled_shifted_beta"
+
+[organization.founded_days_ago.params]
+minv = 1
+medv = 1000
+maxv = 7000
+conc = 10
+
+[person.cash_amount_preference]
+dist = "scaled_normal"
+
+[person.cash_amount_preference.params]
+scale = 0.067
+sd = 100.0
+minv = 5.0
+maxv = 500.0
+
+[person.cash_use_preference]
+dist = "U_age"
+
+[person.cash_use_preference.params]
+age_at_min = 24
+minv = 0.0
+maxv = 10.0
+scale = 0.1
+sd = 0.5
+normaliser = 0.1
+dps = 2
+
+[person.communications]
+random_communications_lambd = 3
+
+[person.credit_card_preference]
+dist = "E_age"
+
+[person.credit_card_preference.params]
+scale = 0.05
+age_at_min = 40
+default_lambd = 0.05
+minv = 0.1
+maxv = 5
+normaliser = 1
+dps = 2
+
+[person.financial_vulnerability]
+dist = "U_age"
+
+[person.financial_vulnerability.params]
+age_at_min = 45
+minv = 0.1
+maxv = 3.0
+scale = 0.05
+sd = 0.5
+dps = 2
+
+[person.fraud_advance_payment]
+dist = "prob_boundary_check"
+
+[person.fraud_advance_payment.params]
+lower_prob_bound = 0.05
+upper_prob_bound = 0.85
+
+[person.fraud_bank_impersonation]
+dist = "prob_boundary_check"
+
+[person.fraud_bank_impersonation.params]
+lower_prob_bound = 0.85
+upper_prob_bound = 1.0
+
+[person.fraud_family_scam]
+dist = "prob_boundary_check"
+
+[person.fraud_family_scam.params]
+lower_prob_bound = 0.0
+upper_prob_bound = 0.05
+
+[person.fraud_vulnerability]
+dist = "U_age"
+
+[person.fraud_vulnerability.params]
+age_at_min = 45
+minv = 0.1
+maxv = 3.0
+scale = 0.05
+sd = 0.5
+dps = 2
+
+[person.mobile_to_fixed_weight]
+dist = "scaled_normal"
+
+[person.mobile_to_fixed_weight.params]
+mu = 1
+sd = 0.4
+minv = 0.1
+maxv = 10
+dps = 2
+
+[person.paypal_preference]
+dist = "E_age"
+
+[person.paypal_preference.params]
+scale = 0.05
+age_at_min = 25
+default_lambd = 0.047619047619047616
+minv = 0
+maxv = 5
+normaliser = 0.2
+dps = 2
+
+[person.text_to_voice_weight]
+dist = "scaled_normal"
+
+[person.text_to_voice_weight.params]
+mu = 1
+sd = 0.2
+minv = 0.1
+maxv = 10
+dps = 2
+
+[person.text_verbosity]
+dist = "L_age"
+
+[person.text_verbosity.params]
+max_age = 130
+age_at_min = 18
+minv = 0.1
+maxv = 10.0
+scale = 0.05
+sd = 0.7
+shift = -2
+dps = 2
+
+[person.voice_loquaciousness]
+dist = "U_age_sex"
+
+[person.voice_loquaciousness.params]
+age_at_min = 45
+minv = 0.1
+maxv = 3.0
+scale_m = 0.0067
+scale_f = 0.025
+sd = 0.5
+dps = 2
+
+[person.max_credit_card_limit]
+dist = "scaled_shifted_beta"
+
+[person.max_credit_card_limit.params]
+minv = 1000
+medv = 4000
+maxv = 12000
+conc = 1000
+
+[person.min_credit_card_limit]
+dist = "scaled_shifted_beta"
+
+[person.min_credit_card_limit.params]
+minv = 100
+medv = 200
+maxv = 500
+conc = 200
+
+[person.credit_card_limit]
+dist = "L_age"
+
+[person.credit_card_limit.params]
+max_age = 130
+age_at_min = 22
+scale = 0.05
+sd = 0.1
+shift = -2
+dps = 2
+
+[person.annual_percentage_rate]
+dist = "scaled_shifted_beta"
+
+[person.annual_percentage_rate.params]
+minv = 5
+medv = 19
+maxv = 35
+conc = 15
+
+[person.housing]
+proportion_renting = 0.6
+merchant = "letting_agencies"
+
+[person.housing.rent]
+dist = "scaled_shifted_beta"
+expectation = "expectation_scaled_shifted_beta"
+
+[person.housing.rent.params]
+minv = 3600
+medv = 9600
+maxv = 24000
+conc = 10
+
+[person.housing.mortgage]
+dist = "scaled_shifted_beta"
+
+[person.housing.mortgage.params]
+minv = 4800
+medv = 12000
+maxv = 48000
+conc = 10
+
+[sme]
+cash_deposit_prop = 0.8
+single_energy_supplier_probability = 0.9
+single_telecoms_supplier_probability = 0.9
+single_business_insurance_supplier_probability = 0.9
+credit_card_preference = 0.85
+credit_card_account_prob = 0.85
+
+[sme.payment_preferences.services]
+DD_D = 0.67
+SO_D = 0.2
+BACS_D = 0.03
+POS = 0.1
+
+[sme.payment_preferences.shopping]
+POS = 1
+
+[sme.cornershop.credit_card_payment.params]
+sd_factor = 0.1
+minv = 1
+maxv = 2
+probability = 1.0
+
+[sme.cornershop.accounting]
+dist = "scaled_normal"
+
+[sme.cornershop.accounting.frequency]
+a = 1
+
+[sme.cornershop.accounting.params]
+sd_factor = 0.1
+minv = 200
+maxv = 3000
+probability = 0.9
+
+[sme.cornershop.accounting.timing]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.cornershop.building_contents_insurance]
+dist = "scaled_normal"
+
+[sme.cornershop.building_contents_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.cornershop.building_contents_insurance.params]
+sd_factor = 0.1
+minv = 300
+maxv = 1000
+probability = 1
+
+[sme.cornershop.building_contents_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.cornershop.business_interruption_insurance]
+dist = "scaled_normal"
+
+[sme.cornershop.business_interruption_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.cornershop.business_interruption_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.cornershop.business_interruption_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.cornershop.business_rates]
+dist = "scaled_normal"
+
+[sme.cornershop.business_rates.frequency]
+m = 1
+
+[sme.cornershop.business_rates.params]
+sd_factor = 0.1
+minv = 2000
+maxv = 3000
+probability = 0.9
+
+[sme.cornershop.business_rates.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.cornershop.cash_deposit]
+cash_income_to_income_ratio = 0.35
+dist = "scaled_normal"
+
+[sme.cornershop.cash_deposit.freq_factors]
+d = 0.002739726
+w = 0.019230769
+
+[sme.cornershop.cash_deposit.freq_props]
+daily_to_weekly_proportion = 0.8
+
+[sme.cornershop.cash_deposit.params]
+scale = 1
+sd_factor = 0.3
+
+[sme.cornershop.txns]
+enabled = false
+customer_multiplier = 1
+
+[sme.cornershop.txns.frequency]
+i = 1.0
+
+[sme.cornershop.txns.timing.choices]
+i = [
+    1,
+    2,
+    3,
+    7,
+]
+
+[sme.cornershop.txns.timing.weights]
+i = [
+    0.1,
+    0.1,
+    0.2,
+    0.6,
+]
+
+[sme.cornershop.txns.amounts]
+dist = "scaled_shifted_beta"
+expectation = "expectation_scaled_shifted_beta"
+
+[sme.cornershop.txns.proportions]
+cash = 0.35
+card = 0.65
+transfer = 0
+
+[sme.cornershop.txns.cash.amounts.params]
+minv = 0.5
+maxv = 200
+medv = 10
+conc = 10
+
+[sme.cornershop.txns.card.amounts.params]
+minv = 0.5
+maxv = 200
+medv = 10
+conc = 10
+
+[sme.cornershop.txns.transfer.amounts.params]
+minv = 0
+maxv = 0
+medv = 0
+conc = 10
+
+[sme.cornershop.commercial_tv]
+dist = "scaled_normal"
+
+[sme.cornershop.commercial_tv.frequency]
+m = 1
+
+[sme.cornershop.commercial_tv.params]
+sd_factor = 0.1
+minv = 0
+maxv = 0
+probability = 0.9
+
+[sme.cornershop.commercial_tv.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.cornershop.electric]
+dist = "scaled_normal"
+
+[sme.cornershop.electric.frequency]
+m = 0.8
+q = 0.2
+
+[sme.cornershop.electric.params]
+sd_factor = 0.1
+minv = 1000
+maxv = 20000
+probability = 1
+
+[sme.cornershop.electric.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.cornershop.employees]
+salary_minv = 21000
+salary_maxv = 35000
+prob_part_time_lowest_tier = 0.5
+part_time_fte_available = [
+    0.25,
+    0.5,
+    0.75,
+]
+part_time_fte_weightings = [
+    1,
+    2,
+    2,
+]
+
+[sme.cornershop.employees.num_employees]
+dist = "scaled_normal"
+
+[sme.cornershop.employees.num_employees.params]
+sd_factor = 0.1
+minv = 2
+maxv = 8
+
+[sme.cornershop.payroll.frequency]
+m = 0.5
+w = 0.5
+
+[sme.cornershop.payroll.timing]
+m = [
+    -3,
+    -2,
+    -1,
+]
+w = [
+    3,
+    4,
+]
+
+[sme.cornershop.employer_liability_insurance]
+dist = "scaled_normal"
+
+[sme.cornershop.employer_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.cornershop.employer_liability_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.cornershop.employer_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.cornershop.gas]
+dist = "scaled_normal"
+
+[sme.cornershop.gas.frequency]
+m = 0.8
+q = 0.2
+
+[sme.cornershop.gas.params]
+sd_factor = 0.1
+minv = 1000
+maxv = 35000
+probability = 1
+
+[sme.cornershop.gas.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.cornershop.income]
+dist = "scaled_shifted_beta"
+income_scaling_multiplier = 1
+
+[sme.cornershop.income.params]
+minv = 175000
+medv = 350000
+maxv = 650000
+conc = 30
+
+[sme.cornershop.internet]
+dist = "scaled_normal"
+
+[sme.cornershop.internet.frequency]
+m = 1
+
+[sme.cornershop.internet.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1200
+probability = 1
+
+[sme.cornershop.internet.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.cornershop.marketing]
+dist = "scaled_normal"
+
+[sme.cornershop.marketing.frequency]
+i = 1
+
+[sme.cornershop.marketing.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.cornershop.marketing.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.cornershop.marketing.params]
+sd_factor = 0.1
+minv = 250
+maxv = 10000
+probability = 1
+
+[sme.cornershop.marketing.timing]
+i = [
+    30,
+]
+
+[sme.cornershop.num_employees]
+dist = "scaled_normal"
+
+[sme.cornershop.num_employees.params]
+sd_factor = 0.1
+minv = 2
+maxv = 8
+probability = 1
+
+[sme.cornershop.phone]
+dist = "scaled_normal"
+
+[sme.cornershop.phone.frequency]
+m = 1
+
+[sme.cornershop.phone.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1500
+probability = 1
+
+[sme.cornershop.phone.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.cornershop.public_liability_insurance]
+dist = "scaled_normal"
+
+[sme.cornershop.public_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.cornershop.public_liability_insurance.params]
+sd_factor = 0.1
+minv = 20
+maxv = 100
+probability = 1
+
+[sme.cornershop.public_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.cornershop.rent]
+dist = "scaled_normal"
+
+[sme.cornershop.rent.frequency]
+m = 0.8
+q = 0.2
+
+[sme.cornershop.rent.params]
+sd_factor = 0.1
+minv = 50000
+maxv = 100000
+probability = 0.9
+
+[sme.cornershop.rent.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.cornershop.vehicle_fuel]
+dist = "scaled_normal"
+
+[sme.cornershop.vehicle_fuel.frequency]
+i = 1
+
+[sme.cornershop.vehicle_fuel.merchants.favourites]
+n = 3
+min_weight = 0.6
+max_weight = 1.0
+
+[sme.cornershop.vehicle_fuel.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.cornershop.vehicle_fuel.params]
+sd_factor = 0.1
+minv = 600
+maxv = 8000
+probability = 1
+
+[sme.cornershop.vehicle_fuel.timing]
+i = [
+    7,
+]
+
+[sme.cornershop.wholesale]
+dist = "scaled_normal"
+
+[sme.cornershop.wholesale.beverages.frequency]
+i = 1
+
+[sme.cornershop.wholesale.beverages.timing]
+i = [
+    7,
+]
+
+[sme.cornershop.wholesale.food.frequency]
+i = 1
+
+[sme.cornershop.wholesale.food.timing]
+i = [
+    7,
+]
+
+[sme.cornershop.wholesale.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.cornershop.wholesale.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.cornershop.wholesale.newspapers.frequency]
+d = 1
+
+[sme.cornershop.wholesale.newspapers.timing]
+d = [
+    0,
+]
+
+[sme.cornershop.wholesale.params]
+minv = 20000
+maxv = 120000
+sd_factor = 0.1
+probability = 0.9
+
+[sme.cornershop.wholesale.stationery.frequency]
+i = 1
+
+[sme.cornershop.wholesale.stationery.timing]
+i = [
+    7,
+]
+
+[sme.cornershop.wholesale.types]
+food = 0.6
+beverages = 0.2
+newspapers = 0.1
+stationery = 0.1
+
+[sme.hairdresser.credit_card_payment.params]
+sd_factor = 0.1
+minv = 1
+maxv = 2
+probability = 1.0
+
+[sme.hairdresser.accounting]
+dist = "scaled_normal"
+
+[sme.hairdresser.accounting.frequency]
+a = 1
+
+[sme.hairdresser.accounting.params]
+sd_factor = 0.1
+minv = 200
+maxv = 3000
+probability = 0.9
+
+[sme.hairdresser.accounting.timing]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.hairdresser.building_contents_insurance]
+dist = "scaled_normal"
+
+[sme.hairdresser.building_contents_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.hairdresser.building_contents_insurance.params]
+sd_factor = 0.1
+minv = 300
+maxv = 1000
+probability = 1
+
+[sme.hairdresser.building_contents_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.hairdresser.business_interruption_insurance]
+dist = "scaled_normal"
+
+[sme.hairdresser.business_interruption_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.hairdresser.business_interruption_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.hairdresser.business_interruption_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.hairdresser.business_rates]
+dist = "scaled_normal"
+
+[sme.hairdresser.business_rates.frequency]
+m = 1
+
+[sme.hairdresser.business_rates.params]
+sd_factor = 0.1
+minv = 2000
+maxv = 3000
+probability = 0.9
+
+[sme.hairdresser.business_rates.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.hairdresser.cash_deposit]
+cash_income_to_income_ratio = 0.4
+dist = "scaled_normal"
+
+[sme.hairdresser.cash_deposit.freq_factors]
+d = 0.002739726
+w = 0.019230769
+
+[sme.hairdresser.cash_deposit.freq_props]
+daily_to_weekly_proportion = 0.8
+
+[sme.hairdresser.cash_deposit.params]
+scale = 1
+sd_factor = 0.3
+
+[sme.hairdresser.txns]
+enabled = false
+customer_multiplier = 1
+
+[sme.hairdresser.txns.frequency]
+i = 1
+
+[sme.hairdresser.txns.timing.choices]
+i = [
+    14,
+    30,
+    90,
+]
+
+[sme.hairdresser.txns.timing.weights]
+i = [
+    0.1,
+    0.7,
+    0.2,
+]
+
+[sme.hairdresser.txns.amounts]
+dist = "scaled_shifted_beta"
+expectation = "expectation_scaled_shifted_beta"
+
+[sme.hairdresser.txns.proportions]
+cash = 0.475
+card = 0.475
+transfer = 0.05
+
+[sme.hairdresser.txns.cash.amounts.params]
+minv = 10
+maxv = 500
+medv = 50
+conc = 10
+
+[sme.hairdresser.txns.card.amounts.params]
+minv = 10
+maxv = 500
+medv = 50
+conc = 10
+
+[sme.hairdresser.txns.transfer.amounts.params]
+minv = 100
+maxv = 3000
+medv = 250
+conc = 10
+
+[sme.hairdresser.commercial_tv]
+dist = "scaled_normal"
+
+[sme.hairdresser.commercial_tv.frequency]
+m = 1
+
+[sme.hairdresser.commercial_tv.params]
+sd_factor = 0.1
+minv = 500
+maxv = 2500
+probability = 0.9
+
+[sme.hairdresser.commercial_tv.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.hairdresser.electric]
+dist = "scaled_normal"
+
+[sme.hairdresser.electric.frequency]
+m = 0.8
+q = 0.2
+
+[sme.hairdresser.electric.params]
+sd_factor = 0.1
+minv = 1000
+maxv = 20000
+probability = 1
+
+[sme.hairdresser.electric.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.hairdresser.employees]
+salary_minv = 21000
+salary_maxv = 35000
+prob_part_time_lowest_tier = 0.8
+part_time_fte_available = [
+    0.25,
+    0.5,
+    0.75,
+]
+part_time_fte_weightings = [
+    1,
+    3,
+    1,
+]
+
+[sme.hairdresser.employees.num_employees]
+dist = "scaled_normal"
+
+[sme.hairdresser.employees.num_employees.params]
+sd_factor = 0.1
+minv = 1
+maxv = 20
+
+[sme.hairdresser.payroll.frequency]
+m = 0.5
+w = 0.5
+
+[sme.hairdresser.payroll.timing]
+m = [
+    -3,
+    -2,
+    -1,
+]
+w = [
+    3,
+    4,
+]
+
+[sme.hairdresser.employer_liability_insurance]
+dist = "scaled_normal"
+
+[sme.hairdresser.employer_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.hairdresser.employer_liability_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.hairdresser.employer_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.hairdresser.gas]
+dist = "scaled_normal"
+
+[sme.hairdresser.gas.frequency]
+m = 0.8
+q = 0.2
+
+[sme.hairdresser.gas.params]
+sd_factor = 0.1
+minv = 100
+maxv = 250000
+probability = 1
+
+[sme.hairdresser.gas.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.hairdresser.income]
+dist = "scaled_shifted_beta"
+income_scaling_multiplier = 1
+
+[sme.hairdresser.income.params]
+minv = 30000
+medv = 150000
+maxv = 1000000
+conc = 30
+
+[sme.hairdresser.internet]
+dist = "scaled_normal"
+
+[sme.hairdresser.internet.frequency]
+m = 1
+
+[sme.hairdresser.internet.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1200
+probability = 1
+
+[sme.hairdresser.internet.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.hairdresser.marketing]
+dist = "scaled_normal"
+
+[sme.hairdresser.marketing.frequency]
+i = 1
+
+[sme.hairdresser.marketing.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.hairdresser.marketing.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.hairdresser.marketing.params]
+sd_factor = 0.1
+minv = 250
+maxv = 10000
+probability = 1
+
+[sme.hairdresser.marketing.timing]
+i = [
+    30,
+]
+
+[sme.hairdresser.num_employees]
+dist = "scaled_normal"
+
+[sme.hairdresser.num_employees.params]
+sd_factor = 0.1
+minv = 1
+maxv = 20
+
+[sme.hairdresser.phone]
+dist = "scaled_normal"
+
+[sme.hairdresser.phone.frequency]
+m = 1
+
+[sme.hairdresser.phone.params]
+sd_factor = 0.1
+minv = 200
+maxv = 1000
+probability = 0.9
+
+[sme.hairdresser.phone.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.hairdresser.public_liability_insurance]
+dist = "scaled_normal"
+
+[sme.hairdresser.public_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.hairdresser.public_liability_insurance.params]
+sd_factor = 0.1
+minv = 20
+maxv = 100
+probability = 0.9
+
+[sme.hairdresser.public_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.hairdresser.rent]
+dist = "scaled_normal"
+
+[sme.hairdresser.rent.frequency]
+m = 0.8
+q = 0.2
+
+[sme.hairdresser.rent.params]
+sd_factor = 0.1
+minv = 10000
+maxv = 100000
+probability = 0.9
+
+[sme.hairdresser.rent.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.hairdresser.vehicle_fuel]
+dist = "scaled_normal"
+
+[sme.hairdresser.vehicle_fuel.frequency]
+i = 1
+
+[sme.hairdresser.vehicle_fuel.merchants.favourites]
+n = 3
+min_weight = 0.6
+max_weight = 1.0
+
+[sme.hairdresser.vehicle_fuel.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.hairdresser.vehicle_fuel.params]
+sd_factor = 0.1
+minv = 50
+maxv = 5000
+probability = 0.9
+
+[sme.hairdresser.vehicle_fuel.timing]
+i = [
+    7,
+]
+
+[sme.hairdresser.wholesale]
+dist = "scaled_normal"
+
+[sme.hairdresser.wholesale.beverages.frequency]
+i = 1
+
+[sme.hairdresser.wholesale.beverages.timing]
+i = [
+    7,
+]
+
+[sme.hairdresser.wholesale.cosmetics.frequency]
+i = 1
+
+[sme.hairdresser.wholesale.cosmetics.timing]
+i = [
+    30,
+]
+
+[sme.hairdresser.wholesale.food.frequency]
+i = 1
+
+[sme.hairdresser.wholesale.food.timing]
+i = [
+    7,
+]
+
+[sme.hairdresser.wholesale.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.hairdresser.wholesale.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.hairdresser.wholesale.params]
+minv = 5000
+maxv = 15000
+sd_factor = 0.1
+probability = 0.9
+
+[sme.hairdresser.wholesale.types]
+food = 0.1
+beverages = 0.1
+cosmetics = 0.8
+
+[sme.professional_services.credit_card_payment.params]
+sd_factor = 0.1
+minv = 1
+maxv = 2
+probability = 1.0
+
+[sme.professional_services.accounting]
+dist = "scaled_normal"
+
+[sme.professional_services.accounting.frequency]
+a = 1
+
+[sme.professional_services.accounting.params]
+sd_factor = 0.1
+minv = 200
+maxv = 3000
+probability = 0.9
+
+[sme.professional_services.accounting.timing]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.professional_services.building_contents_insurance]
+dist = "scaled_normal"
+
+[sme.professional_services.building_contents_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.professional_services.building_contents_insurance.params]
+sd_factor = 0.1
+minv = 300
+maxv = 1000
+probability = 1
+
+[sme.professional_services.building_contents_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.professional_services.business_interruption_insurance]
+dist = "scaled_normal"
+
+[sme.professional_services.business_interruption_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.professional_services.business_interruption_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.professional_services.business_interruption_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.professional_services.business_rates]
+dist = "scaled_normal"
+
+[sme.professional_services.business_rates.frequency]
+m = 1
+
+[sme.professional_services.business_rates.params]
+sd_factor = 0.1
+minv = 2000
+maxv = 3000
+probability = 0.9
+
+[sme.professional_services.business_rates.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.professional_services.cash_deposit]
+cash_income_to_income_ratio = 0.05
+dist = "scaled_normal"
+
+[sme.professional_services.cash_deposit.freq_factors]
+d = 0.002739726
+w = 0.019230769
+
+[sme.professional_services.cash_deposit.freq_props]
+daily_to_weekly_proportion = 0.8
+
+[sme.professional_services.cash_deposit.params]
+scale = 1
+sd_factor = 0.3
+
+[sme.professional_services.txns]
+enabled = false
+customer_multiplier = 1
+
+[sme.professional_services.txns.frequency]
+a = 0.9
+m = 0.1
+
+[sme.professional_services.txns.timing.choices]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+    ],
+]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.professional_services.txns.timing.weights]
+a = [
+    [
+        1,
+        1,
+        1,
+        1,
+    ],
+    [
+        1,
+        1,
+        1,
+        1,
+        1,
+    ],
+]
+m = [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+]
+
+[sme.professional_services.txns.amounts]
+dist = "scaled_shifted_beta"
+expectation = "expectation_scaled_shifted_beta"
+
+[sme.professional_services.txns.proportions]
+cash = 0.21
+card = 0.45
+transfer = 0.34
+
+[sme.professional_services.txns.cash.amounts.params]
+minv = 100
+maxv = 500
+medv = 250
+conc = 10
+
+[sme.professional_services.txns.card.amounts.params]
+minv = 100
+maxv = 1000
+medv = 350
+conc = 10
+
+[sme.professional_services.txns.transfer.amounts.params]
+minv = 250
+maxv = 20000
+medv = 2000
+conc = 10
+
+[sme.professional_services.commercial_tv]
+dist = "scaled_normal"
+
+[sme.professional_services.commercial_tv.frequency]
+m = 1
+
+[sme.professional_services.commercial_tv.params]
+sd_factor = 0.1
+minv = 0
+maxv = 0
+probability = 0.9
+
+[sme.professional_services.commercial_tv.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.professional_services.electric]
+dist = "scaled_normal"
+
+[sme.professional_services.electric.frequency]
+m = 0.8
+q = 0.2
+
+[sme.professional_services.electric.params]
+sd_factor = 0.1
+minv = 2400
+maxv = 24000
+probability = 1
+
+[sme.professional_services.electric.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.professional_services.employees]
+salary_minv = 21000
+salary_maxv = 200000
+prob_part_time_lowest_tier = 0.2
+part_time_fte_available = [
+    0.25,
+    0.5,
+    0.75,
+]
+part_time_fte_weightings = [
+    1,
+    3,
+    1,
+]
+
+[sme.professional_services.employees.num_employees]
+dist = "scaled_normal"
+
+[sme.professional_services.employees.num_employees.params]
+sd_factor = 0.1
+minv = 1
+maxv = 10
+
+[sme.professional_services.payroll.frequency]
+m = 1.0
+
+[sme.professional_services.payroll.timing]
+m = [
+    -3,
+    -2,
+    -1,
+]
+
+[sme.professional_services.employer_liability_insurance]
+dist = "scaled_normal"
+
+[sme.professional_services.employer_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.professional_services.employer_liability_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.professional_services.employer_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.professional_services.gas]
+dist = "scaled_normal"
+
+[sme.professional_services.gas.frequency]
+m = 0.8
+q = 0.2
+
+[sme.professional_services.gas.params]
+sd_factor = 0.1
+minv = 6000
+maxv = 12000
+probability = 0.9
+
+[sme.professional_services.gas.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.professional_services.income]
+dist = "scaled_shifted_beta"
+income_scaling_multiplier = 1
+
+[sme.professional_services.income.params]
+minv = 150000
+medv = 350000
+maxv = 2000000
+conc = 30
+
+[sme.professional_services.internet]
+dist = "scaled_normal"
+
+[sme.professional_services.internet.frequency]
+m = 1
+
+[sme.professional_services.internet.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1200
+probability = 1
+
+[sme.professional_services.internet.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.professional_services.marketing]
+dist = "scaled_normal"
+
+[sme.professional_services.marketing.frequency]
+i = 1
+
+[sme.professional_services.marketing.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.professional_services.marketing.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.professional_services.marketing.params]
+sd_factor = 0.1
+minv = 250
+maxv = 10000
+probability = 1
+
+[sme.professional_services.marketing.timing]
+i = [
+    30,
+]
+
+[sme.professional_services.num_employees]
+dist = "scaled_normal"
+
+[sme.professional_services.num_employees.params]
+sd_factor = 0.1
+minv = 1
+maxv = 10
+
+[sme.professional_services.phone]
+dist = "scaled_normal"
+
+[sme.professional_services.phone.frequency]
+m = 1
+
+[sme.professional_services.phone.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1500
+probability = 1
+
+[sme.professional_services.phone.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.professional_services.public_liability_insurance]
+dist = "scaled_normal"
+
+[sme.professional_services.public_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.professional_services.public_liability_insurance.params]
+sd_factor = 0.1
+minv = 20
+maxv = 100
+probability = 0.9
+
+[sme.professional_services.public_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.professional_services.rent]
+dist = "scaled_normal"
+
+[sme.professional_services.rent.frequency]
+m = 0.8
+q = 0.2
+
+[sme.professional_services.rent.params]
+sd_factor = 0.1
+minv = 10000
+maxv = 50000
+probability = 0.9
+
+[sme.professional_services.rent.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.professional_services.vehicle_fuel]
+dist = "scaled_normal"
+
+[sme.professional_services.vehicle_fuel.frequency]
+i = 1
+
+[sme.professional_services.vehicle_fuel.merchants.favourites]
+n = 3
+min_weight = 0.6
+max_weight = 1.0
+
+[sme.professional_services.vehicle_fuel.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.professional_services.vehicle_fuel.params]
+sd_factor = 0.1
+minv = 2000
+maxv = 8000
+probability = 0.9
+
+[sme.professional_services.vehicle_fuel.timing]
+i = [
+    7,
+]
+
+[sme.professional_services.wholesale]
+dist = "scaled_normal"
+
+[sme.professional_services.wholesale.furniture.frequency]
+i = 1
+
+[sme.professional_services.wholesale.furniture.timing]
+i = [
+    90,
+]
+
+[sme.professional_services.wholesale.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.professional_services.wholesale.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.professional_services.wholesale.office_supplies.frequency]
+i = 1
+
+[sme.professional_services.wholesale.office_supplies.timing]
+i = [
+    7,
+]
+
+[sme.professional_services.wholesale.params]
+minv = 0
+maxv = 0
+sd_factor = 0.1
+probability = 0.9
+
+[sme.professional_services.wholesale.stationery.frequency]
+i = 1
+
+[sme.professional_services.wholesale.stationery.timing]
+i = [
+    7,
+]
+
+[sme.professional_services.wholesale.types]
+stationery = 0.45
+office_supplies = 0.45
+furniture = 0.1
+
+[sme.pub.accounting]
+dist = "scaled_normal"
+
+[sme.pub.accounting.frequency]
+a = 1
+
+[sme.pub.accounting.params]
+sd_factor = 0.1
+minv = 1500
+maxv = 12000
+probability = 0.9
+
+[sme.pub.accounting.timing]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.pub.building_contents_insurance]
+dist = "scaled_normal"
+
+[sme.pub.building_contents_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.pub.building_contents_insurance.params]
+sd_factor = 0.1
+minv = 600
+maxv = 10000
+probability = 1
+
+[sme.pub.building_contents_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.pub.business_interruption_insurance]
+dist = "scaled_normal"
+
+[sme.pub.business_interruption_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.pub.business_interruption_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 600
+probability = 0.9
+
+[sme.pub.business_interruption_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.pub.credit_card_payment.params]
+sd_factor = 0.1
+minv = 1
+maxv = 2
+probability = 1.0
+
+[sme.pub.business_rates]
+dist = "scaled_normal"
+
+[sme.pub.business_rates.frequency]
+m = 1
+
+[sme.pub.business_rates.params]
+sd_factor = 0.1
+minv = 5000
+maxv = 20000
+probability = 0.9
+
+[sme.pub.business_rates.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.pub.cash_deposit.freq_factors]
+d = 0.002739726
+w = 0.019230769
+
+[sme.pub.cash_deposit.freq_props]
+daily_to_weekly_proportion = 0.8
+
+[sme.pub.txns]
+enabled = false
+customer_multiplier = 1
+
+[sme.pub.txns.frequency]
+i = 1.0
+
+[sme.pub.txns.timing.choices]
+i = [
+    1,
+    3,
+    7,
+    30,
+]
+
+[sme.pub.txns.timing.weights]
+i = [
+    0.1,
+    0.2,
+    0.6,
+    0.1,
+]
+
+[sme.pub.txns.amounts]
+dist = "scaled_shifted_beta"
+expectation = "expectation_scaled_shifted_beta"
+
+[sme.pub.txns.proportions]
+cash = 0.655
+card = 0.335
+transfer = 0.01
+
+[sme.pub.txns.cash.amounts.params]
+minv = 1
+maxv = 1000
+medv = 20
+conc = 10
+
+[sme.pub.txns.card.amounts.params]
+minv = 5
+maxv = 5000
+medv = 40
+conc = 10
+
+[sme.pub.txns.transfer.amounts.params]
+minv = 500
+maxv = 10000
+medv = 2000
+conc = 10
+
+[sme.pub.commercial_tv]
+dist = "scaled_normal"
+
+[sme.pub.commercial_tv.frequency]
+m = 1
+
+[sme.pub.commercial_tv.params]
+sd_factor = 0.1
+minv = 8000
+maxv = 30000
+probability = 0.9
+
+[sme.pub.commercial_tv.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.pub.electric]
+dist = "scaled_normal"
+
+[sme.pub.electric.frequency]
+m = 0.8
+q = 0.2
+
+[sme.pub.electric.params]
+sd_factor = 0.1
+minv = 2400
+maxv = 24000
+probability = 1
+
+[sme.pub.electric.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.pub.employees]
+salary_minv = 21000
+salary_maxv = 40000
+prob_part_time_lowest_tier = 0.8
+part_time_fte_available = [
+    0.25,
+    0.5,
+    0.75,
+]
+part_time_fte_weightings = [
+    1,
+    3,
+    1,
+]
+
+[sme.pub.employees.num_employees]
+dist = "scaled_normal"
+
+[sme.pub.employees.num_employees.params]
+sd_factor = 0.1
+minv = 3
+maxv = 50
+
+[sme.pub.payroll.frequency]
+m = 0.5
+w = 0.5
+
+[sme.pub.payroll.timing]
+m = [
+    -3,
+    -2,
+    -1,
+]
+w = [
+    3,
+    4,
+]
+
+[sme.pub.employer_liability_insurance]
+dist = "scaled_normal"
+
+[sme.pub.employer_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.pub.employer_liability_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 1500
+probability = 1
+
+[sme.pub.employer_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.pub.gas]
+dist = "scaled_normal"
+
+[sme.pub.gas.frequency]
+m = 0.8
+q = 0.2
+
+[sme.pub.gas.params]
+sd_factor = 0.1
+minv = 9600
+maxv = 180000
+probability = 1
+
+[sme.pub.gas.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.pub.income]
+dist = "scaled_shifted_beta"
+income_scaling_multiplier = 1
+
+[sme.pub.income.params]
+minv = 200000
+medv = 1500000
+maxv = 10000000
+conc = 30
+
+[sme.pub.internet]
+dist = "scaled_normal"
+
+[sme.pub.internet.frequency]
+m = 1
+
+[sme.pub.internet.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.pub.internet.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.pub.marketing]
+dist = "scaled_normal"
+
+[sme.pub.marketing.frequency]
+i = 1
+
+[sme.pub.marketing.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.pub.marketing.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.pub.marketing.params]
+sd_factor = 0.1
+minv = 1000
+maxv = 50000
+probability = 1
+
+[sme.pub.marketing.timing]
+i = [
+    30,
+]
+
+[sme.pub.num_employees]
+dist = "scaled_normal"
+
+[sme.pub.num_employees.params]
+sd_factor = 0.1
+minv = 3
+maxv = 50
+
+[sme.pub.phone]
+dist = "scaled_normal"
+
+[sme.pub.phone.frequency]
+m = 1
+
+[sme.pub.phone.params]
+sd_factor = 0.1
+minv = 500
+maxv = 1000
+probability = 0.9
+
+[sme.pub.phone.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.pub.public_liability_insurance]
+dist = "scaled_normal"
+
+[sme.pub.public_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.pub.public_liability_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 500
+probability = 0.9
+
+[sme.pub.public_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.pub.rent]
+dist = "scaled_normal"
+
+[sme.pub.rent.frequency]
+m = 0.8
+q = 0.2
+
+[sme.pub.rent.params]
+sd_factor = 0.1
+minv = 12000
+maxv = 240000
+probability = 1
+
+[sme.pub.rent.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.pub.vehicle_fuel]
+dist = "scaled_normal"
+
+[sme.pub.vehicle_fuel.frequency]
+i = 1
+
+[sme.pub.vehicle_fuel.merchants.favourites]
+n = 3
+min_weight = 0.6
+max_weight = 1.0
+
+[sme.pub.vehicle_fuel.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.pub.vehicle_fuel.params]
+sd_factor = 0.1
+minv = 1000
+maxv = 8000
+probability = 0.9
+
+[sme.pub.vehicle_fuel.timing]
+i = [
+    7,
+]
+
+[sme.pub.wholesale]
+dist = "scaled_normal"
+
+[sme.pub.wholesale.beverages.frequency]
+i = 1
+
+[sme.pub.wholesale.beverages.timing]
+i = [
+    7,
+]
+
+[sme.pub.wholesale.crockery.frequency]
+i = 1
+
+[sme.pub.wholesale.crockery.timing]
+i = [
+    30,
+]
+
+[sme.pub.wholesale.food.frequency]
+i = 1
+
+[sme.pub.wholesale.food.timing]
+i = [
+    7,
+]
+
+[sme.pub.wholesale.furniture.frequency]
+i = 1
+
+[sme.pub.wholesale.furniture.timing]
+i = [
+    365,
+]
+
+[sme.pub.wholesale.merchants.favourites]
+n = 3
+min_weight = 0.6
+max_weight = 1.0
+
+[sme.pub.wholesale.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.pub.wholesale.params]
+minv = 200000
+maxv = 1500000
+sd_factor = 0.1
+probability = 0.9
+
+[sme.pub.wholesale.types]
+food = 0.2
+beverages = 0.3
+furniture = 0.3
+crockery = 0.2
+
+[sme.small_landlord.credit_card_payment.params]
+sd_factor = 0.1
+minv = 1
+maxv = 2
+probability = 1.0
+
+[sme.small_landlord.accounting]
+dist = "scaled_normal"
+
+[sme.small_landlord.accounting.frequency]
+a = 1
+
+[sme.small_landlord.accounting.params]
+sd_factor = 0.1
+minv = 200
+maxv = 3000
+probability = 0.9
+
+[sme.small_landlord.accounting.timing]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.small_landlord.building_contents_insurance]
+dist = "scaled_normal"
+
+[sme.small_landlord.building_contents_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.small_landlord.building_contents_insurance.params]
+sd_factor = 0.1
+minv = 300
+maxv = 1000
+probability = 1
+
+[sme.small_landlord.building_contents_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.small_landlord.business_interruption_insurance]
+dist = "scaled_normal"
+
+[sme.small_landlord.business_interruption_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.small_landlord.business_interruption_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.small_landlord.business_interruption_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.small_landlord.business_rates]
+dist = "scaled_normal"
+
+[sme.small_landlord.business_rates.frequency]
+m = 1
+
+[sme.small_landlord.business_rates.params]
+sd_factor = 0.1
+minv = 2000
+maxv = 3000
+probability = 0.9
+
+[sme.small_landlord.business_rates.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.small_landlord.cash_deposit]
+cash_income_to_income_ratio = 0.3
+dist = "scaled_normal"
+
+[sme.small_landlord.cash_deposit.freq_factors]
+d = 0.002739726
+w = 0.019230769
+
+[sme.small_landlord.cash_deposit.freq_props]
+daily_to_weekly_proportion = 0.8
+
+[sme.small_landlord.cash_deposit.params]
+scale = 1
+sd_factor = 0.3
+
+[sme.small_landlord.txns]
+enabled = false
+
+[sme.small_landlord.txns.frequency]
+m = 0.9
+w = 0.1
+
+[sme.small_landlord.txns.timing.choices]
+m = [
+    1,
+    2,
+    -1,
+    -2,
+]
+w = [
+    4,
+]
+
+[sme.small_landlord.txns.timing.weights]
+m = [
+    0.25,
+    0.25,
+    0.25,
+    0.25,
+]
+w = [
+    1,
+]
+
+[sme.small_landlord.txns.amounts]
+dist = "scaled_shifted_beta"
+expectation = "expectation_scaled_shifted_beta"
+
+[sme.small_landlord.txns.proportions]
+cash = 0.3
+card = 0.1
+transfer = 0.6
+
+[sme.small_landlord.txns.cash.amounts.params]
+minv = 50
+maxv = 500
+medv = 150
+conc = 10
+
+[sme.small_landlord.txns.card.amounts.params]
+minv = 50
+maxv = 1000
+medv = 250
+conc = 10
+
+[sme.small_landlord.txns.transfer.amounts.params]
+minv = 50
+maxv = 2000
+medv = 300
+conc = 10
+
+[sme.small_landlord.commercial_tv]
+dist = "scaled_normal"
+
+[sme.small_landlord.commercial_tv.frequency]
+m = 1
+
+[sme.small_landlord.commercial_tv.params]
+sd_factor = 0.1
+minv = 0
+maxv = 0
+probability = 0.9
+
+[sme.small_landlord.commercial_tv.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.small_landlord.electric]
+dist = "scaled_normal"
+
+[sme.small_landlord.electric.frequency]
+m = 0.8
+q = 0.2
+
+[sme.small_landlord.electric.params]
+sd_factor = 0.1
+minv = 5000
+maxv = 10000
+probability = 0.9
+
+[sme.small_landlord.electric.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.small_landlord.employees]
+salary_minv = 21000
+salary_maxv = 50000
+prob_part_time_lowest_tier = 0.5
+part_time_fte_available = [
+    0.25,
+    0.5,
+    0.75,
+]
+part_time_fte_weightings = [
+    1,
+    2,
+    2,
+]
+
+[sme.small_landlord.employees.num_employees]
+dist = "scaled_normal"
+
+[sme.small_landlord.employees.num_employees.params]
+sd_factor = 0.1
+minv = 1
+maxv = 4
+
+[sme.small_landlord.payroll.frequency]
+m = 1.0
+
+[sme.small_landlord.payroll.timing]
+m = [
+    -3,
+    -2,
+    -1,
+]
+
+[sme.small_landlord.employer_liability_insurance]
+dist = "scaled_normal"
+
+[sme.small_landlord.employer_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.small_landlord.employer_liability_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.small_landlord.employer_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.small_landlord.gas]
+dist = "scaled_normal"
+
+[sme.small_landlord.gas.frequency]
+m = 0.8
+q = 0.2
+
+[sme.small_landlord.gas.params]
+sd_factor = 0.1
+minv = 6000
+maxv = 12000
+probability = 0.9
+
+[sme.small_landlord.gas.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.small_landlord.income]
+income_scaling_multiplier = 1
+
+[sme.small_landlord.internet]
+dist = "scaled_normal"
+
+[sme.small_landlord.internet.frequency]
+m = 1
+
+[sme.small_landlord.internet.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1200
+probability = 1
+
+[sme.small_landlord.internet.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.small_landlord.marketing]
+dist = "scaled_normal"
+
+[sme.small_landlord.marketing.frequency]
+i = 1
+
+[sme.small_landlord.marketing.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.small_landlord.marketing.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.small_landlord.marketing.params]
+sd_factor = 0.1
+minv = 250
+maxv = 10000
+probability = 1
+
+[sme.small_landlord.marketing.timing]
+i = [
+    30,
+]
+
+[sme.small_landlord.num_employees]
+dist = "scaled_normal"
+
+[sme.small_landlord.num_employees.params]
+sd_factor = 0.1
+minv = 1
+maxv = 4
+probability = 1
+
+[sme.small_landlord.phone]
+dist = "scaled_normal"
+
+[sme.small_landlord.phone.frequency]
+m = 1
+
+[sme.small_landlord.phone.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1500
+probability = 1
+
+[sme.small_landlord.phone.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.small_landlord.public_liability_insurance]
+dist = "scaled_normal"
+
+[sme.small_landlord.public_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.small_landlord.public_liability_insurance.params]
+sd_factor = 0.1
+minv = 20
+maxv = 100
+probability = 0.9
+
+[sme.small_landlord.public_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.small_landlord.rent]
+dist = "scaled_normal"
+
+[sme.small_landlord.rent.frequency]
+m = 0.8
+q = 0.2
+
+[sme.small_landlord.rent.params]
+sd_factor = 0.1
+minv = 6000
+maxv = 12000
+probability = 0.9
+
+[sme.small_landlord.rent.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.small_landlord.vehicle_fuel]
+dist = "scaled_normal"
+
+[sme.small_landlord.vehicle_fuel.frequency]
+i = 1
+
+[sme.small_landlord.vehicle_fuel.merchants.favourites]
+n = 3
+min_weight = 0.6
+max_weight = 1.0
+
+[sme.small_landlord.vehicle_fuel.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.small_landlord.vehicle_fuel.params]
+sd_factor = 0.1
+minv = 1000
+maxv = 2500
+probability = 0.9
+
+[sme.small_landlord.vehicle_fuel.timing]
+i = [
+    7,
+]
+
+[sme.small_landlord.wholesale]
+dist = "scaled_normal"
+
+[sme.small_landlord.wholesale.furniture.frequency]
+i = 1
+
+[sme.small_landlord.wholesale.furniture.timing]
+i = [
+    365,
+]
+
+[sme.small_landlord.wholesale.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.small_landlord.wholesale.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.small_landlord.wholesale.office_supplies.frequency]
+i = 1
+
+[sme.small_landlord.wholesale.office_supplies.timing]
+i = [
+    7,
+]
+
+[sme.small_landlord.wholesale.params]
+minv = 0
+maxv = 0
+sd_factor = 0.1
+probability = 0.9
+
+[sme.small_landlord.wholesale.stationery.frequency]
+i = 1
+
+[sme.small_landlord.wholesale.stationery.timing]
+i = [
+    7,
+]
+
+[sme.small_landlord.wholesale.types]
+stationery = 0.45
+office_supplies = 0.45
+furniture = 0.1
+
+[sme.takeaway.credit_card_payment.params]
+sd_factor = 0.1
+minv = 1
+maxv = 2
+probability = 1.0
+
+[sme.takeaway.accounting]
+dist = "scaled_normal"
+
+[sme.takeaway.accounting.frequency]
+a = 1
+
+[sme.takeaway.accounting.params]
+sd_factor = 0.1
+minv = 200
+maxv = 3000
+probability = 0.9
+
+[sme.takeaway.accounting.timing]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.takeaway.building_contents_insurance]
+dist = "scaled_normal"
+
+[sme.takeaway.building_contents_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.takeaway.building_contents_insurance.params]
+sd_factor = 0.1
+minv = 300
+maxv = 1000
+probability = 1
+
+[sme.takeaway.building_contents_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.takeaway.business_interruption_insurance]
+dist = "scaled_normal"
+
+[sme.takeaway.business_interruption_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.takeaway.business_interruption_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.takeaway.business_interruption_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.takeaway.business_rates]
+dist = "scaled_normal"
+
+[sme.takeaway.business_rates.frequency]
+m = 1
+
+[sme.takeaway.business_rates.params]
+sd_factor = 0.1
+minv = 2000
+maxv = 3000
+probability = 0.9
+
+[sme.takeaway.business_rates.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.takeaway.cash_deposit]
+cash_income_to_income_ratio = 0.3
+dist = "scaled_normal"
+
+[sme.takeaway.cash_deposit.freq_factors]
+d = 0.002739726
+w = 0.019230769
+
+[sme.takeaway.cash_deposit.freq_props]
+daily_to_weekly_proportion = 0.8
+
+[sme.takeaway.cash_deposit.params]
+scale = 1
+sd_factor = 0.3
+
+[sme.takeaway.txns]
+enabled = false
+customer_multiplier = 1
+
+[sme.takeaway.txns.frequency]
+i = 1
+
+[sme.takeaway.txns.timing.choices]
+i = [
+    1,
+    3,
+    7,
+]
+
+[sme.takeaway.txns.timing.weights]
+i = [
+    0.1,
+    0.3,
+    0.6,
+]
+
+[sme.takeaway.txns.amounts]
+dist = "scaled_shifted_beta"
+expectation = "expectation_scaled_shifted_beta"
+
+[sme.takeaway.txns.proportions]
+cash = 0.42
+card = 0.58
+transfer = 0.0
+
+[sme.takeaway.txns.cash.amounts.params]
+minv = 1
+maxv = 150
+medv = 15
+conc = 10
+
+[sme.takeaway.txns.card.amounts.params]
+minv = 1
+maxv = 250
+medv = 25
+conc = 10
+
+[sme.takeaway.txns.transfer.amounts.params]
+minv = 0
+maxv = 0
+medv = 0
+conc = 10
+
+[sme.takeaway.commercial_tv]
+dist = "scaled_normal"
+
+[sme.takeaway.commercial_tv.frequency]
+m = 1
+
+[sme.takeaway.commercial_tv.params]
+sd_factor = 0.1
+minv = 600
+maxv = 1200
+probability = 0.9
+
+[sme.takeaway.commercial_tv.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.takeaway.electric]
+dist = "scaled_normal"
+
+[sme.takeaway.electric.frequency]
+m = 0.8
+q = 0.2
+
+[sme.takeaway.electric.params]
+sd_factor = 0.1
+minv = 2400
+maxv = 24000
+probability = 1
+
+[sme.takeaway.electric.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.takeaway.employees]
+salary_minv = 21000
+salary_maxv = 35000
+prob_part_time_lowest_tier = 0.9
+part_time_fte_available = [
+    0.25,
+    0.5,
+    0.75,
+]
+part_time_fte_weightings = [
+    2,
+    2,
+    1,
+]
+
+[sme.takeaway.employees.num_employees]
+dist = "scaled_normal"
+
+[sme.takeaway.employees.num_employees.params]
+sd_factor = 0.1
+minv = 3
+maxv = 10
+
+[sme.takeaway.payroll.frequency]
+m = 0.5
+w = 0.5
+
+[sme.takeaway.payroll.timing]
+m = [
+    -3,
+    -2,
+    -1,
+]
+w = [
+    3,
+    4,
+]
+
+[sme.takeaway.employer_liability_insurance]
+dist = "scaled_normal"
+
+[sme.takeaway.employer_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.takeaway.employer_liability_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.takeaway.employer_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.takeaway.gas]
+dist = "scaled_normal"
+
+[sme.takeaway.gas.frequency]
+m = 0.8
+q = 0.2
+
+[sme.takeaway.gas.params]
+sd_factor = 0.1
+minv = 1000
+maxv = 35000
+probability = 1
+
+[sme.takeaway.gas.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.takeaway.income]
+dist = "scaled_shifted_beta"
+income_scaling_multiplier = 1
+
+[sme.takeaway.income.params]
+minv = 100000
+medv = 300000
+maxv = 750000
+conc = 30
+
+[sme.takeaway.internet]
+dist = "scaled_normal"
+
+[sme.takeaway.internet.frequency]
+m = 1
+
+[sme.takeaway.internet.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1200
+probability = 1
+
+[sme.takeaway.internet.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.takeaway.marketing]
+dist = "scaled_normal"
+
+[sme.takeaway.marketing.frequency]
+i = 1
+
+[sme.takeaway.marketing.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.takeaway.marketing.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.takeaway.marketing.params]
+sd_factor = 0.1
+minv = 250
+maxv = 10000
+probability = 1
+
+[sme.takeaway.marketing.timing]
+i = [
+    30,
+]
+
+[sme.takeaway.num_employees]
+dist = "scaled_normal"
+
+[sme.takeaway.num_employees.params]
+sd_factor = 0.1
+minv = 3
+maxv = 10
+probability = 1
+
+[sme.takeaway.phone]
+dist = "scaled_normal"
+
+[sme.takeaway.phone.frequency]
+m = 1
+
+[sme.takeaway.phone.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1500
+probability = 1
+
+[sme.takeaway.phone.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.takeaway.public_liability_insurance]
+dist = "scaled_normal"
+
+[sme.takeaway.public_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.takeaway.public_liability_insurance.params]
+sd_factor = 0.1
+minv = 20
+maxv = 100
+probability = 0.9
+
+[sme.takeaway.public_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.takeaway.rent]
+dist = "scaled_normal"
+
+[sme.takeaway.rent.frequency]
+m = 0.8
+q = 0.2
+
+[sme.takeaway.rent.params]
+sd_factor = 0.1
+minv = 10000
+maxv = 100000
+probability = 0.9
+
+[sme.takeaway.rent.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.takeaway.vehicle_fuel]
+dist = "scaled_normal"
+
+[sme.takeaway.vehicle_fuel.frequency]
+i = 1
+
+[sme.takeaway.vehicle_fuel.merchants.favourites]
+n = 3
+min_weight = 0.6
+max_weight = 1.0
+
+[sme.takeaway.vehicle_fuel.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.takeaway.vehicle_fuel.params]
+sd_factor = 0.1
+minv = 600
+maxv = 8000
+probability = 1
+
+[sme.takeaway.vehicle_fuel.timing]
+i = [
+    7,
+]
+
+[sme.takeaway.wholesale]
+dist = "scaled_normal"
+
+[sme.takeaway.wholesale.beverages.frequency]
+i = 1
+
+[sme.takeaway.wholesale.beverages.timing]
+i = [
+    7,
+]
+
+[sme.takeaway.wholesale.crockery.frequency]
+i = 1
+
+[sme.takeaway.wholesale.crockery.timing]
+i = [
+    7,
+]
+
+[sme.takeaway.wholesale.food.frequency]
+i = 1
+
+[sme.takeaway.wholesale.food.timing]
+i = [
+    7,
+]
+
+[sme.takeaway.wholesale.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.takeaway.wholesale.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.takeaway.wholesale.params]
+minv = 20000
+maxv = 150000
+sd_factor = 0.1
+probability = 0.9
+
+[sme.takeaway.wholesale.types]
+food = 0.8
+beverages = 0.1
+crockery = 0.1
+
+[sme.taxi.accounting]
+dist = "scaled_normal"
+
+[sme.taxi.accounting.frequency]
+a = 1
+
+[sme.taxi.accounting.params]
+sd_factor = 0.1
+minv = 200
+maxv = 3000
+probability = 0.9
+
+[sme.taxi.accounting.timing]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.taxi.building_contents_insurance]
+dist = "scaled_normal"
+
+[sme.taxi.building_contents_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.taxi.building_contents_insurance.params]
+sd_factor = 0.1
+minv = 0
+maxv = 0
+probability = 0.9
+
+[sme.taxi.building_contents_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.taxi.business_interruption_insurance]
+dist = "scaled_normal"
+
+[sme.taxi.business_interruption_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.taxi.business_interruption_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.taxi.business_interruption_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.taxi.credit_card_payment.params]
+sd_factor = 0.1
+minv = 1
+maxv = 2
+probability = 1.0
+
+[sme.taxi.business_rates]
+dist = "scaled_normal"
+
+[sme.taxi.business_rates.frequency]
+m = 1
+
+[sme.taxi.business_rates.params]
+sd_factor = 0.1
+minv = 2000
+maxv = 3000
+probability = 0.9
+
+[sme.taxi.business_rates.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.taxi.cash_deposit]
+cash_income_to_income_ratio = 0.5
+dist = "scaled_normal"
+
+[sme.taxi.cash_deposit.freq_factors]
+d = 0.002739726
+w = 0.019230769
+
+[sme.taxi.cash_deposit.freq_props]
+daily_to_weekly_proportion = 0.8
+
+[sme.taxi.cash_deposit.params]
+scale = 1
+sd_factor = 0.3
+
+[sme.taxi.txns]
+enabled = false
+customer_multiplier = 1
+
+[sme.taxi.txns.frequency]
+i = 1.0
+
+[sme.taxi.txns.timing.choices]
+i = [
+    3,
+    7,
+    14,
+    30,
+]
+
+[sme.taxi.txns.timing.weights]
+i = [
+    0.2,
+    0.5,
+    0.2,
+    0.1,
+]
+
+[sme.taxi.txns.amounts]
+dist = "scaled_shifted_beta"
+expectation = "expectation_scaled_shifted_beta"
+
+[sme.taxi.txns.proportions]
+cash = 0.56
+card = 0.44
+transfer = 0.0
+
+[sme.taxi.txns.cash.amounts.params]
+minv = 3
+maxv = 500
+medv = 25
+conc = 10
+
+[sme.taxi.txns.card.amounts.params]
+minv = 5
+maxv = 500
+medv = 35
+conc = 10
+
+[sme.taxi.txns.transfer.amounts.params]
+minv = 0
+maxv = 0
+medv = 0
+conc = 10
+
+[sme.taxi.commercial_tv]
+dist = "scaled_normal"
+
+[sme.taxi.commercial_tv.frequency]
+m = 1
+
+[sme.taxi.commercial_tv.params]
+sd_factor = 0.1
+minv = 0
+maxv = 0
+probability = 0.9
+
+[sme.taxi.commercial_tv.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.taxi.electric]
+dist = "scaled_normal"
+
+[sme.taxi.electric.frequency]
+m = 0.8
+q = 0.2
+
+[sme.taxi.electric.params]
+sd_factor = 0.1
+minv = 0
+maxv = 0
+probability = 0.9
+
+[sme.taxi.electric.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.taxi.employees]
+salary_minv = 21000
+salary_maxv = 40000
+prob_part_time_lowest_tier = 0.8
+part_time_fte_available = [
+    0.25,
+    0.5,
+    0.75,
+]
+part_time_fte_weightings = [
+    3,
+    2,
+    1,
+]
+
+[sme.taxi.employees.num_employees]
+dist = "scaled_normal"
+
+[sme.taxi.employees.num_employees.params]
+sd_factor = 0.1
+minv = 1
+maxv = 3
+
+[sme.taxi.payroll.frequency]
+m = 0.5
+w = 0.5
+
+[sme.taxi.payroll.timing]
+m = [
+    -3,
+    -2,
+    -1,
+]
+w = [
+    3,
+    4,
+]
+
+[sme.taxi.employer_liability_insurance]
+dist = "scaled_normal"
+
+[sme.taxi.employer_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.taxi.employer_liability_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.taxi.employer_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.taxi.gas]
+dist = "scaled_normal"
+
+[sme.taxi.gas.frequency]
+m = 0.8
+q = 0.2
+
+[sme.taxi.gas.params]
+sd_factor = 0.1
+minv = 5
+maxv = 10
+probability = 0.9
+
+[sme.taxi.gas.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.taxi.income]
+dist = "scaled_shifted_beta"
+income_scaling_multiplier = 1
+
+[sme.taxi.income.params]
+minv = 15000
+medv = 25000
+maxv = 50000
+conc = 30
+
+[sme.taxi.internet]
+dist = "scaled_normal"
+
+[sme.taxi.internet.frequency]
+m = 1
+
+[sme.taxi.internet.params]
+sd_factor = 0.1
+minv = 0
+maxv = 0
+probability = 0.9
+
+[sme.taxi.internet.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.taxi.marketing]
+dist = "scaled_normal"
+
+[sme.taxi.marketing.frequency]
+i = 1
+
+[sme.taxi.marketing.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.taxi.marketing.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.taxi.marketing.params]
+sd_factor = 0.1
+minv = 25
+maxv = 1000
+probability = 1
+
+[sme.taxi.marketing.timing]
+i = [
+    30,
+]
+
+[sme.taxi.num_employees]
+dist = "scaled_normal"
+
+[sme.taxi.num_employees.params]
+sd_factor = 0.1
+minv = 1
+maxv = 3
+
+[sme.taxi.phone]
+dist = "scaled_normal"
+
+[sme.taxi.phone.frequency]
+m = 1
+
+[sme.taxi.phone.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1500
+probability = 1
+
+[sme.taxi.phone.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.taxi.public_liability_insurance]
+dist = "scaled_normal"
+
+[sme.taxi.public_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.taxi.public_liability_insurance.params]
+sd_factor = 0.1
+minv = 20
+maxv = 100
+probability = 0.9
+
+[sme.taxi.public_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.taxi.rent]
+dist = "scaled_normal"
+
+[sme.taxi.rent.frequency]
+m = 0.8
+q = 0.2
+
+[sme.taxi.rent.params]
+sd_factor = 0.1
+minv = 0
+maxv = 0
+probability = 0.9
+
+[sme.taxi.rent.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.taxi.vehicle_fuel]
+dist = "scaled_normal"
+
+[sme.taxi.vehicle_fuel.frequency]
+i = 1
+
+[sme.taxi.vehicle_fuel.merchants.favourites]
+n = 3
+min_weight = 0.6
+max_weight = 1.0
+
+[sme.taxi.vehicle_fuel.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.taxi.vehicle_fuel.params]
+sd_factor = 0.1
+minv = 2000
+maxv = 10000
+probability = 1
+
+[sme.taxi.vehicle_fuel.timing]
+i = [
+    7,
+]
+
+[sme.taxi.wholesale]
+dist = "scaled_normal"
+
+[sme.taxi.wholesale.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.taxi.wholesale.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.taxi.wholesale.office_supplies.frequency]
+i = 1
+
+[sme.taxi.wholesale.office_supplies.timing]
+i = [
+    7,
+]
+
+[sme.taxi.wholesale.params]
+minv = 0
+maxv = 0
+sd_factor = 0.1
+probability = 0.9
+
+[sme.taxi.wholesale.types]
+office_supplies = 1
+
+[sme.tradesperson.credit_card_payment.params]
+sd_factor = 0.1
+minv = 1
+maxv = 2
+probability = 1.0
+
+[sme.tradesperson.accounting]
+dist = "scaled_normal"
+
+[sme.tradesperson.accounting.frequency]
+a = 1
+
+[sme.tradesperson.accounting.params]
+sd_factor = 0.1
+minv = 200
+maxv = 3000
+probability = 0.9
+
+[sme.tradesperson.accounting.timing]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.tradesperson.building_contents_insurance]
+dist = "scaled_normal"
+
+[sme.tradesperson.building_contents_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.tradesperson.building_contents_insurance.params]
+sd_factor = 0.1
+minv = 300
+maxv = 1000
+probability = 1
+
+[sme.tradesperson.building_contents_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.tradesperson.business_interruption_insurance]
+dist = "scaled_normal"
+
+[sme.tradesperson.business_interruption_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.tradesperson.business_interruption_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.tradesperson.business_interruption_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.tradesperson.business_rates]
+dist = "scaled_normal"
+
+[sme.tradesperson.business_rates.frequency]
+m = 1
+
+[sme.tradesperson.business_rates.params]
+sd_factor = 0.1
+minv = 2000
+maxv = 3000
+probability = 0.9
+
+[sme.tradesperson.business_rates.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.tradesperson.cash_deposit]
+cash_income_to_income_ratio = 0.2
+dist = "scaled_normal"
+
+[sme.tradesperson.cash_deposit.freq_factors]
+d = 0.002739726
+w = 0.019230769
+
+[sme.tradesperson.cash_deposit.freq_props]
+daily_to_weekly_proportion = 0.8
+
+[sme.tradesperson.cash_deposit.params]
+scale = 1
+sd_factor = 0.3
+
+[sme.tradesperson.txns]
+enabled = false
+customer_multiplier = 1
+
+[sme.tradesperson.txns.frequency]
+i = 1
+
+[sme.tradesperson.txns.timing.choices]
+i = [
+    365,
+    182,
+]
+
+[sme.tradesperson.txns.timing.weights]
+i = [
+    0.75,
+    0.25,
+]
+
+[sme.tradesperson.txns.amounts]
+dist = "scaled_shifted_beta"
+expectation = "expectation_scaled_shifted_beta"
+
+[sme.tradesperson.txns.proportions]
+cash = 0.475
+card = 0.425
+transfer = 0.1
+
+[sme.tradesperson.txns.cash.amounts.params]
+minv = 50
+maxv = 10000
+medv = 250
+conc = 10
+
+[sme.tradesperson.txns.card.amounts.params]
+minv = 50
+maxv = 5000
+medv = 500
+conc = 10
+
+[sme.tradesperson.txns.transfer.amounts.params]
+minv = 50
+maxv = 100000
+medv = 5000
+conc = 10
+
+[sme.tradesperson.commercial_tv]
+dist = "scaled_normal"
+
+[sme.tradesperson.commercial_tv.frequency]
+m = 1
+
+[sme.tradesperson.commercial_tv.params]
+sd_factor = 0.1
+minv = 0
+maxv = 0
+probability = 0.9
+
+[sme.tradesperson.commercial_tv.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.tradesperson.electric]
+dist = "scaled_normal"
+
+[sme.tradesperson.electric.frequency]
+m = 0.8
+q = 0.2
+
+[sme.tradesperson.electric.params]
+sd_factor = 0.1
+minv = 5000
+maxv = 20000
+probability = 0.9
+
+[sme.tradesperson.electric.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.tradesperson.employees]
+salary_minv = 21000
+salary_maxv = 78000
+prob_part_time_lowest_tier = 0.2
+part_time_fte_available = [
+    0.25,
+    0.5,
+    0.75,
+]
+part_time_fte_weightings = [
+    1,
+    2,
+    1,
+]
+
+[sme.tradesperson.employees.num_employees]
+dist = "scaled_normal"
+
+[sme.tradesperson.employees.num_employees.params]
+sd_factor = 0.1
+minv = 1
+maxv = 10
+
+[sme.tradesperson.payroll.frequency]
+m = 0.5
+w = 0.5
+
+[sme.tradesperson.payroll.timing]
+m = [
+    -3,
+    -2,
+    -1,
+]
+w = [
+    3,
+    4,
+]
+
+[sme.tradesperson.employer_liability_insurance]
+dist = "scaled_normal"
+
+[sme.tradesperson.employer_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.tradesperson.employer_liability_insurance.params]
+sd_factor = 0.1
+minv = 50
+maxv = 300
+probability = 0.9
+
+[sme.tradesperson.employer_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.tradesperson.gas]
+dist = "scaled_normal"
+
+[sme.tradesperson.gas.frequency]
+m = 0.8
+q = 0.2
+
+[sme.tradesperson.gas.params]
+sd_factor = 0.1
+minv = 6000
+maxv = 12000
+probability = 0.9
+
+[sme.tradesperson.gas.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.tradesperson.income]
+dist = "scaled_shifted_beta"
+income_scaling_multiplier = 1
+
+[sme.tradesperson.income.params]
+minv = 100000
+medv = 750000
+maxv = 3000000
+conc = 30
+
+[sme.tradesperson.internet]
+dist = "scaled_normal"
+
+[sme.tradesperson.internet.frequency]
+m = 1
+
+[sme.tradesperson.internet.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1200
+probability = 1
+
+[sme.tradesperson.internet.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.tradesperson.marketing]
+dist = "scaled_normal"
+
+[sme.tradesperson.marketing.frequency]
+i = 1
+
+[sme.tradesperson.marketing.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.tradesperson.marketing.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.tradesperson.marketing.params]
+sd_factor = 0.1
+minv = 250
+maxv = 10000
+probability = 1
+
+[sme.tradesperson.marketing.timing]
+i = [
+    30,
+]
+
+[sme.tradesperson.num_employees]
+dist = "scaled_normal"
+
+[sme.tradesperson.num_employees.params]
+sd_factor = 0.1
+minv = 1
+maxv = 10
+probability = 1
+
+[sme.tradesperson.phone]
+dist = "scaled_normal"
+
+[sme.tradesperson.phone.frequency]
+m = 1
+
+[sme.tradesperson.phone.params]
+sd_factor = 0.1
+minv = 250
+maxv = 1500
+probability = 1
+
+[sme.tradesperson.phone.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.tradesperson.public_liability_insurance]
+dist = "scaled_normal"
+
+[sme.tradesperson.public_liability_insurance.frequency]
+m = 0.2
+a = 0.8
+
+[sme.tradesperson.public_liability_insurance.params]
+sd_factor = 0.1
+minv = 20
+maxv = 100
+probability = 0.9
+
+[sme.tradesperson.public_liability_insurance.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+a = [
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+    ],
+    [
+        1,
+        2,
+        3,
+        4,
+        5,
+        -1,
+        -2,
+        -3,
+        -4,
+        -5,
+    ],
+]
+
+[sme.tradesperson.rent]
+dist = "scaled_normal"
+
+[sme.tradesperson.rent.frequency]
+m = 0.8
+q = 0.2
+
+[sme.tradesperson.rent.params]
+sd_factor = 0.1
+minv = 10000
+maxv = 50000
+probability = 0.9
+
+[sme.tradesperson.rent.timing]
+m = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+q = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    -1,
+    -2,
+    -3,
+    -4,
+    -5,
+]
+
+[sme.tradesperson.vehicle_fuel]
+dist = "scaled_normal"
+
+[sme.tradesperson.vehicle_fuel.frequency]
+i = 1
+
+[sme.tradesperson.vehicle_fuel.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.tradesperson.vehicle_fuel.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.tradesperson.vehicle_fuel.params]
+sd_factor = 0.1
+minv = 2000
+maxv = 10000
+probability = 1
+
+[sme.tradesperson.vehicle_fuel.timing]
+i = [
+    7,
+]
+
+[sme.tradesperson.wholesale]
+dist = "scaled_normal"
+
+[sme.tradesperson.wholesale.building_supplies.frequency]
+i = 1
+
+[sme.tradesperson.wholesale.building_supplies.timing]
+i = [
+    7,
+]
+
+[sme.tradesperson.wholesale.merchants.favourites]
+n = 1
+min_weight = 0.95
+max_weight = 1.0
+
+[sme.tradesperson.wholesale.merchants.others]
+min_weight = 0.0
+max_weight = 0.1
+
+[sme.tradesperson.wholesale.params]
+minv = 10000
+maxv = 500000
+sd_factor = 0.1
+probability = 0.9
+
+[sme.tradesperson.wholesale.types]
+building_supplies = 1
