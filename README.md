@@ -535,7 +535,6 @@ USAGE:
     tomlparams help      --- show this message
     tomlparams version   --- report version number
     tomlparams examples  --- copy the examples to ./tomlparams_examples
-    tomlparams test      --- run the tomlparams tests
 
 Documentation: https://tomlparams.readthedocs.io/
 Source code:   https://github.com/smartdatafoundry.com/tomlparams

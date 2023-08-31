@@ -1,13 +1,15 @@
 """
 TOML-based parameter files made better (main class)
 """
+from __future__ import annotations
 
+from glob import glob
 import os
 import tomli_w
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from tomlparams.params_group import create_params_groups
-from tomlparams.utils import error, warn, nvl, load_toml
+from tomlparams.utils import concatenate_keys, error, warn, nvl, load_toml
 from tomlparams.parse_helpers import (
     DEFAULT_PARAMS_NAME,
     DEFAULT_PARAMS_TYPE_CHECKING_NAME,
@@ -137,7 +139,7 @@ class TOMLParams:
         )
         self._verbose = verbose
 
-        if type(defaults) == str:
+        if isinstance(defaults, str):
             self._defaults = self.load_defaults_toml_file(defaults)
         else:
             self._defaults = defaults
@@ -155,6 +157,13 @@ class TOMLParams:
 
     def __getitem__(self, item):
         return self.__dict__[item]
+
+    def __eq__(self, other: Any) -> bool | type[NotImplemented]:
+        if not isinstance(other, TOMLParams):
+            return NotImplemented
+        return set(concatenate_keys(self.as_saveable_object())) == set(
+            concatenate_keys(other.as_saveable_object())
+        )
 
     @classmethod
     def indent(cls, is_test: bool) -> int:
@@ -264,6 +273,45 @@ class TOMLParams:
                 print('Using default parameters.')
         return outer_params
 
+    def read_defaults_as_directory(self, fullpath: str) -> dict:
+        """
+        Reads defaults from a directory of TOML files.
+
+        Args:
+            fullpath: path to directory containing TOML files
+
+        Returns:
+            dictionary of defaults
+        """
+        defaults = {}
+        toml_dict = {}
+        all_tomls = sorted(glob(f'{fullpath}/**/*.toml', recursive=True))
+        for i, toml in enumerate(all_tomls):
+            toml_dict = load_toml(toml)
+            if 'include' in toml_dict:
+                error(
+                    f'TOML file {toml} includes key "include",\nwhich'
+                    ' is not allow in the consolidated defaults.'
+                )
+            if defaults:
+                defaults_concatenated_keys = {
+                    key for key, _ in concatenate_keys(defaults)
+                }
+                toml_dict_concatenated_keys = {
+                    key for key, _ in concatenate_keys(toml_dict)
+                }
+
+                if keys_in_common := defaults_concatenated_keys.intersection(
+                    toml_dict_concatenated_keys
+                ):
+                    raise KeyError(
+                        f"Duplicated key(s) '{keys_in_common}' in {toml}."
+                        f" Check any of the files in {all_tomls[:i]}"
+                    )
+            selectively_update_dict(defaults, toml_dict)
+
+        return defaults
+
     def load_defaults_toml_file(self, path):
         """
         Loads defaults from TOML file at path provided.
@@ -274,15 +322,17 @@ class TOMLParams:
             else os.path.join(self._standard_params_dir, path)
         )
         if not os.path.splitext(path)[1]:
-            fullpath += '.toml'
-        if os.path.exists(fullpath):
-            defaults = load_toml(fullpath)
+            toml_path = f'{fullpath}.toml'
+        if os.path.exists(toml_path):
+            defaults = load_toml(toml_path)
             if 'include' in defaults:
                 error(
-                    f'Defaults TOML file {fullpath} includes key "include",\n'
+                    f'Defaults TOML file {toml_path} includes key "include",\n'
                     'which is not allow in defaults TOML files.'
                 )
             return defaults
+        elif os.path.isdir(fullpath):
+            return self.read_defaults_as_directory(fullpath)
         else:
             error(f'Defaults cannot be read from {fullpath}.')
 

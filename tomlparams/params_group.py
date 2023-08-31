@@ -4,8 +4,11 @@ ParamsGroup
 
 Container for parameters.
 """
+from __future__ import annotations
+
 from typing import Any, Dict
 from tomlparams.parse_helpers import to_saveable_object
+from tomlparams.utils import concatenate_keys
 
 
 class ParamsGroup:
@@ -38,6 +41,13 @@ class ParamsGroup:
             f'ParamsGroup(\n{self._param_indent}{body}\n{self._group_indent})'
         )
 
+    def __eq__(self, other: Any) -> bool | type[NotImplemented]:
+        if not isinstance(other, ParamsGroup):
+            return NotImplemented
+        return set(concatenate_keys(self.as_saveable_object())) == set(
+            concatenate_keys(other.as_saveable_object())
+        )
+
     def __getitem__(self, item):
         return self.__dict__[item]
 
@@ -47,6 +57,13 @@ class ParamsGroup:
     def get_params(self) -> dict:
         return {
             k: v for k, v in self.__dict__.items() if not k.startswith('_')
+        }
+
+    def as_dict(self) -> dict:
+        return {
+            k: v.as_dict() if isinstance(v, ParamsGroup) else v
+            for k, v in self.__dict__.items()
+            if not k.startswith('_')
         }
 
     def values(self):

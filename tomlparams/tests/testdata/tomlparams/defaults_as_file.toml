@@ -1,0 +1,17 @@
+[animals.birds]
+average_n_eyes = 2
+
+[animals.fish.salmon]
+average_n_eyes = 2
+
+[animals.fish.tuna]
+average_n_eyes = 2
+
+[fungi.ascomycota]
+average_n_eyes = 0
+
+[fungi.chytridiomycota]
+average_n_eyes = 0
+
+[human]
+average_n_eyes = 2

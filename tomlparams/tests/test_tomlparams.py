@@ -4,8 +4,11 @@ import tempfile
 import tomli
 import unittest
 
+from parameterized import parameterized
+
 from tomlparams.captureoutput import CaptureOutput
 from tomlparams import TOMLParams
+from tomlparams.utils import concatenate_keys
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))
 XDIR = os.path.join(THISDIR, 'testdata')
@@ -652,6 +655,78 @@ class TestTOMLParams(unittest.TestCase):
         self.assertEqual(str(self.co), expected_error)
 
         os.environ.pop('TOMLPARAMSCHECKING', None)
+
+    def test_concatenate_keys(self):
+        d = {'a': {'b': 1, 'c': 2}, 'd': 3}
+        expected = (('a.b', 1), ('a.c', 2), ('d', 3))
+        self.assertEqual(tuple(concatenate_keys(d)), expected)
+
+    def test_read_defaults_as_directory(self):
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+        defaults_as_dir = os.path.join(stddir, 'defaults_as_dir')
+        defaults_as_file = os.path.join(stddir, 'defaults_as_file')
+        params_default_as_dir = TOMLParams(
+            defaults_as_dir,
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+        params_default_as_file = TOMLParams(
+            defaults_as_file,
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+        self.assertEqual(params_default_as_dir, params_default_as_file)
+
+    @parameterized.expand(['human', 'animals', 'fungi'])
+    def test_content_defaults_as_directory(self, default_primary_key: str):
+        # primary keys of default as file
+        # primary_keys = ['human', 'animals', 'fungi']
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+        defaults_as_dir = os.path.join(stddir, 'defaults_as_dir')
+        defaults_as_file = os.path.join(stddir, 'defaults_as_file')
+        params_default_as_dir = TOMLParams(
+            defaults_as_dir,
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+        params_default_as_file = TOMLParams(
+            defaults_as_file,
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+        d_as_dir = set(
+            concatenate_keys(
+                params_default_as_dir[default_primary_key].as_dict()
+            )
+        )
+        d_as_file = set(
+            concatenate_keys(
+                params_default_as_file[default_primary_key].as_dict()
+            )
+        )
+        self.assertEqual(d_as_dir, d_as_file)
+
+    def test_read_defaults_as_directory_repeated_keys(self):
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+        defaults_as_dir_repeated_keys = os.path.join(
+            stddir, 'defaults_as_dir_repeated_keys'
+        )
+        self.assertRaises(
+            KeyError,
+            lambda: TOMLParams(
+                defaults_as_dir_repeated_keys,
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+            ),
+        )
 
 
 if __name__ == '__main__':
