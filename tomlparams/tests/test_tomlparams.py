@@ -702,17 +702,17 @@ class TestTOMLParams(unittest.TestCase):
         )
         d_as_dir = set(
             concatenate_keys(
-                params_default_as_dir[default_primary_key].get_params()
+                params_default_as_dir[default_primary_key].as_dict()
             )
         )
         d_as_file = set(
             concatenate_keys(
-                params_default_as_file[default_primary_key].get_params()
+                params_default_as_file[default_primary_key].as_dict()
             )
         )
         self.assertEqual(d_as_dir, d_as_file)
 
-    def test_read_defaults_as_directory_fail_repeated_keys(self):
+    def test_read_defaults_as_directory_repeated_keys(self):
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults_as_dir_repeated_keys = os.path.join(
