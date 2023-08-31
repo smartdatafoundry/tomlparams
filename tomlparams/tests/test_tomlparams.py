@@ -712,6 +712,22 @@ class TestTOMLParams(unittest.TestCase):
         )
         self.assertEqual(d_as_dir, d_as_file)
 
+    def test_read_defaults_as_directory_fail_repeated_keys(self):
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+        defaults_as_dir_repeated_keys = os.path.join(
+            stddir, 'defaults_as_dir_repeated_keys'
+        )
+        self.assertRaises(
+            KeyError,
+            lambda: TOMLParams(
+                defaults_as_dir_repeated_keys,
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+            ),
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
