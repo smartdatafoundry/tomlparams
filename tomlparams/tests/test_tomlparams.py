@@ -4,6 +4,8 @@ import tempfile
 import tomli
 import unittest
 
+from parameterized import parameterized
+
 from tomlparams.captureoutput import CaptureOutput
 from tomlparams import TOMLParams
 from tomlparams.utils import concatenate_keys
@@ -678,11 +680,12 @@ class TestTOMLParams(unittest.TestCase):
         )
         self.assertEqual(params_default_as_dir, params_default_as_file)
 
-    def test_content_defaults_as_directory(self):
+    @parameterized.expand(['human', 'animals', 'fungi'])
+    def test_content_defaults_as_directory(self, default_primary_key: str):
+        # primary keys of default as file
+        # primary_keys = ['human', 'animals', 'fungi']
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
-        # main keys of default as file
-        main_keys = ['human', 'animals', 'fungi']
         defaults_as_dir = os.path.join(stddir, 'defaults_as_dir')
         defaults_as_file = os.path.join(stddir, 'defaults_as_file')
         params_default_as_dir = TOMLParams(
@@ -697,14 +700,17 @@ class TestTOMLParams(unittest.TestCase):
             user_params_dir=userdir,
             verbose=False,
         )
-        for key in main_keys:
-            d_as_dir = tuple(
-                concatenate_keys(params_default_as_dir[key].get_params())
+        d_as_dir = tuple(
+            concatenate_keys(
+                params_default_as_dir[default_primary_key].get_params()
             )
-            d_as_file = tuple(
-                concatenate_keys(params_default_as_file[key].get_params())
+        )
+        d_as_file = tuple(
+            concatenate_keys(
+                params_default_as_file[default_primary_key].get_params()
             )
-            self.assertEqual(d_as_dir, d_as_file)
+        )
+        self.assertEqual(d_as_dir, d_as_file)
 
 
 if __name__ == '__main__':
