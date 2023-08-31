@@ -6,6 +6,7 @@ Container for parameters.
 """
 from typing import Any, Dict
 from tomlparams.parse_helpers import to_saveable_object
+from tomlparams.utils import concatenate_keys
 
 
 class ParamsGroup:
@@ -38,11 +39,11 @@ class ParamsGroup:
             f'ParamsGroup(\n{self._param_indent}{body}\n{self._group_indent})'
         )
 
-    def __eq__(self, other: Any) -> bool:
-        return all(
-            self.as_saveable_object().get(k)
-            == other.as_saveable_object().get(k)
-            for k in self.as_saveable_object()
+    def __eq__(self, other: Any) -> bool | NotImplemented:
+        if not isinstance(other, ParamsGroup):
+            return NotImplemented
+        return set(concatenate_keys(self.as_saveable_object())) == set(
+            concatenate_keys(other.as_saveable_object())
         )
 
     def __getitem__(self, item):

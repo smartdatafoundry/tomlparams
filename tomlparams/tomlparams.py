@@ -157,11 +157,11 @@ class TOMLParams:
     def __getitem__(self, item):
         return self.__dict__[item]
 
-    def __eq__(self, other: Any) -> bool:
-        return all(
-            self.as_saveable_object().get(k)
-            == other.as_saveable_object().get(k)
-            for k in self.as_saveable_object()
+    def __eq__(self, other: Any) -> bool | NotImplemented:
+        if not isinstance(other, TOMLParams):
+            return NotImplemented
+        return set(concatenate_keys(self.as_saveable_object())) == set(
+            concatenate_keys(other.as_saveable_object())
         )
 
     @classmethod
