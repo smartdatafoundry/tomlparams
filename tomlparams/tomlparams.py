@@ -294,19 +294,20 @@ class TOMLParams:
                     ' is not allow in the consolidated defaults.'
                 )
             if defaults:
-                defaults_concatenated_key_value_pairs = concatenate_keys(
-                    defaults
-                )
-                toml_dict_concatenated_keys = dict(
-                    concatenate_keys(toml_dict)
-                ).keys()
+                defaults_concatenated_keys = {
+                    key for key, _ in concatenate_keys(defaults)
+                }
+                toml_dict_concatenated_keys = {
+                    key for key, _ in concatenate_keys(toml_dict)
+                }
 
-                for default_key in defaults_concatenated_key_value_pairs:
-                    if default_key in toml_dict_concatenated_keys:
-                        raise KeyError(
-                            f"Duplicated key '{default_key}' in {toml}. Check"
-                            f" any of the files in {all_tomls[:i]}"
-                        )
+                if keys_in_common := defaults_concatenated_keys.intersection(
+                    toml_dict_concatenated_keys
+                ):
+                    raise KeyError(
+                        f"Duplicated key(s) '{keys_in_common}' in {toml}."
+                        f" Check any of the files in {all_tomls[:i]}"
+                    )
             selectively_update_dict(defaults, toml_dict)
 
         return defaults

@@ -700,12 +700,12 @@ class TestTOMLParams(unittest.TestCase):
             user_params_dir=userdir,
             verbose=False,
         )
-        d_as_dir = tuple(
+        d_as_dir = set(
             concatenate_keys(
                 params_default_as_dir[default_primary_key].get_params()
             )
         )
-        d_as_file = tuple(
+        d_as_file = set(
             concatenate_keys(
                 params_default_as_file[default_primary_key].get_params()
             )

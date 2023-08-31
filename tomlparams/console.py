@@ -1,7 +1,7 @@
 import os
 import shutil
 import sys
-import unittest
+
 from tomlparams import __version__
 
 DIR = os.path.dirname(os.path.realpath(os.path.abspath(__file__)))
@@ -14,7 +14,6 @@ USAGE:
     tomlparams help      --- show this message
     tomlparams version   --- report version number
     tomlparams examples  --- copy the examples to ./tomlparams_examples
-    tomlparams test      --- run the tomlparams tests
 
 Documentation: https://tomlparams.readthedocs.io/
 Source code:   https://github.com/smartdatafoundry.com/tomlparams
@@ -45,16 +44,6 @@ def main():
                 ignore=shutil.ignore_patterns('__pycache__'),
             )
             print(f'Examples copied to {dest_path}.')
-        elif cmd == 'test':
-            from tomlparams.tests.test_tomlparams import TestTOMLParams
-
-            suite = unittest.TestSuite()
-            test_loader = unittest.TestLoader()
-            s = test_loader.loadTestsFromTestCase(TestTOMLParams)
-            suite.addTest(s)
-            tester = unittest.TextTestRunner(verbosity=2)
-            tester.run(suite)
-
         else:
             print(f'*** Unknown command: {" ".join(args)}\n')
             print(USAGE, file=sys.stderr)

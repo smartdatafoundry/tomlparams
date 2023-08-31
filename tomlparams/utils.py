@@ -3,7 +3,7 @@ Utils
 =====
 """
 import sys
-from typing import NoReturn
+from typing import Any, Generator, NoReturn
 
 import tomli
 
@@ -36,7 +36,9 @@ def load_toml(path):
             raise
 
 
-def concatenate_keys(d: dict, sep='.'):
+def concatenate_keys(
+    d: dict, sep='.'
+) -> Generator[tuple[str, Any], None, None]:
     """
     Concatenate keys in a nested dict, e.g.:
             >>> d = {'a': {'b': 1, 'c': 2}, 'd': 3}
