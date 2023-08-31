@@ -296,7 +296,7 @@ class TOMLParams:
             if defaults:
                 defaults_concatenated_key_value_pairs = concatenate_keys(
                     defaults
-                ) 
+                )
                 toml_dict_concatenated_keys = dict(
                     concatenate_keys(toml_dict)
                 ).keys()
