@@ -4,6 +4,8 @@ ParamsGroup
 
 Container for parameters.
 """
+from __future__ import annotations
+
 from typing import Any, Dict
 from tomlparams.parse_helpers import to_saveable_object
 from tomlparams.utils import concatenate_keys

@@ -1,6 +1,7 @@
 """
 TOML-based parameter files made better (main class)
 """
+from __future__ import annotations
 
 from glob import glob
 import os
