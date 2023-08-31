@@ -39,7 +39,7 @@ class ParamsGroup:
             f'ParamsGroup(\n{self._param_indent}{body}\n{self._group_indent})'
         )
 
-    def __eq__(self, other: Any) -> bool | NotImplemented:
+    def __eq__(self, other: Any) -> bool | type[NotImplemented]:
         if not isinstance(other, ParamsGroup):
             return NotImplemented
         return set(concatenate_keys(self.as_saveable_object())) == set(

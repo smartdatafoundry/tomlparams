@@ -157,7 +157,7 @@ class TOMLParams:
     def __getitem__(self, item):
         return self.__dict__[item]
 
-    def __eq__(self, other: Any) -> bool | NotImplemented:
+    def __eq__(self, other: Any) -> bool | type[NotImplemented]:
         if not isinstance(other, TOMLParams):
             return NotImplemented
         return set(concatenate_keys(self.as_saveable_object())) == set(
