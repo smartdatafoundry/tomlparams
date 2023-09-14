@@ -553,17 +553,6 @@ files = [
 dev = ["jinja2"]
 
 [[package]]
-name = "parametrized"
-version = "0.1"
-description = "A decorator collection allowing for simple parametrized test case definitions."
-optional = false
-python-versions = "*"
-files = [
-    {file = "parametrized-0.1.tar.gz", hash = "sha256:ad55c4d803715bd921869701757bd3604dfa1deacdee53e835c0a4840ddb102d"},
-    {file = "parametrized-0.1.zip", hash = "sha256:f2d42384fee14ecceb09156a2219415c9a92af998b183092bc7f27ba3fd3c7f5"},
-]
-
-[[package]]
 name = "pathspec"
 version = "0.11.1"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -989,4 +978,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "4d701fab3275237adce239611a373c2fc0c6919fb872a5ab500ba6afae957bf8"
+content-hash = "8ad02d399e59141fb4d5e0e432a71f5b867421b788a2a347e4a48213e8910636"
