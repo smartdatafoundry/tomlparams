@@ -65,7 +65,7 @@ jobs:
 
       - name: Check poetry lock
         shell: bash
-        run: poetry lock --no-update
+        run: poetry lock --check
 
       - name: Install dependencies
         shell: bash
