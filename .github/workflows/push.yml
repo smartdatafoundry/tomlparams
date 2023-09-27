@@ -46,6 +46,10 @@ jobs:
         shell: bash
         run: poetry config virtualenvs.in-project true
 
+      - name: Check poetry lock
+        shell: bash
+        run: poetry lock --check
+
       - name: Install dependencies
         shell: bash
         run: poetry install
