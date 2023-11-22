@@ -164,47 +164,55 @@ def overwrite_defaults_with_toml(
     defaults: dict[str, Any],
     overwrite: Optional[dict[str, Any]] = None,
 ) -> tuple[dict[str, Any], list[ParseMismatch]]:
+    if overwrite is None:
+        overwrite = {}
+
     ret_d = {}
     parse_mismatches = []
 
-    for dk, dv in defaults.items():
-        if isinstance(dv, dict):
-            ov = overwrite.get(dk) if overwrite is not None else None
+    for default_key, default_value in defaults.items():
+        if isinstance(default_value, dict):
+            ov = overwrite.get(default_key)
             if ov is not None and type(ov) is not dict:
-                error(f'*** ERROR: {dk} should be a section of the toml file')
+                error(
+                    f'*** ERROR: {default_key} should be a section of the toml'
+                    ' file'
+                )
             new_dict, new_type_mismatches = overwrite_defaults_with_toml(
-                hierarchy + [dk],
-                defaults=dv,
+                hierarchy + [default_key],
+                defaults=default_value,
                 overwrite=ov,
             )
-            ret_d[dk] = new_dict
+            ret_d[default_key] = new_dict
             parse_mismatches.extend(new_type_mismatches)
         else:
-            ov = overwrite.get(dk, dv) if overwrite is not None else dv
-            if isinstance(dv, (list, set, tuple)):
-                default_types = get_collection_types(dv)
+            ov = overwrite.get(default_key, default_value)
+
+            if isinstance(default_value, (set, list, tuple)):
+                default_types = get_collection_types(default_value)
                 toml_types = get_collection_types(ov)
                 if default_types - toml_types:
                     parse_mismatches.append(
                         ParseMismatch(
                             ParseMismatchType.TYPING,
                             hierarchy,
-                            dk,
+                            default_key,
                             list(default_types),
                             list(toml_types),
                         )
                     )
-            if type(ov) != type(dv):
+
+            if type(ov) != type(default_value):
                 parse_mismatches.append(
                     ParseMismatch(
                         ParseMismatchType.TYPING,
                         hierarchy,
-                        dk,
-                        type(dv),
+                        default_key,
+                        type(default_value),
                         type(ov),
                     )
                 )
-            ret_d[dk] = ov
+            ret_d[default_key] = ov
 
     if overwrite is not None and (
         bad_keys := set(overwrite.keys()) - set(defaults.keys()) - {'include'}

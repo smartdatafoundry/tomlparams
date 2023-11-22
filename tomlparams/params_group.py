@@ -81,6 +81,14 @@ def create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
     for k, v in d.items():
         if isinstance(v, dict):
             pg.__dict__[k] = create_params_groups(v, depth + 1)
+        elif is_iterable_of_dicts(v):
+            pg.__dict__[k] = [create_params_groups(x, depth + 1) for x in v]
         else:
             pg.__dict__[k] = v
     return pg
+
+
+def is_iterable_of_dicts(item: Any):
+    if isinstance(item, (set, list, tuple)):
+        return all(isinstance(x, dict) for x in item)
+    return False

@@ -8,6 +8,7 @@ from parameterized import parameterized
 
 from tomlparams.captureoutput import CaptureOutput
 from tomlparams import TOMLParams
+from tomlparams.params_group import ParamsGroup
 from tomlparams.utils import concatenate_keys
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))
@@ -727,6 +728,62 @@ class TestTOMLParams(unittest.TestCase):
                 verbose=False,
             ),
         )
+
+    def test_table_array(self):
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+
+        params = TOMLParams(
+            "table_array_defaults",
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+
+        for array in params['array']:
+            self.assertIsInstance(array, ParamsGroup)
+
+    def test_table_array_overwriting_same_length(self):
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+
+        params = TOMLParams(
+            defaults="table_array_defaults",
+            name="table_array_same_length",
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+
+        self.assertEqual(len(params['array']), 2)
+
+    def test_table_array_overwriting_longer(self):
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+
+        params = TOMLParams(
+            defaults="table_array_defaults",
+            name="table_array_longer",
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+
+        self.assertEqual(len(params['array']), 3)
+
+    def test_table_array_overwriting_shorter(self):
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+
+        params = TOMLParams(
+            defaults="table_array_defaults",
+            name="table_array_shorter",
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+            verbose=False,
+        )
+
+        self.assertEqual(len(params['array']), 1)
 
 
 if __name__ == '__main__':

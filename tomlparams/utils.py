@@ -11,6 +11,7 @@ import tomli
 def error(*msg, exit_code=1) -> NoReturn:
     print("*** ERROR:", *msg, file=sys.stderr)
     sys.exit(exit_code)
+    # raise Exception
 
 
 def warn(*msg):
