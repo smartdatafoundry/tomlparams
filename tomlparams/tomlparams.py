@@ -24,6 +24,8 @@ from tomlparams.parse_helpers import (
     TypeChecking,
 )
 
+SPECIAL_KEYS = ['include', 'exclude_keys']
+
 
 class TOMLParams:
     """
@@ -223,7 +225,7 @@ class TOMLParams:
             elif ext == '':
                 pfile = f'{name}.toml'
             else:
-                error(
+                raise ValueError(
                     'configuration files must use .toml extension\n'
                     f'(unlike {name}).'
                 )
@@ -233,12 +235,12 @@ class TOMLParams:
             path = std_path
             if os.path.exists(std_path):
                 if is_user_reserved_path(path):
-                    error(
+                    raise ValueError(
                         f'path {path} is reserved for user '
                         'TOML files, but exists in standardparams.'
                     )
                 if os.path.exists(custom_path):
-                    warn(
+                    raise Warning(
                         f'{pfile} exists as {std_path} '
                         f'and {custom_path}; using {custom_path}'
                     )
@@ -290,11 +292,15 @@ class TOMLParams:
         all_tomls = sorted(glob(f'{fullpath}/**/*.toml', recursive=True))
         for i, toml in enumerate(all_tomls):
             toml_dict = load_toml(toml)
-            if 'include' in toml_dict:
-                error(
-                    f'TOML file {toml} includes key "include",\nwhich'
-                    ' is not allow in the consolidated defaults.'
-                )
+            for special_key in SPECIAL_KEYS:
+                # Check for special keys in the TOML file, which are not
+                # allowed in the consolidated defaults. These are:
+                # 'include', 'exclude_keys'
+                if special_key in toml_dict:
+                    raise KeyError(
+                        f'TOML file {toml} includes key "{special_key}",\nwhich'
+                        ' is not allow in the consolidated defaults.'
+                    )
             if defaults:
                 defaults_concatenated_keys = {
                     key for key, _ in concatenate_keys(defaults)
@@ -327,11 +333,15 @@ class TOMLParams:
             toml_path = f'{fullpath}.toml'
         if os.path.exists(toml_path):
             defaults = load_toml(toml_path)
-            if 'include' in defaults:
-                error(
-                    f'Defaults TOML file {toml_path} includes key "include",\n'
-                    'which is not allow in defaults TOML files.'
-                )
+            for special_key in SPECIAL_KEYS:
+                # Check for special keys in the TOML file, which are not
+                # allowed in the defaults. These are:
+                # 'include', 'exclude_keys'
+                if special_key in defaults:
+                    raise KeyError(
+                        f'Defaults TOML file {toml_path} includes key "{special_key}",\n'
+                        'which is not allow in defaults TOML files.'
+                    )
             return defaults
         elif os.path.isdir(fullpath):
             return self.read_defaults_as_directory(fullpath)
