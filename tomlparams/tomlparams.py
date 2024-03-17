@@ -1,15 +1,17 @@
 """
 TOML-based parameter files made better (main class)
 """
+
 from __future__ import annotations
 
 from glob import glob
 import os
+from types import NotImplementedType
 import tomli_w
-from typing import Any, Optional, Union
+from typing import Any
 
 from tomlparams.params_group import create_params_groups
-from tomlparams.utils import concatenate_keys, error, warn, nvl, load_toml
+from tomlparams.utils import concatenate_keys, error, warn, load_toml
 from tomlparams.parse_helpers import (
     DEFAULT_PARAMS_NAME,
     DEFAULT_PARAMS_TYPE_CHECKING_NAME,
@@ -117,25 +119,25 @@ class TOMLParams:
 
     def __init__(
         self,
-        defaults: Union[dict, str],
-        name: str = None,
+        defaults: dict | str,
+        name: str | None = None,
         params_name: str = DEFAULT_PARAMS_NAME,
-        env_var: str = None,
+        env_var: str | None = None,
         base_params_stem: str = 'base',
-        standard_params_dir: str = None,
-        user_params_dir: str = None,
-        verbose: Optional[bool] = True,
+        standard_params_dir: str | None = None,
+        user_params_dir: str | None = None,
+        verbose: bool = True,
         check_types: TypeChecking = WARN,
-        type_check_env_var: str = None,
+        type_check_env_var: str | None = None,
     ):
-        self._env_var = nvl(env_var, params_name.upper())  # TOMLPARAMS
+        self._env_var = env_var or params_name.upper()  # TOMLPARAMS
         self._base_params_stem = base_params_stem
 
-        self._standard_params_dir = nvl(
-            standard_params_dir, os.path.expanduser(f'~/{params_name}')
+        self._standard_params_dir = standard_params_dir or os.path.expanduser(
+            f'~/{params_name}'
         )
-        self._user_params_dir = nvl(
-            user_params_dir, os.path.expanduser(f'~/user{params_name}')
+        self._user_params_dir = user_params_dir or os.path.expanduser(
+            f'~/user{params_name}'
         )
         self._verbose = verbose
 
@@ -144,8 +146,8 @@ class TOMLParams:
         else:
             self._defaults = defaults
 
-        self._type_check_env_var = nvl(
-            type_check_env_var, DEFAULT_PARAMS_TYPE_CHECKING_NAME
+        self._type_check_env_var = (
+            type_check_env_var or DEFAULT_PARAMS_TYPE_CHECKING_NAME
         )
 
         env_var_checking_value = os.environ.get(self._type_check_env_var)
@@ -158,9 +160,9 @@ class TOMLParams:
     def __getitem__(self, item):
         return self.__dict__[item]
 
-    def __eq__(self, other: Any) -> bool | type[NotImplemented]:
+    def __eq__(self, other: Any) -> bool | NotImplementedType:
         if not isinstance(other, TOMLParams):
-            return NotImplemented
+            return NotImplementedType
         return set(concatenate_keys(self.as_saveable_object())) == set(
             concatenate_keys(other.as_saveable_object())
         )
@@ -173,7 +175,7 @@ class TOMLParams:
         """
         return cls.json_test_indent if is_test else cls.json_indent
 
-    def set_params(self, name: str, report_load: bool = False):
+    def set_params(self, name: str | None, report_load: bool = False):
         """
         Sets the name for the run, which is used as
           - the subdirectory for results
@@ -202,7 +204,7 @@ class TOMLParams:
 
         self.load(report=report_load)
 
-    def read_toml_file(self, report: bool = False, name: Optional[str] = None):
+    def read_toml_file(self, report: bool = False, name: str | None = None):
         """
         Reads parameters from toml file
 
@@ -413,13 +415,13 @@ class TOMLParams:
         )
         return f'TOMLParams(\n    {body}\n)'
 
-    def as_saveable_object(self):
+    def as_saveable_object(
+        self,
+    ) -> dict[Any, dict[Any, Any] | list[Any] | tuple[Any] | Any]:
         return to_saveable_object(self.__dict__, self._defaults)
 
-    def write_consolidated_toml(
-        self, path: str, verbose: Optional[bool] = None
-    ):
-        verbose = nvl(verbose, self._verbose)
+    def write_consolidated_toml(self, path: str, verbose: bool | None = None):
+        verbose = verbose or self._verbose
         d = to_saveable_object(self.__dict__, self._defaults)
         with open(path, 'wb') as f:
             tomli_w.dump(d, f)

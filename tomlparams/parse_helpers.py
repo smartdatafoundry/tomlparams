@@ -2,13 +2,14 @@
 Parse Helpers
 =============
 """
+
 from __future__ import annotations
 
 import datetime
 import os
 import re
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from tomlparams.utils import error
 from tomlparams import params_group
 
@@ -27,8 +28,8 @@ class ParseMismatch:
         pm_type: ParseMismatchType,
         position: list[str],
         key: str,
-        default_type: Optional[type | list[type]] = None,
-        toml_type: Optional[type | list[type]] = None,
+        default_type: type | list[type] | None = None,
+        toml_type: type | list[type] | None = None,
     ):
         self.pm_type = pm_type
         self.position = position
@@ -77,7 +78,9 @@ class ParseMismatch:
         )
 
 
-def to_saveable_object(o: Any, ref: Optional[Any] = None):
+def to_saveable_object(
+    o: Any, ref: Any | None = None
+) -> dict[Any, dict[Any, Any] | list[Any] | tuple[Any] | Any]:
     """
     Convert a TOMLParams Object, a ParamsGroup object, or a collection
     type (dict, list, tuple) recursively to a TOML-dumpable object.
@@ -112,8 +115,8 @@ def to_saveable_object(o: Any, ref: Optional[Any] = None):
         }
     elif isinstance(o, (list, tuple)):
         if ref:
-            return [to_saveable_object(v, w) for (v, w) in zip(o, ref)]
-        return [to_saveable_object(v) for v in o]
+            return [to_saveable_object(v, w) for (v, w) in zip(o, ref)]  # type: ignore
+        return [to_saveable_object(v) for v in o]  # type: ignore
     elif o is None or type(o) in (
         bool,
         str,
@@ -127,7 +130,7 @@ def to_saveable_object(o: Any, ref: Optional[Any] = None):
     elif hasattr(o, 'as_saveable_object'):
         return o.as_saveable_object()
     else:
-        error(f'Cannot flatten object type {type(o)}:\n{str(o)}')
+        raise ValueError(f'Cannot flatten object type {type(o)}:\n{str(o)}')
 
 
 def selectively_update_dict(d: Dict[str, Any], new_d: Dict[str, Any]) -> None:
@@ -162,7 +165,7 @@ def get_collection_types(coll: list[Any] | set[Any] | tuple[Any]) -> set[type]:
 def overwrite_defaults_with_toml(
     hierarchy: list[str],
     defaults: dict[str, Any],
-    overwrite: Optional[dict[str, Any]] = None,
+    overwrite: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], list[ParseMismatch]]:
     if overwrite is None:
         overwrite = {}
@@ -173,8 +176,8 @@ def overwrite_defaults_with_toml(
     for default_key, default_value in defaults.items():
         if isinstance(default_value, dict):
             ov = overwrite.get(default_key)
-            if ov is not None and type(ov) is not dict:
-                error(
+            if ov is not None and not isinstance(ov, dict):
+                raise KeyError(
                     f'*** ERROR: {default_key} should be a section of the toml'
                     ' file'
                 )

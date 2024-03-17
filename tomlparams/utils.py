@@ -2,6 +2,7 @@
 Utils
 =====
 """
+
 import sys
 from typing import Any, Generator, NoReturn
 
@@ -38,7 +39,7 @@ def load_toml(path):
 
 
 def concatenate_keys(
-    d: dict, sep='.'
+    dict_to_flatten: dict[Any, Any], sep: str = '.'
 ) -> Generator[tuple[str, Any], None, None]:
     """
     Concatenate keys in a nested dict, e.g.:
@@ -51,9 +52,11 @@ def concatenate_keys(
     Returns:
         generator of (key, value) pairs
     """
-    for k, v in d.items():
-        if isinstance(v, dict):
-            for k2, v2 in dict(concatenate_keys(v, sep=sep)).items():
-                yield k + sep + k2, v2
+    for key1, value1 in dict_to_flatten.items():
+        if isinstance(value1, dict):
+            for key2, value2 in dict(
+                concatenate_keys(value1, sep=sep)
+            ).items():
+                yield key1 + sep + key2, value2
         else:
-            yield k, v
+            yield key1, value1
