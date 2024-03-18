@@ -9,7 +9,7 @@ import datetime
 import os
 import re
 from enum import Enum
-from typing import Any, Dict
+from typing import Any
 from tomlparams.utils import error
 from tomlparams import params_group
 
@@ -133,9 +133,11 @@ def to_saveable_object(
         raise ValueError(f'Cannot flatten object type {type(o)}:\n{str(o)}')
 
 
-def selectively_update_dict(d: Dict[str, Any], new_d: Dict[str, Any]) -> None:
+def selectively_update_dict(
+    original_dict: dict[str, Any], new_dict: dict[str, Any]
+) -> None:
     """
-    Selectively update dictionary d with any values that are in new_d,
+    Selectively update dictionary original_dict with any values that are in new_dict,
     but being careful only to update keys in dictionaries that are present
     in new_d.
 
@@ -143,14 +145,14 @@ def selectively_update_dict(d: Dict[str, Any], new_d: Dict[str, Any]) -> None:
         d: dictionary with string keys
         new_d: dictionary with string keys
     """
-    for k, v in new_d.items():
-        if isinstance(v, dict) and k in d:
-            if isinstance(d[k], dict):
-                selectively_update_dict(d[k], v)
+    for k, v in new_dict.items():
+        if isinstance(v, dict) and k in original_dict:
+            if isinstance(original_dict[k], dict):
+                selectively_update_dict(original_dict[k], v)
             else:
-                d[k] = v
+                original_dict[k] = v
         else:
-            d[k] = v
+            original_dict[k] = v
 
 
 def is_user_reserved_path(path: str) -> bool:
