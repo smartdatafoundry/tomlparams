@@ -68,6 +68,6 @@ def concatenate_keys(
                     for key3, value3 in concatenate_keys(list_item, sep=sep):
                         yield f'{key1}{sep}{list_index}{sep}{key3}', value3
                 else:
-                    yield f'{key1}{sep}{list_index}', value2
+                    yield f'{key1}{sep}{list_index}', list_item
         else:
             yield key1, value1
