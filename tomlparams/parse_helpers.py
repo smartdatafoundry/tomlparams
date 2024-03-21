@@ -2,13 +2,14 @@
 Parse Helpers
 =============
 """
+
 from __future__ import annotations
 
 import datetime
 import os
 import re
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any
 from tomlparams.utils import error
 from tomlparams import params_group
 
@@ -27,8 +28,8 @@ class ParseMismatch:
         pm_type: ParseMismatchType,
         position: list[str],
         key: str,
-        default_type: Optional[type | list[type]] = None,
-        toml_type: Optional[type | list[type]] = None,
+        default_type: type | list[type] | None = None,
+        toml_type: type | list[type] | None = None,
     ):
         self.pm_type = pm_type
         self.position = position
@@ -77,7 +78,9 @@ class ParseMismatch:
         )
 
 
-def to_saveable_object(o: Any, ref: Optional[Any] = None):
+def to_saveable_object(
+    o: Any, ref: Any | None = None
+) -> dict[Any, dict[Any, Any] | list[Any] | tuple[Any] | Any]:
     """
     Convert a TOMLParams Object, a ParamsGroup object, or a collection
     type (dict, list, tuple) recursively to a TOML-dumpable object.
@@ -113,7 +116,7 @@ def to_saveable_object(o: Any, ref: Optional[Any] = None):
     elif isinstance(o, (list, tuple)):
         if ref:
             return [to_saveable_object(v, w) for (v, w) in zip(o, ref)]
-        return [to_saveable_object(v) for v in o]
+        return [to_saveable_object(v) for v in o]  # type: ignore
     elif o is None or type(o) in (
         bool,
         str,
@@ -127,27 +130,29 @@ def to_saveable_object(o: Any, ref: Optional[Any] = None):
     elif hasattr(o, 'as_saveable_object'):
         return o.as_saveable_object()
     else:
-        error(f'Cannot flatten object type {type(o)}:\n{str(o)}')
+        raise ValueError(f'Cannot flatten object type {type(o)}:\n{str(o)}')
 
 
-def selectively_update_dict(d: Dict[str, Any], new_d: Dict[str, Any]) -> None:
+def selectively_update_dict(
+    original_dict: dict[str, Any], new_dict: dict[str, Any]
+) -> None:
     """
-    Selectively update dictionary d with any values that are in new_d,
-    but being careful only to update keys in dictionaries that are present
-    in new_d.
+    Selectively update dictionary original_dict with any values that are in
+    new_dict, but being careful only to update keys in dictionaries that are
+    present in new_d.
 
     Args:
         d: dictionary with string keys
         new_d: dictionary with string keys
     """
-    for k, v in new_d.items():
-        if isinstance(v, dict) and k in d:
-            if isinstance(d[k], dict):
-                selectively_update_dict(d[k], v)
+    for k, v in new_dict.items():
+        if isinstance(v, dict) and k in original_dict:
+            if isinstance(original_dict[k], dict):
+                selectively_update_dict(original_dict[k], v)
             else:
-                d[k] = v
+                original_dict[k] = v
         else:
-            d[k] = v
+            original_dict[k] = v
 
 
 def is_user_reserved_path(path: str) -> bool:
@@ -162,7 +167,7 @@ def get_collection_types(coll: list[Any] | set[Any] | tuple[Any]) -> set[type]:
 def overwrite_defaults_with_toml(
     hierarchy: list[str],
     defaults: dict[str, Any],
-    overwrite: Optional[dict[str, Any]] = None,
+    overwrite: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], list[ParseMismatch]]:
     if overwrite is None:
         overwrite = {}
@@ -173,8 +178,8 @@ def overwrite_defaults_with_toml(
     for default_key, default_value in defaults.items():
         if isinstance(default_value, dict):
             ov = overwrite.get(default_key)
-            if ov is not None and type(ov) is not dict:
-                error(
+            if ov is not None and not isinstance(ov, dict):
+                raise KeyError(
                     f'*** ERROR: {default_key} should be a section of the toml'
                     ' file'
                 )

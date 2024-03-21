@@ -2,6 +2,7 @@
 Utils
 =====
 """
+
 import sys
 from typing import Any, Generator, NoReturn
 
@@ -45,15 +46,28 @@ def concatenate_keys(
             >>> d = {'a': {'b': 1, 'c': 2}, 'd': 3}
             >>> dict(concat_keys(d))
             {'a.b': 1, 'a.c': 2, 'd': 3}
+    Special when values is a list:
+            >>> d = {'a': {'b': 1, 'c': 2}, 'd': [3, {'e': 4}]}
+            >>> dict(concat_keys(d))
+            {'a.b': 1, 'a.c': 2, 'd.0': 3, 'd.1.e': 4}
     Args:
         d: dict
         sep: separator between keys
     Returns:
         generator of (key, value) pairs
     """
-    for k, v in d.items():
-        if isinstance(v, dict):
-            for k2, v2 in dict(concatenate_keys(v, sep=sep)).items():
-                yield k + sep + k2, v2
+    for key1, value1 in d.items():
+        if isinstance(value1, dict):
+            for key2, value2 in dict(
+                concatenate_keys(value1, sep=sep)
+            ).items():
+                yield key1 + sep + key2, value2
+        elif isinstance(value1, list):
+            for list_index, list_item in enumerate(value1):
+                if isinstance(list_item, dict):
+                    for key3, value3 in concatenate_keys(list_item, sep=sep):
+                        yield f'{key1}{sep}{list_index}{sep}{key3}', value3
+                else:
+                    yield f'{key1}{sep}{list_index}', value2
         else:
-            yield k, v
+            yield key1, value1

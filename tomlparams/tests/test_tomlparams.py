@@ -279,14 +279,16 @@ class TestTOMLParams(unittest.TestCase):
             )
 
         try:
-            self.assertRaises(SystemExit, create_params)
-
-            expected_error = (
-                f'*** ERROR: path {THISDIR}/testdata/tomlparams/user_only.toml'
-                ' is reserved for user TOML files, but exists in'
-                ' standardparams.\n'
-            )
-            self.assertEqual(str(self.co), expected_error)
+            self.assertRaises(ValueError, create_params)
+            with self.assertRaises(ValueError) as cm:
+                create_params()
+                expected_error = (
+                    '*** ERROR: path'
+                    f' {THISDIR}/testdata/tomlparams/user_only.toml is'
+                    ' reserved for user TOML files, but exists in'
+                    ' standardparams.\n'
+                )
+                self.assertEqual(str(cm.exception), expected_error)
         finally:
             os.remove(naughty_toml)
 
@@ -307,14 +309,15 @@ class TestTOMLParams(unittest.TestCase):
             )
 
         try:
-            self.assertRaises(SystemExit, create_params)
-
-            expected_error = (
-                f'*** ERROR: path {THISDIR}/testdata/tomlparams/u_only.toml is'
-                ' reserved for user TOML files, but exists in'
-                ' standardparams.\n'
-            )
-            self.assertEqual(str(self.co), expected_error)
+            self.assertRaises(ValueError, create_params)
+            with self.assertRaises(ValueError) as cm:
+                create_params()
+                expected_error = (
+                    '*** ERROR: path'
+                    f' {THISDIR}/testdata/tomlparams/u_only.toml is reserved'
+                    ' for user TOML files, but exists in standardparams.\n'
+                )
+                self.assertEqual(str(cm.exception), expected_error)
         finally:
             os.remove(naughty_toml)
 

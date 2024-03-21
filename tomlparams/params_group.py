@@ -4,9 +4,10 @@ ParamsGroup
 
 Container for parameters.
 """
+
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 from tomlparams.parse_helpers import to_saveable_object
 from tomlparams.utils import concatenate_keys
 
@@ -16,7 +17,7 @@ class ParamsGroup:
     Container for parameters.
     """
 
-    def __init__(self, depth: int = 0, indent=4):
+    def __init__(self, depth: int = 0, indent: int = 4):
         self._depth = depth
         self._param_indent = ' ' * indent * (depth + 1)
         self._group_indent = ' ' * indent * depth
@@ -55,11 +56,14 @@ class ParamsGroup:
         return to_saveable_object(self.get_params())
 
     def get_params(self) -> dict:
+        """Return a dictionary of parameters, excluding private attributes."""
         return {
             k: v for k, v in self.__dict__.items() if not k.startswith('_')
         }
 
     def as_dict(self) -> dict:
+        """Return a dictionary of parameters, including nested ParamsGroups.
+        Exclude private attributes."""
         return {
             k: v.as_dict() if isinstance(v, ParamsGroup) else v
             for k, v in self.__dict__.items()
@@ -76,16 +80,20 @@ class ParamsGroup:
         return self.get_params().items()
 
 
-def create_params_groups(d: Dict[str, Any], depth: int = 0) -> ParamsGroup:
-    pg = ParamsGroup(depth)
-    for k, v in d.items():
+def create_params_groups(
+    input_dict: dict[str, Any], depth: int = 0
+) -> ParamsGroup:
+    params_group = ParamsGroup(depth)
+    for k, v in input_dict.items():
         if isinstance(v, dict):
-            pg.__dict__[k] = create_params_groups(v, depth + 1)
+            params_group.__dict__[k] = create_params_groups(v, depth + 1)
         elif is_iterable_of_dicts(v):
-            pg.__dict__[k] = [create_params_groups(x, depth + 1) for x in v]
+            params_group.__dict__[k] = [
+                create_params_groups(x, depth + 1) for x in v
+            ]
         else:
-            pg.__dict__[k] = v
-    return pg
+            params_group.__dict__[k] = v
+    return params_group
 
 
 def is_iterable_of_dicts(item: Any):
