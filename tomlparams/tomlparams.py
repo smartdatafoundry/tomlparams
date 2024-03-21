@@ -158,8 +158,17 @@ class TOMLParams:
 
         self.set_params(name, report_load=self._verbose)
 
-    def __getitem__(self, item):
-        return self.__dict__[item]
+    def __getitem__(self, item, sep: str = ".") -> Any:
+        try:
+            return self.__dict__[item]
+        except KeyError:
+            concatenated_keys = dict(
+                concatenate_keys(self.as_saveable_object(), sep)
+            )
+            if item in concatenated_keys:
+                return concatenated_keys[item]
+            else:
+                raise KeyError(f"Key {item} not found in {self}")
 
     def __eq__(self, other: Any) -> bool | type[NotImplemented]:
         if not isinstance(other, TOMLParams):
