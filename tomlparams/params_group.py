@@ -7,7 +7,6 @@ Container for parameters.
 
 from __future__ import annotations
 
-from types import NotImplementedType
 from typing import Any
 from tomlparams.parse_helpers import to_saveable_object
 from tomlparams.utils import concatenate_keys
@@ -43,9 +42,9 @@ class ParamsGroup:
             f'ParamsGroup(\n{self._param_indent}{body}\n{self._group_indent})'
         )
 
-    def __eq__(self, other: Any) -> bool | NotImplementedType:
+    def __eq__(self, other: Any) -> bool | type[NotImplemented]:
         if not isinstance(other, ParamsGroup):
-            return NotImplementedType
+            return NotImplemented
         return set(concatenate_keys(self.as_saveable_object())) == set(
             concatenate_keys(other.as_saveable_object())
         )

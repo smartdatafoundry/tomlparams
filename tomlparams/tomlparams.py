@@ -6,7 +6,6 @@ from __future__ import annotations
 
 from glob import glob
 import os
-from types import NotImplementedType
 import tomli_w
 from typing import Any
 
@@ -162,9 +161,9 @@ class TOMLParams:
     def __getitem__(self, item):
         return self.__dict__[item]
 
-    def __eq__(self, other: Any) -> bool | NotImplementedType:
+    def __eq__(self, other: Any) -> bool | type[NotImplemented]:
         if not isinstance(other, TOMLParams):
-            return NotImplementedType
+            return NotImplemented
         return set(concatenate_keys(self.as_saveable_object())) == set(
             concatenate_keys(other.as_saveable_object())
         )
