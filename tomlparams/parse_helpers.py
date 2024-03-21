@@ -115,7 +115,7 @@ def to_saveable_object(
         }
     elif isinstance(o, (list, tuple)):
         if ref:
-            return [to_saveable_object(v, w) for (v, w) in zip(o, ref)]  # type: ignore
+            return [to_saveable_object(v, w) for (v, w) in zip(o, ref)]
         return [to_saveable_object(v) for v in o]  # type: ignore
     elif o is None or type(o) in (
         bool,
@@ -137,9 +137,9 @@ def selectively_update_dict(
     original_dict: dict[str, Any], new_dict: dict[str, Any]
 ) -> None:
     """
-    Selectively update dictionary original_dict with any values that are in new_dict,
-    but being careful only to update keys in dictionaries that are present
-    in new_d.
+    Selectively update dictionary original_dict with any values that are in
+    new_dict, but being careful only to update keys in dictionaries that are
+    present in new_d.
 
     Args:
         d: dictionary with string keys

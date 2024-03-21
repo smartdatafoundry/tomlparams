@@ -298,8 +298,9 @@ class TOMLParams:
                 # 'include', 'exclude_keys'
                 if special_key in toml_dict:
                     raise KeyError(
-                        f'TOML file {toml} includes key "{special_key}",\nwhich'
-                        ' is not allow in the consolidated defaults.'
+                        f'TOML file {toml} includes key'
+                        f' "{special_key}",\nwhich is not allow in the'
+                        ' consolidated defaults.'
                     )
             if defaults:
                 defaults_concatenated_keys = {
@@ -339,8 +340,9 @@ class TOMLParams:
                 # 'include', 'exclude_keys'
                 if special_key in defaults:
                     raise KeyError(
-                        f'Defaults TOML file {toml_path} includes key "{special_key}",\n'
-                        'which is not allow in defaults TOML files.'
+                        f'Defaults TOML file {toml_path} includes key'
+                        f' "{special_key}",\nwhich is not allow in defaults'
+                        ' TOML files.'
                     )
             return defaults
         elif os.path.isdir(fullpath):

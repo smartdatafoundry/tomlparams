@@ -283,8 +283,9 @@ class TestTOMLParams(unittest.TestCase):
             with self.assertRaises(ValueError) as cm:
                 create_params()
                 expected_error = (
-                    f'*** ERROR: path {THISDIR}/testdata/tomlparams/user_only.toml'
-                    ' is reserved for user TOML files, but exists in'
+                    '*** ERROR: path'
+                    f' {THISDIR}/testdata/tomlparams/user_only.toml is'
+                    ' reserved for user TOML files, but exists in'
                     ' standardparams.\n'
                 )
                 self.assertEqual(str(cm.exception), expected_error)
@@ -312,9 +313,9 @@ class TestTOMLParams(unittest.TestCase):
             with self.assertRaises(ValueError) as cm:
                 create_params()
                 expected_error = (
-                    f'*** ERROR: path {THISDIR}/testdata/tomlparams/u_only.toml is'
-                    ' reserved for user TOML files, but exists in'
-                    ' standardparams.\n'
+                    '*** ERROR: path'
+                    f' {THISDIR}/testdata/tomlparams/u_only.toml is reserved'
+                    ' for user TOML files, but exists in standardparams.\n'
                 )
                 self.assertEqual(str(cm.exception), expected_error)
         finally:

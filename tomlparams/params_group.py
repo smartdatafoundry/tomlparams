@@ -63,7 +63,8 @@ class ParamsGroup:
         }
 
     def as_dict(self) -> dict:
-        """Return a dictionary of parameters, including nested ParamsGroups. Exclude private attributes."""
+        """Return a dictionary of parameters, including nested ParamsGroups.
+        Exclude private attributes."""
         return {
             k: v.as_dict() if isinstance(v, ParamsGroup) else v
             for k, v in self.__dict__.items()
