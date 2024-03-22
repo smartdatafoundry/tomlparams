@@ -52,6 +52,12 @@ class ParamsGroup:
     def __getitem__(self, item):
         return self.__dict__[item]
 
+    def __setitem__(self, key, value):
+        self.__dict__[key] = value
+
+    def get(self, key, default=None):
+        return self.__dict__.get(key, default)
+
     def as_saveable_object(self):
         return to_saveable_object(self.get_params())
 

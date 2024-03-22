@@ -46,6 +46,30 @@ def concatenate_keys(
             >>> d = {'a': {'b': 1, 'c': 2}, 'd': 3}
             >>> dict(concat_keys(d))
             {'a.b': 1, 'a.c': 2, 'd': 3}
+    Args:
+        d: dict
+        sep: separator between keys
+    Returns:
+        generator of (key, value) pairs
+    """
+    for key1, value1 in d.items():
+        if isinstance(value1, dict):
+            for key2, value2 in dict(
+                concatenate_keys(value1, sep=sep)
+            ).items():
+                yield key1 + sep + key2, value2
+        else:
+            yield key1, value1
+
+
+def concatenate_keys_with_list(
+    d: dict, sep='.'
+) -> Generator[tuple[str, Any], None, None]:
+    """
+    Concatenate keys in a nested dict, e.g.:
+            >>> d = {'a': {'b': 1, 'c': 2}, 'd': 3}
+            >>> dict(concat_keys(d))
+            {'a.b': 1, 'a.c': 2, 'd': 3}
     Special when values is a list:
             >>> d = {'a': {'b': 1, 'c': 2}, 'd': [3, {'e': 4}]}
             >>> dict(concat_keys(d))

@@ -9,8 +9,14 @@ import os
 import tomli_w
 from typing import Any
 
-from tomlparams.params_group import create_params_groups
-from tomlparams.utils import concatenate_keys, error, warn, load_toml
+from tomlparams.params_group import ParamsGroup, create_params_groups
+from tomlparams.utils import (
+    concatenate_keys,
+    concatenate_keys_with_list,
+    error,
+    warn,
+    load_toml,
+)
 from tomlparams.parse_helpers import (
     DEFAULT_PARAMS_NAME,
     DEFAULT_PARAMS_TYPE_CHECKING_NAME,
@@ -163,12 +169,21 @@ class TOMLParams:
             return self.__dict__[item]
         except KeyError:
             concatenated_keys = dict(
-                concatenate_keys(self.as_saveable_object(), sep)
+                concatenate_keys_with_list(self.as_saveable_object(), sep)
             )
             if item in concatenated_keys:
                 return concatenated_keys[item]
             else:
                 raise KeyError(f"Key {item} not found in {self}")
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        self.__dict__[key] = value
+
+    def get(self, key: str | int, default: Any = None) -> Any:
+        try:
+            return self[key]
+        except KeyError:
+            return default
 
     def __eq__(self, other: Any) -> bool | type[NotImplemented]:
         if not isinstance(other, TOMLParams):
