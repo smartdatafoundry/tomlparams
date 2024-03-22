@@ -9,7 +9,7 @@ import os
 import tomli_w
 from typing import Any
 
-from tomlparams.params_group import ParamsGroup, create_params_groups
+from tomlparams.params_group import create_params_groups
 from tomlparams.utils import (
     concatenate_keys,
     concatenate_keys_with_list,
