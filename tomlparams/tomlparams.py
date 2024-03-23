@@ -9,7 +9,7 @@ import os
 import tomli_w
 from typing import Any
 
-from tomlparams.params_group import create_params_groups
+from tomlparams.params_group import ParamsGroup, create_params_groups
 from tomlparams.utils import (
     concatenate_keys,
     concatenate_keys_with_list,
@@ -164,20 +164,55 @@ class TOMLParams:
 
         self.set_params(name, report_load=self._verbose)
 
+    @property
+    def _concatenated_keys(self):
+        return dict(concatenate_keys(self.as_dict()))
+
+    @property
+    def _concatenated_keys_with_list(self):
+        return dict(concatenate_keys_with_list(self.as_saveable_object()))
+
     def __getitem__(self, item, sep: str = ".") -> Any:
         try:
             return self.__dict__[item]
         except KeyError:
-            concatenated_keys = dict(
-                concatenate_keys_with_list(self.as_saveable_object(), sep)
-            )
-            if item in concatenated_keys:
-                return concatenated_keys[item]
-            else:
-                raise KeyError(f"Key {item} not found in {self}")
+            try:
+                return self.get_concatenated_key(item, sep)
+            except KeyError:
+                try:
+                    return self.get_concatenated_key_with_list(item, sep)
+                except KeyError:
+                    raise KeyError(f"Key {item} not found in {self}")
+
+    def get_concatenated_key(self, key: str, sep: str = ".") -> Any:
+        if key not in self._concatenated_keys:
+            raise KeyError(f"Key {key} not found in {self}")
+        return self._concatenated_keys[key]
+
+    def get_concatenated_key_with_list(self, key: str, sep: str = ".") -> Any:
+        if key not in self._concatenated_keys_with_list:
+            raise KeyError(f"Key {key} not found in {self}")
+        return self._concatenated_keys_with_list[key]
 
     def __setitem__(self, key: str, value: Any) -> None:
-        self.__dict__[key] = value
+        splitted_key = [int(k) if k.isdigit() else k for k in key.split(".")]
+        # first key is always a string
+        initial_key = splitted_key.pop(0)
+        param_value = self[initial_key]
+        while splitted_key:
+            next_key = splitted_key.pop(0)
+            if isinstance(param_value, list) and isinstance(next_key, int):
+                param_value = param_value[next_key]
+            elif isinstance(param_value, ParamsGroup) and isinstance(
+                next_key, str
+            ):
+                param_value = param_value.get(next_key)
+            if len(splitted_key) == 1:
+                break
+        if param_value is None:
+            raise KeyError(f"Key {key} not found in {self}")
+        else:
+            param_value[splitted_key[0]] = value  # type: ignore
 
     def get(self, key: str | int, default: Any = None) -> Any:
         try:
@@ -454,6 +489,9 @@ class TOMLParams:
         self,
     ) -> dict[Any, dict[Any, Any] | list[Any] | tuple[Any] | Any]:
         return to_saveable_object(self.__dict__, self._defaults)
+
+    def as_dict(self) -> dict:
+        return to_saveable_object(self.__dict__, self._defaults, False)
 
     def write_consolidated_toml(self, path: str, verbose: bool | None = None):
         verbose = verbose or self._verbose

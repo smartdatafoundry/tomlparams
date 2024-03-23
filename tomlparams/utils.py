@@ -83,13 +83,15 @@ def concatenate_keys_with_list(
     for key1, value1 in d.items():
         if isinstance(value1, dict):
             for key2, value2 in dict(
-                concatenate_keys(value1, sep=sep)
+                concatenate_keys_with_list(value1, sep=sep)
             ).items():
                 yield key1 + sep + key2, value2
         elif isinstance(value1, list):
             for list_index, list_item in enumerate(value1):
                 if isinstance(list_item, dict):
-                    for key3, value3 in concatenate_keys(list_item, sep=sep):
+                    for key3, value3 in concatenate_keys_with_list(
+                        list_item, sep=sep
+                    ):
                         yield f'{key1}{sep}{list_index}{sep}{key3}', value3
                 else:
                     yield f'{key1}{sep}{list_index}', list_item
