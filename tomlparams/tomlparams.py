@@ -200,6 +200,8 @@ class TOMLParams:
         initial_key = splitted_key.pop(0)
         param_value = self[initial_key]
         while splitted_key:
+            if len(splitted_key) == 1:
+                break
             next_key = splitted_key.pop(0)
             if isinstance(param_value, list) and isinstance(next_key, int):
                 param_value = param_value[next_key]
@@ -207,8 +209,6 @@ class TOMLParams:
                 next_key, str
             ):
                 param_value = param_value.get(next_key)
-            if len(splitted_key) == 1:
-                break
         if param_value is None:
             raise KeyError(f"Key {key} not found in {self}")
         else:
