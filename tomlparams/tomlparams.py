@@ -198,8 +198,13 @@ class TOMLParams:
         splitted_key = [int(k) if k.isdigit() else k for k in key.split(".")]
         # first key is always a string
         initial_key = splitted_key.pop(0)
+        if len(splitted_key) == 0 and isinstance(initial_key, str):
+            self.__dict__[initial_key] = value
+            return
         param_value = self[initial_key]
         while splitted_key:
+            if len(splitted_key) == 1:
+                break
             next_key = splitted_key.pop(0)
             if isinstance(param_value, list) and isinstance(next_key, int):
                 param_value = param_value[next_key]
@@ -207,8 +212,6 @@ class TOMLParams:
                 next_key, str
             ):
                 param_value = param_value.get(next_key)
-            if len(splitted_key) == 1:
-                break
         if param_value is None:
             raise KeyError(f"Key {key} not found in {self}")
         else:
