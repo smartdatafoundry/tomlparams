@@ -198,6 +198,9 @@ class TOMLParams:
         splitted_key = [int(k) if k.isdigit() else k for k in key.split(".")]
         # first key is always a string
         initial_key = splitted_key.pop(0)
+        if len(splitted_key) == 0 and isinstance(initial_key, str):
+            self.__dict__[initial_key] = value
+            return
         param_value = self[initial_key]
         while splitted_key:
             if len(splitted_key) == 1:
