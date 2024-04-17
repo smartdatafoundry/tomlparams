@@ -27,6 +27,7 @@ from tomlparams.parse_helpers import (
     overwrite_defaults_with_toml,
     selectively_update_dict,
     TypeChecking,
+    to_saveable_object_deep,
 )
 
 SPECIAL_KEYS = ['include', 'exclude_keys']
@@ -170,7 +171,11 @@ class TOMLParams:
 
     @property
     def _concatenated_keys_with_list(self):
-        return dict(concatenate_keys_with_list(self.as_saveable_object()))
+        return dict(
+            concatenate_keys_with_list(
+                to_saveable_object_deep(self.__dict__, self._defaults)
+            )
+        )
 
     def __getitem__(self, item, sep: str = ".") -> Any:
         try:

@@ -139,6 +139,76 @@ def to_saveable_object(
         raise ValueError(f'Cannot flatten object type {type(o)}:\n{str(o)}')
 
 
+def to_saveable_object_deep(
+    o: Any, ref: Any | None = None, include_iterables: bool = True
+) -> dict[Any, dict[Any, Any] | list[Any] | tuple[Any] | Any]:
+    """
+    Convert a TOMLParams Object, a ParamsGroup object, or a collection
+    type (dict, list, tuple) recursively to a TOML-dumpable object.
+    Typically called on either a TOMLParams or ParamsGroup object as
+    top-level invocation.
+
+    Also accepts other objects with as_saveable_object methods,
+    which it will use to make TOML-compatible version of those.
+
+    Raises an exception using error if non-TOML-compatible data
+    is found.
+
+    Args:
+        o: object to be flattened
+        ref: object to compare keys of o against
+        include_iterables: whether to include iterable objects to be flattened
+
+    Returns:
+        TOML-dumpable object
+
+    """
+    if isinstance(o, dict):
+        return {
+            k: to_saveable_object(v, ref[k], include_iterables)
+            for k, v in o.items()
+            if ref and k in ref
+        }
+    elif isinstance(o, params_group.ParamsGroup):
+        return {
+            k: to_saveable_object(v, ref[k], include_iterables)
+            for k, v in o.__dict__.items()
+            if ref and k in ref
+        }
+    elif isinstance(o, (list, tuple)):
+        if ref:
+            return (
+                [
+                    to_saveable_object(v, w, include_iterables)
+                    for (v, w) in zip(o, ref)
+                ]
+                if include_iterables
+                else o
+            )  # type: ignore
+        return (
+            [
+                to_saveable_object(v, include_iterables=include_iterables)
+                for v in o
+            ]
+            if include_iterables
+            else o
+        )  # type: ignore
+    elif o is None or type(o) in (
+        bool,
+        str,
+        int,
+        float,
+        datetime.date,
+        datetime.time,
+        datetime.datetime,
+    ):
+        return o
+    elif hasattr(o, 'as_saveable_object'):
+        return o.as_saveable_object()
+    else:
+        raise ValueError(f'Cannot flatten object type {type(o)}:\n{str(o)}')
+
+
 def selectively_update_dict(
     original_dict: dict[str, Any], new_dict: dict[str, Any]
 ) -> None:
