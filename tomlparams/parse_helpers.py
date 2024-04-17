@@ -115,15 +115,6 @@ def to_saveable_object(
             if ref and k in ref
         }
     elif isinstance(o, (list, tuple)):
-        if ref:
-            return (
-                [
-                    to_saveable_object(v, w, include_iterables)
-                    for (v, w) in zip(o, ref)
-                ]
-                if include_iterables
-                else o
-            )  # type: ignore
         return (
             [
                 to_saveable_object(v, include_iterables=include_iterables)
