@@ -171,11 +171,10 @@ class TOMLParams:
 
     @property
     def _concatenated_keys_with_list(self):
-        return dict(
-            concatenate_keys_with_list(
-                to_saveable_object_deep(self.__dict__, self._defaults)
-            )
-        )
+        return dict(concatenate_keys_with_list(self.to_deep_saveable_object()))
+
+    def to_deep_saveable_object(self):
+        return to_saveable_object_deep(self.__dict__, self._defaults)
 
     def __getitem__(self, item, sep: str = ".") -> Any:
         try:
