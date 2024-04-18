@@ -116,14 +116,27 @@ def to_saveable_object(
         }
     elif isinstance(o, (list, tuple)):
         if ref:
-            return (
-                [
-                    to_saveable_object(v, w, include_iterables)
-                    for (v, w) in zip(o, ref)
-                ]
-                if include_iterables
-                else o
-            )  # type: ignore
+            new_v = []
+            for item in o:
+                if isinstance(item, dict):
+                    for ref_item in ref:
+                        if ref_item:
+                            new_v.append(
+                                to_saveable_object(
+                                    item, ref_item, include_iterables
+                                )
+                            )
+                elif isinstance(item, params_group.ParamsGroup):
+                    for ref_item in ref:
+                        if ref_item:
+                            new_v.append(
+                                to_saveable_object(
+                                    item, ref_item, include_iterables
+                                )
+                            )
+                else:
+                    new_v.append(item)
+            return new_v  # type: ignore
         return (
             [
                 to_saveable_object(v, include_iterables=include_iterables)
