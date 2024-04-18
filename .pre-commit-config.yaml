@@ -1,24 +1,34 @@
 repos:
-    -   repo: https://github.com/python-poetry/poetry
-        rev: 1.8.0
-        hooks:
-            -   id: poetry-lock
-                args: ["--no-update"]
-    -   repo: https://github.com/pre-commit/pre-commit-hooks
-        rev: v4.6.0
-        hooks:
-            -   id: check-yaml
-                stages: [commit]
-            -   id: end-of-file-fixer
-                stages: [commit]
-            -   id: trailing-whitespace
-                stages: [commit]
-    -   repo: https://github.com/psf/black
-        rev: 24.4.0
-        hooks:
-            -   id: black
-                stages: [commit]
-    - repo: https://github.com/pycqa/flake8
-      rev: 7.0.0
-      hooks:
-          - id: flake8
+
+- repo: https://github.com/floatingpurr/sync_with_poetry
+  rev: "1.1.0"
+  hooks:
+    - id: sync_with_poetry
+      args: [] # optional args
+
+- repo: https://github.com/python-poetry/poetry
+  rev: "1.8.0"
+  hooks:
+    - id: poetry-check
+      verbose: true
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.6.0
+  hooks:
+    - id: check-yaml
+      stages: [commit]
+    - id: end-of-file-fixer
+      stages: [commit]
+    - id: trailing-whitespace
+      stages: [commit]
+
+- repo: https://github.com/psf/black
+  rev: 24.4.0
+  hooks:
+    - id: black
+      stages: [commit]
+
+- repo: https://github.com/pycqa/flake8
+  rev: 7.0.0
+  hooks:
+    - id: flake8
