@@ -222,7 +222,7 @@ def overwrite_defaults_with_toml(
                         )
                     )
 
-            if type(ov) != type(default_value):
+            if type(ov) != type(default_value):  # noqa
                 parse_mismatches.append(
                     ParseMismatch(
                         ParseMismatchType.TYPING,
