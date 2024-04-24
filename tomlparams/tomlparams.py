@@ -393,6 +393,8 @@ class TOMLParams:
         )
         if not os.path.splitext(path)[1]:
             toml_path = f'{fullpath}.toml'
+        else:
+            toml_path = fullpath
         if os.path.exists(toml_path):
             defaults = load_toml(toml_path)
             for special_key in SPECIAL_KEYS:
