@@ -48,7 +48,7 @@ jobs:
 
       - name: Check poetry lock
         shell: bash
-        run: poetry lock --check
+        run: poetry check --lock
 
       - name: Install dependencies
         shell: bash
