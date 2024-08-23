@@ -3,20 +3,22 @@ Utils
 =====
 """
 
-import sys
 from typing import Any, Generator, NoReturn
+import warnings
 
 import tomli
 
 
-def error(*msg, exit_code=1) -> NoReturn:
-    print("*** ERROR:", *msg, file=sys.stderr)
-    sys.exit(exit_code)
-    # raise Exception
+class TOMLParamsError(Exception):
+    pass
+
+
+def error(*msg) -> NoReturn:
+    raise TOMLParamsError("*** ERROR:", *msg)
 
 
 def warn(*msg):
-    print("*** WARNING:", *msg, file=sys.stderr)
+    warnings.warn(*msg)
 
 
 def nvl(v, default):
@@ -29,13 +31,7 @@ def load_toml(path):
     was if parsing fails (and then re-raises the exception).
     """
     with open(path, 'rb') as f:
-        try:
-            return tomli.load(f)
-        except Exception:
-            print(
-                f'\n***\n*** Problem parsing {path}:\n***\n', file=sys.stderr
-            )
-            raise
+        return tomli.load(f)
 
 
 def concatenate_keys(

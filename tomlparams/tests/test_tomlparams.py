@@ -6,7 +6,7 @@ import unittest
 
 from parameterized import parameterized
 
-from tomlparams.captureoutput import CaptureOutput
+from tests.captureoutput import CaptureOutput
 from tomlparams import TOMLParams
 from tomlparams.params_group import ParamsGroup
 from tomlparams.utils import concatenate_keys
