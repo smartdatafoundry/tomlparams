@@ -301,7 +301,7 @@ class TOMLParams:
                         'TOML files, but exists in standardparams.'
                     )
                 if os.path.exists(custom_path):
-                    raise Warning(
+                    warn(
                         f'{pfile} exists as {std_path} '
                         f'and {custom_path}; using {custom_path}'
                     )

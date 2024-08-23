@@ -3,6 +3,7 @@ import shutil
 import sys
 
 from tomlparams import __version__
+from tomlparams.utils import error
 
 DIR = os.path.dirname(os.path.realpath(os.path.abspath(__file__)))
 EXAMPLES_DIR = os.path.join(DIR, 'examples')
@@ -47,7 +48,7 @@ def main():
         else:
             print(f'*** Unknown command: {" ".join(args)}\n')
             print(USAGE, file=sys.stderr)
-            sys.exit(1)
+            error(f'Unknown command: {cmd}')
 
 
 if __name__ == '__main__':

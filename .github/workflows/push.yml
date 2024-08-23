@@ -46,17 +46,13 @@ jobs:
         shell: bash
         run: poetry config virtualenvs.in-project true
 
-      - name: Check poetry lock
-        shell: bash
-        run: poetry lock --check
-
       - name: Install dependencies
         shell: bash
         run: poetry install
 
       - name: Linting
         shell: bash
-        run: poetry run flake8
+        run: poetry run pre-commit run --all-files
 
       - name: Run unit tests
         shell: bash
