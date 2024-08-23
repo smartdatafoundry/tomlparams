@@ -9,7 +9,8 @@ from parameterized import parameterized
 from tomlparams.tests.captureoutput import CaptureOutput
 from tomlparams import TOMLParams
 from tomlparams.params_group import ParamsGroup
-from tomlparams.utils import concatenate_keys
+from tomlparams.utils import concatenate_keys, TOMLParamsError
+
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))
 XDIR = os.path.join(THISDIR, 'testdata')
@@ -390,61 +391,43 @@ class TestTOMLParams(unittest.TestCase):
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"not_there_1": 2, "z": 4}
-        TOMLParams(
-            defaults,
-            name='type_check_root_level',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-            check_types=TOMLParams.WARN,
-        )
-        expected_warning = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' root level - key: z, default_type: int, toml_type: str\n\n'
-        )
-
-        self.assertEqual(str(self.co), expected_warning)
+        with self.assertWarns(Warning):
+            TOMLParams(
+                defaults,
+                name='type_check_root_level',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+                check_types=TOMLParams.WARN,
+            )
 
     def test_type_checking_shallow_warning(self):
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": "one", "section": {"subsection": {"n": "one"}}}
-        TOMLParams(
-            defaults,
-            name='type_check_shallow',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-            check_types=TOMLParams.WARN,
-        )
-        expected_warning = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' root level - key: s, default_type: str, toml_type: int\n Type'
-            ' mismatch at level: section.subsection - key: n, default_type:'
-            ' str, toml_type: int\n\n'
-        )
-
-        self.assertEqual(str(self.co), expected_warning)
+        with self.assertWarns(Warning):
+            TOMLParams(
+                defaults,
+                name='type_check_shallow',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+                check_types=TOMLParams.WARN,
+            )
 
     def test_type_checking_list(self):
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": ["one", 2]}
-        TOMLParams(
-            defaults,
-            name='type_check_list',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-            check_types=TOMLParams.WARN,
-        )
-        expected_warning = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' root level - key: s, default_type: [int,str], toml_type:'
-            ' [bool,int]\n\n'
-        )
-
-        self.assertEqual(str(self.co), expected_warning)
+        with self.assertWarns(Warning):
+            TOMLParams(
+                defaults,
+                name='type_check_list',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+                check_types=TOMLParams.WARN,
+            )
 
     def test_type_checking_deep_level_warning(self):
         stddir = os.path.join(XDIR, 'tomlparams')
@@ -460,20 +443,15 @@ class TestTOMLParams(unittest.TestCase):
                 }
             },
         }
-        TOMLParams(
-            defaults,
-            name='type_check_deeper_level',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-            check_types=TOMLParams.WARN,
-        )
-        expected_warning = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' level: this.was.pretty.deep.folks - key: x, default_type: int,'
-            ' toml_type: str\n\n'
-        )
-        self.assertEqual(str(self.co), expected_warning)
+        with self.assertWarns(Warning):
+            TOMLParams(
+                defaults,
+                name='type_check_deeper_level',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+                check_types=TOMLParams.WARN,
+            )
 
     def test_date_type_checking_warning(self):
         stddir = os.path.join(XDIR, 'tomlparams')
@@ -482,19 +460,15 @@ class TestTOMLParams(unittest.TestCase):
             "not_there_1": 2,
             "date": '1970-01-01',
         }
-        TOMLParams(
-            defaults,
-            name='type_check_dates',
-            standard_params_dir=stddir,
-            user_params_dir=userdir,
-            verbose=False,
-            check_types=TOMLParams.WARN,
-        )
-        expected_warning = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' root level - key: date, default_type: str, toml_type: date\n\n'
-        )
-        self.assertEqual(str(self.co), expected_warning)
+        with self.assertWarns(Warning):
+            TOMLParams(
+                defaults,
+                name='type_check_dates',
+                standard_params_dir=stddir,
+                user_params_dir=userdir,
+                verbose=False,
+                check_types=TOMLParams.WARN,
+            )
 
     def test_type_checking_root_level_error(self):
         stddir = os.path.join(XDIR, 'tomlparams')
@@ -512,15 +486,9 @@ class TestTOMLParams(unittest.TestCase):
             )
 
         self.assertRaises(
-            SystemExit,
+            TOMLParamsError,
             create_params,
         )
-
-        expected_error = (
-            '*** ERROR: The following issues were found:\n Type mismatch at'
-            ' root level - key: z, default_type: int, toml_type: str\n\n'
-        )
-        self.assertEqual(str(self.co), expected_error)
 
     def test_type_checking_shallow_error(self):
         stddir = os.path.join(XDIR, 'tomlparams')
@@ -538,17 +506,9 @@ class TestTOMLParams(unittest.TestCase):
             )
 
         self.assertRaises(
-            SystemExit,
+            TOMLParamsError,
             create_params,
         )
-
-        expected_error = (
-            '*** ERROR: The following issues were found:\n Type mismatch at'
-            ' root level - key: s, default_type: str, toml_type: int\n Type'
-            ' mismatch at level: section.subsection - key: n, default_type:'
-            ' str, toml_type: int\n\n'
-        )
-        self.assertEqual(str(self.co), expected_error)
 
     def test_bad_key_shallow_error(self):
         stddir = os.path.join(XDIR, 'tomlparams')
@@ -566,15 +526,9 @@ class TestTOMLParams(unittest.TestCase):
             )
 
         self.assertRaises(
-            SystemExit,
+            TOMLParamsError,
             create_params,
         )
-
-        expected_error = (
-            '*** ERROR: The following issues were found:\n'
-            ' Bad key at level: section.subsection - key: n\n\n'
-        )
-        self.assertEqual(str(self.co), expected_error)
 
     def test_type_checking_bad_key_shallow_error(self):
         stddir = os.path.join(XDIR, 'tomlparams')
@@ -592,16 +546,9 @@ class TestTOMLParams(unittest.TestCase):
             )
 
         self.assertRaises(
-            SystemExit,
+            TOMLParamsError,
             create_params,
         )
-
-        expected_error = (
-            '*** ERROR: The following issues were found:\n Type mismatch at'
-            ' root level - key: s, default_type: str, toml_type: int\n Bad key'
-            ' at level: section.subsection - key: n\n\n'
-        )
-        self.assertEqual(str(self.co), expected_error)
 
     def test_type_checking_warn_bad_key_shallow_error(self):
         stddir = os.path.join(XDIR, 'tomlparams')
@@ -619,17 +566,9 @@ class TestTOMLParams(unittest.TestCase):
             )
 
         self.assertRaises(
-            SystemExit,
+            TOMLParamsError,
             create_params,
         )
-
-        expected_warning_error = (
-            '*** WARNING: The following issues were found:\n Type mismatch at'
-            ' root level - key: s, default_type: str, toml_type: int\n\n***'
-            ' ERROR: The following issues were found:\n Bad key at level:'
-            ' section.subsection - key: n\n\n'
-        )
-        self.assertEqual(str(self.co), expected_warning_error)
 
     def test_type_check_env_var_fail(self):
         stddir = os.path.join(XDIR, 'tomlparams')
@@ -649,15 +588,9 @@ class TestTOMLParams(unittest.TestCase):
             )
 
         self.assertRaises(
-            SystemExit,
+            TOMLParamsError,
             create_params,
         )
-        expected_error = (
-            "*** ERROR: Not a valid TOMLParams.TypeChecking value. Change"
-            " TOMLPARAMSCHECKING to one of: 'warn', 'error', or 'off'.\n"
-        )
-        self.assertEqual(str(self.co), expected_error)
-
         os.environ.pop('TOMLPARAMSCHECKING', None)
 
     def test_concatenate_keys(self):

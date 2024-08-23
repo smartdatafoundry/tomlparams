@@ -14,11 +14,11 @@ class TOMLParamsError(Exception):
 
 
 def error(*msg) -> NoReturn:
-    raise TOMLParamsError("*** ERROR:", *msg)
+    raise TOMLParamsError(msg)
 
 
-def warn(*msg):
-    warnings.warn(*msg)
+def warn(*msg: str):
+    warnings.warn(msg)
 
 
 def nvl(v, default):
