@@ -13,22 +13,22 @@ repos:
       verbose: true
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.6.0
+  rev: v5.0.0
   hooks:
     - id: check-yaml
-      stages: [commit]
+      stages: [Nonepre-commitNone]
     - id: end-of-file-fixer
-      stages: [commit]
+      stages: [Nonepre-commitNone]
     - id: trailing-whitespace
-      stages: [commit]
+      stages: [Nonepre-commitNone]
 
 - repo: https://github.com/psf/black
-  rev: 24.4.0
+  rev: 24.10.0
   hooks:
     - id: black
-      stages: [commit]
+      stages: [Nonepre-commitNone]
 
 - repo: https://github.com/pycqa/flake8
-  rev: 6.1.0
+  rev: 7.1.1
   hooks:
     - id: flake8
