@@ -1,40 +1,38 @@
-"""
-TOML-based parameter files made better (main class)
-"""
+"""TOML-based parameter files made better (main class)"""
 
 from __future__ import annotations
 
-from glob import glob
 import os
-import tomli_w
+from glob import glob
 from typing import Any
 
+import tomli_w
+
 from tomlparams.params_group import ParamsGroup, create_params_groups
-from tomlparams.utils import (
-    concatenate_keys,
-    concatenate_keys_with_list,
-    error,
-    warn,
-    load_toml,
-)
 from tomlparams.parse_helpers import (
     DEFAULT_PARAMS_NAME,
     DEFAULT_PARAMS_TYPE_CHECKING_NAME,
     DEFAULTS_ONLY_NAMES,
     ParseMismatchType,
-    to_saveable_object,
+    TypeChecking,
     is_user_reserved_path,
     overwrite_defaults_with_toml,
     selectively_update_dict,
-    TypeChecking,
+    to_saveable_object,
+)
+from tomlparams.utils import (
+    concatenate_keys,
+    concatenate_keys_with_list,
+    error,
+    load_toml,
+    warn,
 )
 
 SPECIAL_KEYS = ['include', 'exclude_keys']
 
 
 class TOMLParams:
-    """
-    TOML-based parameter files made better
+    """TOML-based parameter files made better.
 
     Args:
 
@@ -114,7 +112,6 @@ class TOMLParams:
                             be set to one of `'warn'`, `'error'`, or
                             `'off'`, and that value will override
                             the value of check_types passed in.
-
     """
 
     ERROR = TypeChecking.ERROR
@@ -126,7 +123,7 @@ class TOMLParams:
 
     def __init__(
         self,
-        defaults: dict | str,
+        defaults: dict[str, Any] | str,
         name: str | None = None,
         params_name: str = DEFAULT_PARAMS_NAME,
         env_var: str | None = None,
@@ -165,39 +162,41 @@ class TOMLParams:
         self.set_params(name, report_load=self._verbose)
 
     @property
-    def _concatenated_keys(self):
+    def _concatenated_keys(self) -> dict[str, Any]:
         return dict(concatenate_keys(self.as_dict()))
 
     @property
-    def _concatenated_keys_with_list(self):
+    def _concatenated_keys_with_list(self) -> dict[str, Any]:
         return dict(concatenate_keys_with_list(self.as_saveable_object()))
 
-    def __getitem__(self, item, sep: str = ".") -> Any:
+    def __getitem__(self, item: str) -> Any:
         try:
             return self.__dict__[item]
         except KeyError:
             try:
-                return self.get_concatenated_key(item, sep)
+                return self.get_concatenated_key(item)
             except KeyError:
                 try:
-                    return self.get_concatenated_key_with_list(item, sep)
+                    return self.get_concatenated_key_with_list(item)
                 except KeyError:
                     raise KeyError(f"Key {item} not found in {self}")
 
-    def get_concatenated_key(self, key: str, sep: str = ".") -> Any:
+    def get_concatenated_key(self, key: str) -> Any:
         if key not in self._concatenated_keys:
             raise KeyError(f"Key {key} not found in {self}")
         return self._concatenated_keys[key]
 
-    def get_concatenated_key_with_list(self, key: str, sep: str = ".") -> Any:
+    def get_concatenated_key_with_list(self, key: str) -> Any:
         if key not in self._concatenated_keys_with_list:
             raise KeyError(f"Key {key} not found in {self}")
         return self._concatenated_keys_with_list[key]
 
     def __setitem__(self, key: str, value: Any) -> None:
-        splitted_key = [int(k) if k.isdigit() else k for k in key.split(".")]
+        splitted_key: list[int | str] = [
+            int(k) if k.isdigit() else k for k in key.split(".")
+        ]
         # first key is always a string
-        initial_key = splitted_key.pop(0)
+        initial_key: int | str = splitted_key.pop(0)
         if len(splitted_key) == 0 and isinstance(initial_key, str):
             self.__dict__[initial_key] = value
             return
@@ -215,15 +214,15 @@ class TOMLParams:
         if param_value is None:
             raise KeyError(f"Key {key} not found in {self}")
         else:
-            param_value[splitted_key[0]] = value  # type: ignore
+            param_value[splitted_key[0]] = value
 
-    def get(self, key: str | int, default: Any = None) -> Any:
+    def get(self, key: str, default: Any = None) -> Any:
         try:
             return self[key]
         except KeyError:
             return default
 
-    def __eq__(self, other: Any) -> bool | type[NotImplemented]:
+    def __eq__(self, other: Any) -> bool:
         if not isinstance(other, TOMLParams):
             return NotImplemented
         return set(concatenate_keys(self.as_saveable_object())) == set(
@@ -232,15 +231,13 @@ class TOMLParams:
 
     @classmethod
     def indent(cls, is_test: bool) -> int:
-        """
-        Returns amount to indent JSON, which depends on whether
-        this is a test run or not.
-        """
+        """Returns amount to indent JSON, which depends on whether this is a
+        test run or not."""
         return cls.json_test_indent if is_test else cls.json_indent
 
-    def set_params(self, name: str | None, report_load: bool = False):
-        """
-        Sets the name for the run, which is used as
+    def set_params(self, name: str | None, report_load: bool = False) -> None:
+        """Sets the name for the run, which is used as.
+
           - the subdirectory for results
           - the parameter file for setting other run parameters
 
@@ -259,7 +256,7 @@ class TOMLParams:
 
             report_load: print loading status
         """
-        self._toml_files_used = []
+        self._toml_files_used: list[str] = []
         env_params = os.environ.get(self._env_var, self._base_params_stem)
         if name is None:
             name = env_params
@@ -267,9 +264,10 @@ class TOMLParams:
 
         self.load(report=report_load)
 
-    def read_toml_file(self, report: bool = False, name: str | None = None):
-        """
-        Reads parameters from toml file
+    def read_toml_file(
+        self, report: bool = False, name: str | None = None
+    ) -> dict[str, Any]:
+        """Reads parameters from toml file.
 
         Args:
             report: print loading status
@@ -278,7 +276,7 @@ class TOMLParams:
         Returns:
             dictionary of parameters from toml file.
         """
-        outer_params = {}
+        outer_params: dict[str, Any] = {}
         if name := name or self._name:
             base, ext = os.path.splitext(name)
             if ext == '.toml':
@@ -321,7 +319,7 @@ class TOMLParams:
 
             if include := outer_params.get('include', None):
                 if isinstance(include, list):
-                    included_params = {}
+                    included_params: dict[str, Any] = {}
                     for name in include:
                         this_inclusion = self.read_toml_file(report, name)
                         selectively_update_dict(
@@ -338,9 +336,8 @@ class TOMLParams:
                 print('Using default parameters.')
         return outer_params
 
-    def read_defaults_as_directory(self, fullpath: str) -> dict:
-        """
-        Reads defaults from a directory of TOML files.
+    def read_defaults_as_directory(self, fullpath: str) -> dict[str, Any]:
+        """Reads defaults from a directory of TOML files.
 
         Args:
             fullpath: path to directory containing TOML files
@@ -348,8 +345,8 @@ class TOMLParams:
         Returns:
             dictionary of defaults
         """
-        defaults = {}
-        toml_dict = {}
+        defaults: dict[str, Any] = {}
+        toml_dict: dict[str, Any] = {}
         all_tomls = sorted(glob(f'{fullpath}/**/*.toml', recursive=True))
         for i, toml in enumerate(all_tomls):
             toml_dict = load_toml(toml)
@@ -382,10 +379,8 @@ class TOMLParams:
 
         return defaults
 
-    def load_defaults_toml_file(self, path):
-        """
-        Loads defaults from TOML file at path provided.
-        """
+    def load_defaults_toml_file(self, path: str) -> dict[str, Any]:
+        """Loads defaults from TOML file at path provided."""
         fullpath = (
             path
             if os.path.isabs(path)
@@ -396,7 +391,7 @@ class TOMLParams:
         else:
             toml_path = fullpath
         if os.path.exists(toml_path):
-            defaults = load_toml(toml_path)
+            defaults: dict[str, Any] = load_toml(toml_path)
             for special_key in SPECIAL_KEYS:
                 # Check for special keys in the TOML file, which are not
                 # allowed in the defaults. These are:
@@ -413,9 +408,8 @@ class TOMLParams:
         else:
             error(f'Defaults cannot be read from {fullpath}.')
 
-    def load(self, report: bool = False):
-        """
-        Loads parameters from TOML file.
+    def load(self, report: bool = False) -> None:
+        """Loads parameters from TOML file.
 
         The TOML file's name is the stem in `self._name + '.toml'`.
 
@@ -471,7 +465,7 @@ class TOMLParams:
             create_params_groups(consolidated_dict).get_params()
         )
 
-    def toml_files_str(self):
+    def toml_files_str(self) -> str:
         return ', '.join(self._toml_files_used) or ''
 
     def __str__(self) -> str:
@@ -492,13 +486,15 @@ class TOMLParams:
 
     def as_saveable_object(
         self,
-    ) -> dict[Any, dict[Any, Any] | list[Any] | tuple[Any] | Any]:
+    ) -> dict[str, Any]:
         return to_saveable_object(self.__dict__, self._defaults)
 
-    def as_dict(self) -> dict:
+    def as_dict(self) -> dict[str, Any]:
         return to_saveable_object(self.__dict__, self._defaults, False)
 
-    def write_consolidated_toml(self, path: str, verbose: bool | None = None):
+    def write_consolidated_toml(
+        self, path: str, verbose: bool | None = None
+    ) -> None:
         verbose = verbose or self._verbose
         d = to_saveable_object(self.__dict__, self._defaults)
         with open(path, 'wb') as f:
@@ -507,7 +503,7 @@ class TOMLParams:
             print(f'Consolidated TOML file written to {path}.')
 
     def check_type_env_var_to_typechecking(
-        self, env_var, default_value
+        self, env_var: str | None, default_value: TypeChecking
     ) -> TypeChecking:
         if env_var is None:
             return default_value

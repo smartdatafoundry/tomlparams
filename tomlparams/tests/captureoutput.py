@@ -1,5 +1,4 @@
-"""
-captureoutput.py
+"""captureoutput.py.
 
 Copyright (c) Stochastic Solutions Limited 2016-2023
 
@@ -10,8 +9,7 @@ import sys
 
 
 class CaptureOutput(object):
-    """
-    Class for capturing a stream (typically) stdout.
+    """Class for capturing a stream (typically) stdout.
 
     Typical Usage:
 
@@ -23,7 +21,7 @@ class CaptureOutput(object):
         printed = str(c)
     """
 
-    def __init__(self, echo=False, stream="stdout"):
+    def __init__(self, echo: bool = False, stream: str = "stdout") -> None:
         self.stream = stream
         if stream == "stdout":
             self.saved = sys.stdout
@@ -33,26 +31,26 @@ class CaptureOutput(object):
             sys.stderr = self
         else:
             raise Exception("Unsupported capture stream %s" % stream)
-        self.out = []
-        self.echo = echo
+        self.out: list[str] = []
+        self.echo: bool = echo
 
-    def write(self, s):
+    def write(self, s: str) -> None:
         self.out.append(s)
         if self.echo:
             self.saved.write(s)
 
-    def flush(self):
+    def flush(self) -> None:
         if self.echo:
             self.saved.flush()
 
-    def getvalue(self):
+    def getvalue(self) -> None:
         self.saved.flush()
 
-    def restore(self):
+    def restore(self) -> None:
         if self.stream == "stdout":
             sys.stdout = self.saved
         else:
             sys.stderr = self.saved
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "".join(self.out)

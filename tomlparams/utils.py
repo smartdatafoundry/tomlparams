@@ -3,8 +3,8 @@ Utils
 =====
 """
 
-from typing import Any, Generator, NoReturn
 import warnings
+from typing import Any, Generator, NoReturn
 
 import tomli
 
@@ -13,33 +13,27 @@ class TOMLParamsError(Exception):
     pass
 
 
-def error(*msg) -> NoReturn:
+def error(*msg: str) -> NoReturn:
     raise TOMLParamsError(msg)
 
 
-def warn(*msg: str):
-    warnings.warn(msg)
+def warn(*msg: str) -> None:
+    warnings.warn(message=' '.join(msg))
 
 
-def nvl(v, default):
-    return default if v is None else v
-
-
-def load_toml(path):
-    """
-    Protected TOML load using tomli that reports what the file
-    was if parsing fails (and then re-raises the exception).
-    """
+def load_toml(path: str) -> dict[str, Any]:
+    """Protected TOML load using tomli that reports what the file was if
+    parsing fails (and then re-raises the exception)."""
     with open(path, 'rb') as f:
         return tomli.load(f)
 
 
 def concatenate_keys(
-    d: dict, sep='.'
+    d: dict[str, Any], sep: str = '.'
 ) -> Generator[tuple[str, Any], None, None]:
-    """
-    Concatenate keys in a nested dict, e.g.:
-            >>> d = {'a': {'b': 1, 'c': 2}, 'd': 3}
+    """Concatenate keys in a nested dict, e.g.:
+
+    >>> d = {'a': {'b': 1, 'c': 2}, 'd': 3}
             >>> dict(concat_keys(d))
             {'a.b': 1, 'a.c': 2, 'd': 3}
     Args:
@@ -59,11 +53,11 @@ def concatenate_keys(
 
 
 def concatenate_keys_with_list(
-    d: dict, sep='.'
+    d: dict[str, Any], sep: str = '.'
 ) -> Generator[tuple[str, Any], None, None]:
-    """
-    Concatenate keys in a nested dict, e.g.:
-            >>> d = {'a': {'b': 1, 'c': 2}, 'd': 3}
+    """Concatenate keys in a nested dict, e.g.:
+
+    >>> d = {'a': {'b': 1, 'c': 2}, 'd': 3}
             >>> dict(concat_keys(d))
             {'a.b': 1, 'a.c': 2, 'd': 3}
     Special when values is a list:

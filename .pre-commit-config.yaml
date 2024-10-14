@@ -4,7 +4,7 @@ repos:
   rev: "1.1.0"
   hooks:
     - id: sync_with_poetry
-      args: [] # optional args
+      exclude: tests.*
 
 - repo: https://github.com/python-poetry/poetry
   rev: "1.8.0"
@@ -12,23 +12,51 @@ repos:
     - id: poetry-check
       verbose: true
 
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.6.0
-  hooks:
-    - id: check-yaml
-      stages: [commit]
-    - id: end-of-file-fixer
-      stages: [commit]
-    - id: trailing-whitespace
-      stages: [commit]
-
 - repo: https://github.com/psf/black
-  rev: 24.4.0
+  rev: 24.10.0
   hooks:
     - id: black
-      stages: [commit]
 
-- repo: https://github.com/pycqa/flake8
-  rev: 6.1.0
+- repo: https://github.com/pycqa/isort
+  rev: 5.13.2
   hooks:
-    - id: flake8
+    - id: isort
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.6.9
+  hooks:
+    - id: ruff
+      types_or: [python, pyi, jupyter]
+      args: [ --fix, --exit-non-zero-on-fix ]
+
+- repo: https://github.com/PyCQA/autoflake
+  rev: v2.3.1
+  hooks:
+    - id: autoflake
+      args: [ --remove-all-unused-imports]
+
+- repo: https://github.com/PyCQA/docformatter
+  rev: v1.7.5
+  hooks:
+    - id: docformatter
+      args: [--config, pyproject.toml]
+
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+    - id: check-toml
+    - id: check-yaml
+    - id: check-json
+    - id: check-xml
+    - id: check-case-conflict
+    - id: check-byte-order-marker
+    - id: check-symlinks
+    - id: detect-private-key
+    # - id: check-merge-conflict
+  
+- repo: https://github.com/executablebooks/mdformat
+  rev: 0.7.17
+  hooks:
+    - id: mdformat
+      exclude: '(\.github/pull_request_template\.md|\.github/ISSUE_TEMPLATE/.*\.md)'
