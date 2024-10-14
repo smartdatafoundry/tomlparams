@@ -3,6 +3,7 @@
 # in the tomlparams repo.
 
 from datetime import date, datetime
+
 from tomlparams import TOMLParams
 
 defaults = {
@@ -18,9 +19,9 @@ defaults = {
 
 params = TOMLParams(defaults=defaults, standard_params_dir='')
 
-print(repr(params.run_days))
+print(repr(params.run_days))  # type: ignore [attr-defined]
 print(repr(params['start_date']))
-print(repr(params.logging.format))
+print(repr(params.logging.format))  # type: ignore [attr-defined]
 print(repr(params['logging']['events']))
 
 print(repr(params))

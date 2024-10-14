@@ -6,27 +6,29 @@ TOML-based parameter files made better
 
 ## Key features
 
- * Simple externalization of parameters in one or more TOML files.
- * Supports loading, saving, default values, parameter name checking
-   and optional parameter type checking.
- * Parameters available through attribute lookup or dictionary lookup.
- * Supports hierarchical file inclusion with overriding.
- * Support for using environment variables to select parameter set (as well as API).
- * Default values can be specified in code (as Python dictionaries) or in a TOML file.
- * Full support for parameter hierarchy (using TOML Tables),
-   still with attribute and dictionary lookup.
- * Support for writing consolidated parameters as TOML after hierarchical inclusion
-   and resolution.
- * Can be subclassed and other attributes can be used without affecting TOML file writing.
+- Simple externalization of parameters in one or more TOML files.
+- Supports loading, saving, default values, parameter name checking
+  and optional parameter type checking.
+- Parameters available through attribute lookup or dictionary lookup.
+- Supports hierarchical file inclusion with overriding.
+- Support for using environment variables to select parameter set (as well as API).
+- Default values can be specified in code (as Python dictionaries) or in a TOML file.
+- Full support for parameter hierarchy (using TOML Tables),
+  still with attribute and dictionary lookup.
+- Support for writing consolidated parameters as TOML after hierarchical inclusion
+  and resolution.
+- Can be subclassed and other attributes can be used without affecting TOML file writing.
 
 ## Installation
 
 From PyPI:
+
 ```
 python -m pip install -U tomlparams
 ```
 
 Source installation from Github:
+
 ```
 python -m pip install -U git+ssh://git@github.com/gofcoe/tomlparams.git
 ```
@@ -94,6 +96,7 @@ format = '.json'
 ```
 
 Then we will have the following (using the same `defaults` dict as before)
+
 ```python
 >>> params = TOMLParams(defaults=defaults, name='defaults')
 >>> params.run_days
@@ -131,6 +134,7 @@ simply giving the path to the TOML file as the value for `defaults` when initial
 the system will look in the `standard_params_dir`.
 
 This TOML file:
+
 ```toml
 start_date = 2024-01-01
 run_days = 366
@@ -145,9 +149,11 @@ events = [
     "telecoms",
 ]
 ```
+
 is equivalent to the dict used above.
 
 and if stored in `./defaults.toml` can be used with
+
 ```python
 >>> params = TOMLParams(
      defaults='defaults',
@@ -169,6 +175,7 @@ new_param = 'this will go badly'
 
 and we repeated the use the same defaults, passing `newparams` as the `name`
 we get the following error:
+
 ```
 >>> params = TOMLParams(
      defaults='defaults',
@@ -198,10 +205,10 @@ So if `base.toml` (or other named TOML file used)
 starts with this `include` line, and neither of `one` and `two`
 has any further inclusions, the order of parameter setting will be:
 
-  1. values from defaults
-  2. values from `one.toml`
-  3. values from `two.toml`
-  4. any other values
+1. values from defaults
+1. values from `one.toml`
+1. values from `two.toml`
+1. any other values
 
 If `one` and `two` both start with
 
@@ -211,11 +218,11 @@ include = 'three'
 
 then the order of processing will be:
 
-  1. values from defaults
-  2. values from `three.toml` (from its inclusion by `one.toml`)
-  3. values from `one.toml`
-  4. values from `two.toml` (`three.toml` will is *not* included a second time)
-  5. any other values
+1. values from defaults
+1. values from `three.toml` (from its inclusion by `one.toml`)
+1. values from `one.toml`
+1. values from `two.toml` (`three.toml` will is *not* included a second time)
+1. any other values
 
 Circular inclusion does not cause a problem, because each file is only
 ever included once, but is potentially confusing for the reader, so is
@@ -225,9 +232,9 @@ Unless `verbose` is set to `False` when initializing `TOMLParams`, any
 TOML files processed are reported, in order of inclusion, listing full
 paths.
 
-
 So running this code (available in the source repo
 as `examples/readme/readme4.py`):
+
 ```python
 from tomlparams import TOMLParams
 
@@ -239,7 +246,9 @@ params = TOMLParams(
 
 print(repr(params))
 ```
+
 we see the following output:
+
 ```none
 $ python readme4.py
 Parameters set from: /home/sdf/tomlparams/examples/readme/three.toml
@@ -268,8 +277,10 @@ TOMLParams(
     )
 )
 ```
+
 where (in order of parameter setting):
 `defaults2.toml` (used to specify defaults) is:
+
 ```toml
 # defaults2.toml
 
@@ -295,7 +306,9 @@ c = 'subgroup default'
 d = 'subgroup default'
 e = 'subgroup default'
 ```
+
 These settings are overridden first by `three.toml`:
+
 ```toml
 # three.toml
 
@@ -402,16 +415,16 @@ argument---`name`---determines which set of parameters is used.
 Many options for setting this are supported. In determining which
 parameters file to use, there are two relevant directories:
 
- * the _standard parameters directory_ can be set by passing in
-   a path as `standard_params_dir`. If this is not specified,
-   explicitly, `~/{params_name}` will be used if the `params_name`
-   argument has been set on instantiating TOMLParams,
-   or `~/tomlparams` otherwise.
- * the _user parameters directory_ can be set by passing in a
-   path as `user_params_dir`. If this is not specified,
-   explicitly, `~/user{params_name}` will be used if the `params_name`
-   argument has been set on instantiating TOMLParams,
-   or `~/usertomlparams` otherwise.
+- the _standard parameters directory_ can be set by passing in
+  a path as `standard_params_dir`. If this is not specified,
+  explicitly, `~/{params_name}` will be used if the `params_name`
+  argument has been set on instantiating TOMLParams,
+  or `~/tomlparams` otherwise.
+- the _user parameters directory_ can be set by passing in a
+  path as `user_params_dir`. If this is not specified,
+  explicitly, `~/user{params_name}` will be used if the `params_name`
+  argument has been set on instantiating TOMLParams,
+  or `~/usertomlparams` otherwise.
 
 1. If `name` is set to `foo`, TOMLParams will search for `foo.toml`
    in both the standard parameters directory and the user parameters
@@ -425,12 +438,12 @@ parameters file to use, there are two relevant directories:
    not allowing either to take priority over the other, so that
    which parameters are used is unambiguous.)
 
-2. If `name` is set to either of the special values `default` or
+1. If `name` is set to either of the special values `default` or
    `defaults`, the default values will be used for all parameters,
    whether those were supplied as a Python dictionary or in a
    TOML file (specified by the `defaults` argument).
 
-3. If `name` is not supplied, or is passed as `None`, TOMLParams
+1. If `name` is not supplied, or is passed as `None`, TOMLParams
    will look the value in an environment variable. That variable
    defaults to `TOMLPARAMS`, but can be set by setting the argument
    `env_var` when instantiating a `TOMLParams` object.
@@ -443,16 +456,17 @@ parameters file to use, there are two relevant directories:
    environment variable will be specified on the command line before
    the Python command, e.g.
 
-       TOMLPARAMS=bar python simulate.py
+   ```
+   TOMLPARAMS=bar python simulate.py
+   ```
 
    if the Python program using `TOMLParams` is `simulate.py`.
    Alternatively, a value may be  export a shell start-up file,
    or in a script, using `export TOMLPARAMS=bar`.
 
-4. If `name` is not supplied, and the relevant environment variable
+1. If `name` is not supplied, and the relevant environment variable
    is not set, the value of the argument `base_params_dir` will be
    used; this defaults to `base`.
-
 
 ## Idiomatic command-line use
 
@@ -477,32 +491,30 @@ if __name__ == '__main__:
 
 ```
 
-
 # Environment Variables
 
 As noted above, there are two environment variables that can affect
 the behaviour of TOMLParams.
 
- * If the `name` argument is not passed to`TOMLParams` (or is passed as `None`)
-   the environment variable `TOMLPARAMS` will be consulted (by default).
-   The name of the environment variable to consult can be changed by
-   passing a different value for `env_var`.
+- If the `name` argument is not passed to`TOMLParams` (or is passed as `None`)
+  the environment variable `TOMLPARAMS` will be consulted (by default).
+  The name of the environment variable to consult can be changed by
+  passing a different value for `env_var`.
 
- * Any value for the variable `check_types` can be overridden by setting
-   the environment variable `TOMLPARAMSCHECKING` to `warn`, `error` or `off`.
-   A variable other than `TOMLPARAMSCHECKING` can be specified using
-   the argument `type_check_env_var` when initializing `TOMLParams`.
-
+- Any value for the variable `check_types` can be overridden by setting
+  the environment variable `TOMLPARAMSCHECKING` to `warn`, `error` or `off`.
+  A variable other than `TOMLPARAMSCHECKING` can be specified using
+  the argument `type_check_env_var` when initializing `TOMLParams`.
 
 # Type Checking
 
 Type checking is performed against the types of any values present in
 the passed-in `defaults`. Three levels of action are configurable:
 
-* `WARN` (default) — a warning is sent to `stderr` but processing continues)
-* `ERROR` — processing stops. All type-checking and key-checking errors are collected
-   and reported before exit
-* `OFF` — no type checking. (Useful when using polymorphic parameters.)
+- `WARN` (default) — a warning is sent to `stderr` but processing continues)
+- `ERROR` — processing stops. All type-checking and key-checking errors are collected
+  and reported before exit
+- `OFF` — no type checking. (Useful when using polymorphic parameters.)
 
 Type checking of any collections (e.g. `list`, `set` and `tuple`)
 present in `defaults` is also performed and the selected action taken
@@ -511,10 +523,10 @@ corresponding collection in the defaults.
 
 Action on a type checking mismatch can be configured in two ways:
 
-* Via the environment variable specified by the
+- Via the environment variable specified by the
   `type_check_env_var` setting (defaults to `TOMLPARAMSCHECKING`)
   with allowed levels `warn`, `error`, and `off`.
-* Via the `check_types` setting.
+- Via the `check_types` setting.
 
 The environment variable takes precedence over the setting where set.
 

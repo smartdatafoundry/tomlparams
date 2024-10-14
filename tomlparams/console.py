@@ -26,8 +26,8 @@ Installation:
 '''
 
 
-def main():
-    args = sys.argv
+def main() -> None:
+    args: list[str] = sys.argv
     if len(args) < 2:
         print(USAGE)
     else:
@@ -37,8 +37,8 @@ def main():
         elif cmd in ('version', '--version', '-v'):
             print(__version__)
         elif cmd == 'examples':
-            dest_dir = os.path.abspath('.')
-            dest_path = os.path.join(dest_dir, 'tomlparams_examples')
+            dest_dir: str = os.path.abspath('.')
+            dest_path: str = os.path.join(dest_dir, 'tomlparams_examples')
             shutil.copytree(
                 EXAMPLES_DIR,
                 dest_path,
