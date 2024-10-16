@@ -119,21 +119,15 @@ def to_saveable_object(
             new_v = []
             for item in o:
                 if isinstance(item, dict):
-                    for ref_item in ref:
-                        if ref_item:
-                            new_v.append(
-                                to_saveable_object(
-                                    item, ref_item, include_iterables
-                                )
-                            )
+                    new_v.append(
+                        to_saveable_object(item, item, include_iterables)
+                    )
                 elif isinstance(item, params_group.ParamsGroup):
-                    for ref_item in ref:
-                        if ref_item:
-                            new_v.append(
-                                to_saveable_object(
-                                    item, ref_item, include_iterables
-                                )
-                            )
+                    new_v.append(
+                        to_saveable_object(
+                            item, item.as_dict(), include_iterables
+                        )
+                    )
                 else:
                     new_v.append(item)
             return new_v  # type: ignore
