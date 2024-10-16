@@ -28,8 +28,10 @@ from tomlparams.parse_helpers import (
     selectively_update_dict,
     TypeChecking,
 )
+import logging
 
 SPECIAL_KEYS = ['include', 'exclude_keys']
+LOGGER = logging.getLogger(__name__)
 
 
 class TOMLParams:
@@ -332,10 +334,10 @@ class TOMLParams:
                 selectively_update_dict(included_params, outer_params)
                 outer_params = included_params
             if report:
-                print(f'Parameters set from: {path}')
+                LOGGER.info(f'Parameters set from: {path}')
         else:
             if report:
-                print('Using default parameters.')
+                LOGGER.info('Using default parameters.')
         return outer_params
 
     def read_defaults_as_directory(self, fullpath: str) -> dict:
@@ -504,7 +506,7 @@ class TOMLParams:
         with open(path, 'wb') as f:
             tomli_w.dump(d, f)
         if verbose:
-            print(f'Consolidated TOML file written to {path}.')
+            LOGGER.info(f'Consolidated TOML file written to {path}.')
 
     def check_type_env_var_to_typechecking(
         self, env_var, default_value

@@ -4,6 +4,7 @@ import sys
 
 from tomlparams import __version__
 from tomlparams.utils import error
+import logging
 
 DIR = os.path.dirname(os.path.realpath(os.path.abspath(__file__)))
 EXAMPLES_DIR = os.path.join(DIR, 'examples')
@@ -52,4 +53,5 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     main()
