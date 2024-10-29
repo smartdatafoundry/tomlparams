@@ -151,6 +151,8 @@ def to_saveable_object(
         return o
     elif isinstance(o, Enum):
         return o.value
+    elif callable(o):
+        return o.__name__
     elif hasattr(o, 'as_saveable_object'):
         return o.as_saveable_object()
     else:
