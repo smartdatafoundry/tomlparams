@@ -17,8 +17,8 @@ def error(*msg) -> NoReturn:
     raise TOMLParamsError(msg)
 
 
-def warn(*msg: str):
-    warnings.warn(msg)
+def warn(*msg: str) -> None:
+    warnings.warn(" ".join(msg))
 
 
 def nvl(v, default):
