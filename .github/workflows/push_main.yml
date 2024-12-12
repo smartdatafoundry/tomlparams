@@ -13,12 +13,17 @@ jobs:
       matrix:
         python-version: ['3.9', '3.10', '3.11']
     steps:
-      - name: Fetch repo
-        uses: actions/checkout@v3
 
       - name: Install poetry
         shell: bash
         run: pipx install poetry
+      
+      - name: Fetch repo
+        uses: actions/checkout@v3
+
+      - name: Poetry Lock
+        shell: bash
+        run: poetry lock
 
       - uses: actions/setup-python@v4
         with:
