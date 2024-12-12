@@ -3,7 +3,7 @@ import os
 import tempfile
 import unittest
 from pathlib import Path
-from typing import Any
+from typing import Any, Union
 
 import tomli
 from parameterized import parameterized
@@ -25,7 +25,9 @@ class TestTOMLParams(unittest.TestCase):
     def tearDown(self) -> None:
         self.co.restore()
 
-    def assertFileCorrect(self, path: str | Path, refpath: str | Path) -> None:
+    def assertFileCorrect(
+        self, path: Union[str, Path], refpath: Union[str, Path]
+    ) -> None:
         with open(path) as f:
             orig = f.read()
         with open(refpath) as f:
