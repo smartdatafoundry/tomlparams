@@ -39,6 +39,11 @@ jobs:
       - name: Run unit tests
         shell: bash
         run: poetry run pytest
+
+      - name: Run mypy
+        shell: bash
+        run: poetry run mypy
+        
   bump-version-tag:
     runs-on: ubuntu-latest
     needs: unit-tests

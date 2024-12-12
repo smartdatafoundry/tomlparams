@@ -56,3 +56,7 @@ jobs:
         shell: bash
         run: poetry run pytest
 
+      - name: Run mypy
+        shell: bash
+        run: poetry run mypy
+
