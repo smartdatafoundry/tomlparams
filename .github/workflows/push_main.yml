@@ -99,26 +99,25 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Fetch repo
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: main
-
       - name: Install poetry
         shell: bash
         run: pipx install poetry
+      
+      - name: Fetch repo
+        uses: actions/checkout@v3
+
+      - name: Configure poetry
+        shell: bash
+        run: poetry config virtualenvs.in-project true
+
+      - name: Poetry Lock
+        shell: bash
+        run: poetry lock
 
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
           cache: 'poetry'
-
-      - name: Configure poetry
-        shell: bash
-        run: |
-          poetry config virtualenvs.in-project true
-          poetry config pypi-token.pypi  ${{ secrets.pypi_token }}
 
       - name: Install dependencies
         shell: bash
