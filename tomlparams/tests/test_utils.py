@@ -1,7 +1,8 @@
 import unittest
 
-from tomlparams.utils import warn
 from parameterized import parameterized
+
+from tomlparams.utils import warn
 
 
 class TestUtils(unittest.TestCase):
