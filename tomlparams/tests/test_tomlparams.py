@@ -1,16 +1,19 @@
+from __future__ import annotations
+
 import datetime
 import os
 import tempfile
-import tomli
 import unittest
+from pathlib import Path
+from typing import Any
 
+import tomli
 from parameterized import parameterized
 
-from tomlparams.tests.captureoutput import CaptureOutput
 from tomlparams import TOMLParams
 from tomlparams.params_group import ParamsGroup
-from tomlparams.utils import concatenate_keys, TOMLParamsError
-
+from tomlparams.tests.captureoutput import CaptureOutput
+from tomlparams.utils import TOMLParamsError, concatenate_keys
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))
 XDIR = os.path.join(THISDIR, 'testdata')
@@ -18,20 +21,20 @@ EXPECTEDDIR = os.path.join(THISDIR, 'testdata', 'expected')
 
 
 class TestTOMLParams(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.co = CaptureOutput(stream='stderr')
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.co.restore()
 
-    def assertFileCorrect(self, path, refpath):
+    def assertFileCorrect(self, path: str | Path, refpath: str | Path) -> None:
         with open(path) as f:
             orig = f.read()
         with open(refpath) as f:
             ref = f.read()
         self.assertEqual(orig, ref)
 
-    def test_write_consolidated_toml_unchanged_from_defaults(self):
+    def test_write_consolidated_toml_unchanged_from_defaults(self) -> None:
         # Tests writing of consolidated TOML file when
         # uk_retirees.toml exists but is empty, so what's written
         # is in fact the defaults.
@@ -69,11 +72,11 @@ class TestTOMLParams(unittest.TestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, defaults)
 
-    def test_write_consolidated_toml_with_hierarchy(self):
+    def test_write_consolidated_toml_with_hierarchy(self) -> None:
         # Tests writing of consolidated TOML file when
         # one.toml and two.toml both exist.
         # two.toml includes one.toml and they have some conflicts
-        defaults = {
+        defaults: dict[str, Any] = {
             'n': 1,
             'f': 1.5,
             's': 'tomlparams',
@@ -94,7 +97,7 @@ class TestTOMLParams(unittest.TestCase):
         consolidated_path = os.path.join(outdir, 'in_params.toml')
 
         params = TOMLParams(
-            defaults,
+            defaults=defaults,
             name='two',
             standard_params_dir=stddir,
             user_params_dir=userdir,
@@ -113,12 +116,12 @@ class TestTOMLParams(unittest.TestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
-    def test_write_consolidated_toml_list_hierarchy(self):
+    def test_write_consolidated_toml_list_hierarchy(self) -> None:
         # Tests writing of consolidated TOML file when
         # three.toml, four.toml and five.toml all exist.
         # three.toml includes four.toml and five.toml in order
         # with some conflicts
-        defaults = {
+        defaults: dict[str, Any] = {
             'n': 1,
             'f': 1.5,
             's': 'tomlparams',
@@ -158,8 +161,8 @@ class TestTOMLParams(unittest.TestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
-    def test_self_inclusion(self):
-        defaults = {
+    def test_self_inclusion(self) -> None:
+        defaults: dict[str, Any] = {
             'n': 1,
             'f': 1.5,
             's': 'tomlparams',
@@ -199,8 +202,8 @@ class TestTOMLParams(unittest.TestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
-    def test_write_consolidated_toml_deep_equals(self):
-        defaults = {
+    def test_write_consolidated_toml_deep_equals(self) -> None:
+        defaults: dict[str, Any] = {
             "not_there_1": 2,
             "z": 4,
             "this": {
@@ -237,12 +240,12 @@ class TestTOMLParams(unittest.TestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
-    def test_userparams_not_in_stdparams(self):
-        defaults = {'x': 10}
-        stddir = os.path.join(XDIR, 'tomlparams')
-        userdir = os.path.join(XDIR, 'usertomlparams')
-        outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'in_params.toml')
+    def test_userparams_not_in_stdparams(self) -> None:
+        defaults: dict[str, Any] = {'x': 10}
+        stddir: str = os.path.join(XDIR, 'tomlparams')
+        userdir: str = os.path.join(XDIR, 'usertomlparams')
+        outdir: str = tempfile.mkdtemp()
+        consolidated_path: str = os.path.join(outdir, 'in_params.toml')
 
         params = TOMLParams(
             defaults,
@@ -263,14 +266,14 @@ class TestTOMLParams(unittest.TestCase):
             loaded_params = tomli.load(f)
         self.assertEqual(loaded_params, expected)
 
-    def test_reserved_user_raises(self):
-        defaults = {'x': 10}
-        stddir = os.path.join(XDIR, 'tomlparams')
-        userdir = os.path.join(XDIR, 'usertomlparams')
-        naughty_toml = os.path.join(XDIR, 'tomlparams', 'user_only.toml')
+    def test_reserved_user_raises(self) -> None:
+        defaults: dict[str, Any] = {'x': 10}
+        stddir: str = os.path.join(XDIR, 'tomlparams')
+        userdir: str = os.path.join(XDIR, 'usertomlparams')
+        naughty_toml: str = os.path.join(XDIR, 'tomlparams', 'user_only.toml')
         open(naughty_toml, "wt").close()
 
-        def create_params():
+        def create_params() -> None:
             TOMLParams(
                 defaults,
                 name='user_only',
@@ -293,14 +296,14 @@ class TestTOMLParams(unittest.TestCase):
         finally:
             os.remove(naughty_toml)
 
-    def test_reserved_u_raises(self):
+    def test_reserved_u_raises(self) -> None:
         defaults = {'x': 10}
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         naughty_toml = os.path.join(XDIR, 'tomlparams', 'u_only.toml')
         open(naughty_toml, "wt").close()
 
-        def create_params():
+        def create_params() -> None:
             TOMLParams(
                 defaults,
                 name='u_only',
@@ -322,12 +325,16 @@ class TestTOMLParams(unittest.TestCase):
         finally:
             os.remove(naughty_toml)
 
-    def test_default_env_param_used_no_name(self):
-        stddir = os.path.join(XDIR, 'tomlparams')
-        userdir = os.path.join(XDIR, 'usertomlparams')
-        outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'in_params.toml')
-        defaults = {'s': 'none', 'subsection': {'n': 0}, 'section2': {'n': 0}}
+    def test_default_env_param_used_no_name(self) -> None:
+        stddir: str = os.path.join(XDIR, 'tomlparams')
+        userdir: str = os.path.join(XDIR, 'usertomlparams')
+        outdir: str = tempfile.mkdtemp()
+        consolidated_path: str = os.path.join(outdir, 'in_params.toml')
+        defaults: dict[str, Any] = {
+            's': 'none',
+            'subsection': {'n': 0},
+            'section2': {'n': 0},
+        }
 
         self.assertIsNone(os.environ.get('TOMLPARAMS'))
         os.environ['TOMLPARAMS'] = 'one'
@@ -354,12 +361,16 @@ class TestTOMLParams(unittest.TestCase):
 
         os.environ.pop('TOMLPARAMS', None)
 
-    def test_defined_env_param_used_no_name(self):
-        stddir = os.path.join(XDIR, 'tomlparams')
-        userdir = os.path.join(XDIR, 'usertomlparams')
-        outdir = tempfile.mkdtemp()
-        consolidated_path = os.path.join(outdir, 'in_params.toml')
-        defaults = {'s': 'none', 'subsection': {'n': 0}, 'section2': {'n': 0}}
+    def test_defined_env_param_used_no_name(self) -> None:
+        stddir: str = os.path.join(XDIR, 'tomlparams')
+        userdir: str = os.path.join(XDIR, 'usertomlparams')
+        outdir: str = tempfile.mkdtemp()
+        consolidated_path: str = os.path.join(outdir, 'in_params.toml')
+        defaults: dict[str, Any] = {
+            's': 'none',
+            'subsection': {'n': 0},
+            'section2': {'n': 0},
+        }
 
         self.assertIsNone(os.environ.get('MYTOMLPARAMS'))
         os.environ['MYTOMLPARAMS'] = 'one'
@@ -387,7 +398,7 @@ class TestTOMLParams(unittest.TestCase):
 
         os.environ.pop('MYTOMLPARAMS', None)
 
-    def test_type_checking_root_level_warning(self):
+    def test_type_checking_root_level_warning(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"not_there_1": 2, "z": 4}
@@ -401,7 +412,7 @@ class TestTOMLParams(unittest.TestCase):
                 check_types=TOMLParams.WARN,
             )
 
-    def test_type_checking_shallow_warning(self):
+    def test_type_checking_shallow_warning(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": "one", "section": {"subsection": {"n": "one"}}}
@@ -415,7 +426,7 @@ class TestTOMLParams(unittest.TestCase):
                 check_types=TOMLParams.WARN,
             )
 
-    def test_type_checking_list(self):
+    def test_type_checking_list(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {"s": ["one", 2]}
@@ -429,7 +440,7 @@ class TestTOMLParams(unittest.TestCase):
                 check_types=TOMLParams.WARN,
             )
 
-    def test_type_checking_deep_level_warning(self):
+    def test_type_checking_deep_level_warning(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {
@@ -453,7 +464,7 @@ class TestTOMLParams(unittest.TestCase):
                 check_types=TOMLParams.WARN,
             )
 
-    def test_date_type_checking_warning(self):
+    def test_date_type_checking_warning(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults = {
@@ -470,12 +481,12 @@ class TestTOMLParams(unittest.TestCase):
                 check_types=TOMLParams.WARN,
             )
 
-    def test_type_checking_root_level_error(self):
-        stddir = os.path.join(XDIR, 'tomlparams')
-        userdir = os.path.join(XDIR, 'usertomlparams')
-        defaults = {"not_there_1": 2, "z": 4}
+    def test_type_checking_root_level_error(self) -> None:
+        stddir: str = os.path.join(XDIR, 'tomlparams')
+        userdir: str = os.path.join(XDIR, 'usertomlparams')
+        defaults: dict[str, Any] = {"not_there_1": 2, "z": 4}
 
-        def create_params():
+        def create_params() -> None:
             TOMLParams(
                 defaults,
                 name='type_check_root_level',
@@ -490,12 +501,15 @@ class TestTOMLParams(unittest.TestCase):
             create_params,
         )
 
-    def test_type_checking_shallow_error(self):
-        stddir = os.path.join(XDIR, 'tomlparams')
-        userdir = os.path.join(XDIR, 'usertomlparams')
-        defaults = {"s": "one", "section": {"subsection": {"n": "one"}}}
+    def test_type_checking_shallow_error(self) -> None:
+        stddir: str = os.path.join(XDIR, 'tomlparams')
+        userdir: str = os.path.join(XDIR, 'usertomlparams')
+        defaults: dict[str, Any] = {
+            "s": "one",
+            "section": {"subsection": {"n": "one"}},
+        }
 
-        def create_params():
+        def create_params() -> None:
             TOMLParams(
                 defaults,
                 name='type_check_shallow',
@@ -510,12 +524,15 @@ class TestTOMLParams(unittest.TestCase):
             create_params,
         )
 
-    def test_bad_key_shallow_error(self):
-        stddir = os.path.join(XDIR, 'tomlparams')
-        userdir = os.path.join(XDIR, 'usertomlparams')
-        defaults = {"s": 1, "section": {"subsection": {"m": "two"}}}
+    def test_bad_key_shallow_error(self) -> None:
+        stddir: str = os.path.join(XDIR, 'tomlparams')
+        userdir: str = os.path.join(XDIR, 'usertomlparams')
+        defaults: dict[str, Any] = {
+            "s": 1,
+            "section": {"subsection": {"m": "two"}},
+        }
 
-        def create_params():
+        def create_params() -> None:
             TOMLParams(
                 defaults,
                 name='type_check_shallow',
@@ -530,12 +547,15 @@ class TestTOMLParams(unittest.TestCase):
             create_params,
         )
 
-    def test_type_checking_bad_key_shallow_error(self):
-        stddir = os.path.join(XDIR, 'tomlparams')
-        userdir = os.path.join(XDIR, 'usertomlparams')
-        defaults = {"s": "one", "section": {"subsection": {"m": "two"}}}
+    def test_type_checking_bad_key_shallow_error(self) -> None:
+        stddir: str = os.path.join(XDIR, 'tomlparams')
+        userdir: str = os.path.join(XDIR, 'usertomlparams')
+        defaults: dict[str, Any] = {
+            "s": "one",
+            "section": {"subsection": {"m": "two"}},
+        }
 
-        def create_params():
+        def create_params() -> None:
             TOMLParams(
                 defaults,
                 name='type_check_shallow',
@@ -550,12 +570,15 @@ class TestTOMLParams(unittest.TestCase):
             create_params,
         )
 
-    def test_type_checking_warn_bad_key_shallow_error(self):
-        stddir = os.path.join(XDIR, 'tomlparams')
-        userdir = os.path.join(XDIR, 'usertomlparams')
-        defaults = {"s": "one", "section": {"subsection": {"m": "two"}}}
+    def test_type_checking_warn_bad_key_shallow_error(self) -> None:
+        stddir: str = os.path.join(XDIR, 'tomlparams')
+        userdir: str = os.path.join(XDIR, 'usertomlparams')
+        defaults: dict[str, Any] = {
+            "s": "one",
+            "section": {"subsection": {"m": "two"}},
+        }
 
-        def create_params():
+        def create_params() -> None:
             TOMLParams(
                 defaults,
                 name='type_check_shallow',
@@ -570,15 +593,19 @@ class TestTOMLParams(unittest.TestCase):
             create_params,
         )
 
-    def test_type_check_env_var_fail(self):
-        stddir = os.path.join(XDIR, 'tomlparams')
-        userdir = os.path.join(XDIR, 'usertomlparams')
-        defaults = {'s': 'none', 'subsection': {'n': 0}, 'section2': {'n': 0}}
+    def test_type_check_env_var_fail(self) -> None:
+        stddir: str = os.path.join(XDIR, 'tomlparams')
+        userdir: str = os.path.join(XDIR, 'usertomlparams')
+        defaults: dict[str, Any] = {
+            's': 'none',
+            'subsection': {'n': 0},
+            'section2': {'n': 0},
+        }
 
         self.assertIsNone(os.environ.get('TOMLPARAMSCHECKING'))
         os.environ['TOMLPARAMSCHECKING'] = 'pp'
 
-        def create_params():
+        def create_params() -> None:
             TOMLParams(
                 defaults,
                 standard_params_dir=stddir,
@@ -593,12 +620,12 @@ class TestTOMLParams(unittest.TestCase):
         )
         os.environ.pop('TOMLPARAMSCHECKING', None)
 
-    def test_concatenate_keys(self):
+    def test_concatenate_keys(self) -> None:
         d = {'a': {'b': 1, 'c': 2}, 'd': 3}
         expected = (('a.b', 1), ('a.c', 2), ('d', 3))
         self.assertEqual(tuple(concatenate_keys(d)), expected)
 
-    def test_read_defaults_as_directory(self):
+    def test_read_defaults_as_directory(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults_as_dir = os.path.join(stddir, 'defaults_as_dir')
@@ -617,8 +644,10 @@ class TestTOMLParams(unittest.TestCase):
         )
         self.assertEqual(params_default_as_dir, params_default_as_file)
 
-    @parameterized.expand(['human', 'animals', 'fungi'])
-    def test_content_defaults_as_directory(self, default_primary_key: str):
+    @parameterized.expand(['human', 'animals', 'fungi'])  # type: ignore [misc]
+    def test_content_defaults_as_directory(
+        self, default_primary_key: str
+    ) -> None:
         # primary keys of default as file
         # primary_keys = ['human', 'animals', 'fungi']
         stddir = os.path.join(XDIR, 'tomlparams')
@@ -649,7 +678,7 @@ class TestTOMLParams(unittest.TestCase):
         )
         self.assertEqual(d_as_dir, d_as_file)
 
-    def test_read_defaults_as_directory_repeated_keys(self):
+    def test_read_defaults_as_directory_repeated_keys(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
         defaults_as_dir_repeated_keys = os.path.join(
@@ -665,7 +694,7 @@ class TestTOMLParams(unittest.TestCase):
             ),
         )
 
-    def test_table_array(self):
+    def test_table_array(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
 
@@ -679,7 +708,7 @@ class TestTOMLParams(unittest.TestCase):
         for array in params['array']:
             self.assertIsInstance(array, ParamsGroup)
 
-    def test_table_array_overwriting_same_length(self):
+    def test_table_array_overwriting_same_length(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
 
@@ -693,7 +722,7 @@ class TestTOMLParams(unittest.TestCase):
 
         self.assertEqual(len(params['array']), 2)
 
-    def test_table_array_overwriting_longer(self):
+    def test_table_array_overwriting_longer(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
 
@@ -707,7 +736,7 @@ class TestTOMLParams(unittest.TestCase):
 
         self.assertEqual(len(params['array']), 3)
 
-    def test_table_array_overwriting_shorter(self):
+    def test_table_array_overwriting_shorter(self) -> None:
         stddir = os.path.join(XDIR, 'tomlparams')
         userdir = os.path.join(XDIR, 'usertomlparams')
 

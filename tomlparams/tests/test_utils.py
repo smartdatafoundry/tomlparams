@@ -1,7 +1,8 @@
 import unittest
 
-from tomlparams.utils import warn
 from parameterized import parameterized
+
+from tomlparams.utils import warn
 
 
 class TestUtils(unittest.TestCase):
@@ -12,7 +13,7 @@ class TestUtils(unittest.TestCase):
             ("This", "is", "a", "warning"),
             ("This is a warning", "and this is another warning"),
         ]
-    )
-    def test_warn(self, *msg):
+    )  # type: ignore [misc]
+    def test_warn(self, *msg: str) -> None:
         with self.assertWarns(UserWarning):
             warn(*msg)

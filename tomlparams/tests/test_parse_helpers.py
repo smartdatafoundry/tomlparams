@@ -10,7 +10,7 @@ EXPECTEDDIR = os.path.join(THISDIR, 'testdata', 'expected')
 
 
 class TestParseHelpers:
-    def test_to_saveable_object(self):
+    def test_to_saveable_object(self) -> None:
         defaults = {
             'a': 1,
             'b': 'two',

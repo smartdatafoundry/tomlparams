@@ -8,18 +8,27 @@ from __future__ import annotations
 import datetime
 import os
 import re
-from enum import Enum
+from enum import Enum, auto
 from typing import Any
-from tomlparams.utils import error
+
 from tomlparams import params_group
+from tomlparams.utils import error
 
-USER_RESERVED_NAMES_RE = re.compile(r'^(u|user)[-_].*$')
-DEFAULT_PARAMS_NAME = 'tomlparams'
+USER_RESERVED_NAMES_RE: re.Pattern[str] = re.compile(r'^(u|user)[-_].*$')
+DEFAULT_PARAMS_NAME: str = 'tomlparams'
 DEFAULT_PARAMS_TYPE_CHECKING_NAME = 'TOMLPARAMSCHECKING'
-DEFAULTS_ONLY_NAMES = ['default', 'defaults']
+DEFAULTS_ONLY_NAMES: list[str] = ['default', 'defaults']
 
-TypeChecking = Enum('TypeChecking', ['OFF', 'WARN', 'ERROR'])
-ParseMismatchType = Enum('ParseMismatch', ['BADKEY', 'TYPING'])
+
+class TypeChecking(Enum):
+    OFF = auto()
+    WARN = auto()
+    ERROR = auto()
+
+
+class ParseMismatchType(Enum):
+    BADKEY = auto()
+    TYPING = auto()
 
 
 class ParseMismatch:
@@ -53,7 +62,7 @@ class ParseMismatch:
             else:
                 self.toml_type = toml_type.__name__
 
-    def __str__(self):
+    def __str__(self) -> str:
         hierarchy = (
             f'at level: {".".join(self.position)}'
             if self.position
@@ -70,7 +79,7 @@ class ParseMismatch:
         else:
             error(f'Unknown parse_mismatch type: {self.pm_type}')
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f'ParseMismatch({self.pm_type} at'
             f' {self.position or "root"}, {self.key}, '
@@ -80,12 +89,10 @@ class ParseMismatch:
 
 def to_saveable_object(
     o: Any, ref: Any | None = None, include_iterables: bool = True
-) -> dict[Any, dict[Any, Any] | list[Any] | tuple[Any] | Any]:
-    """
-    Convert a TOMLParams Object, a ParamsGroup object, or a collection
-    type (dict, list, tuple) recursively to a TOML-dumpable object.
-    Typically called on either a TOMLParams or ParamsGroup object as
-    top-level invocation.
+) -> Any:
+    """Convert a TOMLParams Object, a ParamsGroup object, or a collection type
+    (dict, list, tuple) recursively to a TOML-dumpable object. Typically called
+    on either a TOMLParams or ParamsGroup object as top-level invocation.
 
     Also accepts other objects with as_saveable_object methods,
     which it will use to make TOML-compatible version of those.
@@ -100,7 +107,6 @@ def to_saveable_object(
 
     Returns:
         TOML-dumpable object
-
     """
     if isinstance(o, dict):
         return {
@@ -116,7 +122,7 @@ def to_saveable_object(
         }
     elif isinstance(o, (list, tuple)):
         if ref:
-            new_v = []
+            new_v: list[Any] = []
             for item in o:
                 if isinstance(item, dict):
                     new_v.append(
@@ -130,7 +136,7 @@ def to_saveable_object(
                     )
                 else:
                     new_v.append(item)
-            return new_v  # type: ignore
+            return new_v
         return (
             [
                 to_saveable_object(v, include_iterables=include_iterables)
@@ -138,7 +144,7 @@ def to_saveable_object(
             ]
             if include_iterables
             else o
-        )  # type: ignore
+        )
     elif o is None or type(o) in (
         bool,
         str,
@@ -162,8 +168,7 @@ def to_saveable_object(
 def selectively_update_dict(
     original_dict: dict[str, Any], new_dict: dict[str, Any]
 ) -> None:
-    """
-    Selectively update dictionary original_dict with any values that are in
+    """Selectively update dictionary original_dict with any values that are in
     new_dict, but being careful only to update keys in dictionaries that are
     present in new_d.
 

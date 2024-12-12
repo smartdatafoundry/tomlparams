@@ -18,9 +18,10 @@ tomli = "^2.0.1"
 tomli-w = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^3.3.1"
-pytest = "^7.3.2"
+pre-commit = "^4.0.1"
+pytest = "^8.3.4"
 parameterized = "^0.9.0"
+mypy = "^1.13.0"
 
 [tool.poetry.group.docs]
 optional = true
@@ -53,3 +54,61 @@ tomlparams = "tomlparams.console:main"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+files = ["tomlparams"]
+python_version = "3.9"
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["parameterized"]
+ignore_missing_imports = true
+disallow_untyped_decorators = false
+
+[tool.sqlfluff.core]
+nocolor = false
+templater = "dbt"
+sql_file_exts = ".sql"
+dialect = "duckdb"
+exclude_rules = "AM04,L009,CV03"
+
+[tool.sqlfluff.rules.capitalisation.keywords]
+capitalisation_policy = "upper"
+
+[tool.sqlfluff.templater.dbt]
+project_dir = "./data_processing"
+profiles_dir = "./data_processing"
+profile = "data_processing"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 79
+
+[tool.rufff.lint]
+select = [
+    "E",  # pycodestyle
+    "F",  # pyflakes
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",
+] # Ignore line length errors, since we're using Black/docformatter
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402", "F401"]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+profile = "black"
+line_length = 79
+skip = ["__init__.py"]
+
+[tool.docformatter]
+black = true
+style = "sphinx"
+precursive = true
+wrap-summaries = 79
+wrap-descriptions = 79
+in-place = true
