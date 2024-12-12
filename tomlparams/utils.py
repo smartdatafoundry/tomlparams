@@ -4,7 +4,7 @@ Utils
 """
 
 import warnings
-from typing import Any, Generator, NoReturn
+from typing import Any, Generator, NoReturn, TypeVar
 
 import tomli
 
@@ -21,8 +21,21 @@ def warn(*msg: str) -> None:
     warnings.warn(" ".join(msg))
 
 
-def nvl(v, default):
-    return default if v is None else v
+U = TypeVar("U")
+V = TypeVar("V")
+
+
+def nvl(value: U | None, default: V) -> U | V:
+    """Returns value if value is not None, otherwise default.
+
+    Args:
+        value: a value
+        default: a default value
+
+    Returns:
+        value if value is not None, otherwise default
+    """
+    return default if value is None else value
 
 
 def load_toml(path: str) -> dict[str, Any]:

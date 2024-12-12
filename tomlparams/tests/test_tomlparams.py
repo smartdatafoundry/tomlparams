@@ -642,7 +642,7 @@ class TestTOMLParams(unittest.TestCase):
         )
         self.assertEqual(params_default_as_dir, params_default_as_file)
 
-    @parameterized.expand(['human', 'animals', 'fungi'])
+    @parameterized.expand(['human', 'animals', 'fungi'])  # type: ignore [misc]
     def test_content_defaults_as_directory(
         self, default_primary_key: str
     ) -> None:

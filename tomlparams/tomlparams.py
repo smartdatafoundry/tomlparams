@@ -198,7 +198,9 @@ class TOMLParams:
             int(k) if k.isdigit() else k for k in key.split(".")
         ]
         # first key is always a string
-        initial_key: int | str = splitted_key.pop(0)
+        _initial_key = splitted_key[0]
+        assert isinstance(_initial_key, str)
+        initial_key: str = _initial_key
         if len(splitted_key) == 0 and isinstance(initial_key, str):
             self.__dict__[initial_key] = value
             return
@@ -488,10 +490,10 @@ class TOMLParams:
 
     def as_saveable_object(
         self,
-    ) -> dict[str, Any]:
+    ) -> Any:
         return to_saveable_object(self.__dict__, self._defaults)
 
-    def as_dict(self) -> dict[str, Any]:
+    def as_dict(self) -> Any:
         return to_saveable_object(self.__dict__, self._defaults, False)
 
     def write_consolidated_toml(
