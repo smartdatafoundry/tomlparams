@@ -3,8 +3,10 @@ Utils
 =====
 """
 
+from __future__ import annotations
+
 import warnings
-from typing import Any, Generator, NoReturn, Optional, TypeVar, Union
+from typing import Any, Generator, NoReturn, TypeVar
 
 import tomli
 
@@ -25,7 +27,7 @@ U = TypeVar("U")
 V = TypeVar("V")
 
 
-def nvl(value: Optional[U], default: V) -> Union[U, V]:
+def nvl(value: U | None, default: V) -> U | V:
     """Returns value if value is not None, otherwise default.
 
     Args:
