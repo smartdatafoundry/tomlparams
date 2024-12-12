@@ -12,20 +12,16 @@ Version {sub-ref}`release`
 
 Smart Data Foundry Limited
 
-**Contents**
-:::
+**Contents** :::
 
 ## :::{toctree}
 
 ## numbered: True maxdepth: 2
 
-README.md
-tomlparams.md
-:::
+README.md tomlparams.md :::
 
 ## :::{only} html
 
 ______________________________________________________________________
 
-[Index](genindex) • [Search](search)
-:::
+[Index](genindex) • [Search](search) :::
