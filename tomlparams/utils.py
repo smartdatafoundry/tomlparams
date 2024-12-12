@@ -18,7 +18,11 @@ def error(*msg: str) -> NoReturn:
 
 
 def warn(*msg: str) -> None:
-    warnings.warn(message=' '.join(msg))
+    warnings.warn(" ".join(msg))
+
+
+def nvl(v, default):
+    return default if v is None else v
 
 
 def load_toml(path: str) -> dict[str, Any]:

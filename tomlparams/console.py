@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 import sys
@@ -52,4 +53,5 @@ def main() -> None:
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     main()

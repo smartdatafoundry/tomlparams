@@ -58,7 +58,7 @@ class ParamsGroup:
         return self.__dict__.get(key, default)
 
     def as_saveable_object(self) -> Any:
-        return to_saveable_object(self.get_params())
+        return to_saveable_object(self, self.as_dict())
 
     def get_params(self) -> dict[str, Any]:
         """Return a dictionary of parameters, excluding private attributes."""
