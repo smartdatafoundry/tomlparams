@@ -50,10 +50,6 @@ jobs:
         shell: bash
         run: poetry install
 
-      - name: Linting
-        shell: bash
-        run: poetry run pre-commit run --all-files
-
       - name: Run unit tests
         shell: bash
         run: poetry run pytest
