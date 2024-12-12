@@ -35,8 +35,11 @@ repos:
     - id: autoflake
       args: [ --remove-all-unused-imports]
 
-- repo: https://github.com/PyCQA/docformatter
-  rev: v1.7.5
+- repo: https://github.com/smartdatafoundry/docformatter
+  # forked from https://github.com/PyCQA/docformatter due to pre-commit incompatiblity
+  # fixed in the repo but not released.
+  # https://github.com/PyCQA/docformatter/issues/293
+  rev: v1.7.6
   hooks:
     - id: docformatter
       args: [--config, pyproject.toml]
