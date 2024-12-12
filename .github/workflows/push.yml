@@ -5,6 +5,8 @@ on:
       - main
 
 jobs:
+  unit-test:
+    uses: smartdatafoundry/tomlparams/.github/workflows/tests.yml@unit-tests
   create-pr:
     runs-on: ubuntu-latest
     permissions:
@@ -21,39 +23,3 @@ jobs:
           title: Merge ${{ github.ref_name }} -> main
           branch: ${{ github.ref }}
           base: main
-
-  quality:
-    runs-on: ubuntu-latest
-    permissions: read-all
-    needs: create-pr
-    strategy:
-      matrix:
-        python-version: ['3.9', '3.10', '3.11']
-    steps:
-      - name: Install poetry
-        shell: bash
-        run: pipx install poetry
-      
-      - name: Fetch repo
-        uses: actions/checkout@v3
-
-      - name: Poetry Lock
-        shell: bash
-        run: poetry lock
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'poetry'
-
-      - name: Configure poetry
-        shell: bash
-        run: poetry config virtualenvs.in-project true
-
-      - name: Install dependencies
-        shell: bash
-        run: poetry install
-
-      - name: Run unit tests
-        shell: bash
-        run: poetry run pytest
