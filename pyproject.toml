@@ -57,7 +57,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 files = ["tomlparams"]
-python_version = "3.12"
+python_version = "3.9"
 strict = true
 
 [[tool.mypy.overrides]]
