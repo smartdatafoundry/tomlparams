@@ -1,9 +1,7 @@
 # TOMLParams
-
-## :::{only} html
-
-______________________________________________________________________
-
+:::{only} html
+---
+---
 Version {sub-ref}`release`
 
 *TOML-based parameter files made better*
@@ -12,16 +10,20 @@ Version {sub-ref}`release`
 
 Smart Data Foundry Limited
 
-**Contents** :::
+**Contents**
+:::
 
-## :::{toctree}
+:::{toctree}
+---
+numbered: True
+maxdepth: 2
+---
+README.md
+tomlparams.md
+:::
 
-## numbered: True maxdepth: 2
-
-README.md tomlparams.md :::
-
-## :::{only} html
-
-______________________________________________________________________
-
-[Index](genindex) • [Search](search) :::
+:::{only} html
+---
+---
+[Index](genindex) • [Search](search)
+:::
