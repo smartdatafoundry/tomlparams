@@ -5,6 +5,22 @@ on:
       - main
 
 jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Fetch repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: Merge ${{ github.ref_name }} -> main
+          branch: ${{ github.ref }}
+          base: main
   unit-tests:
     runs-on: ubuntu-latest
     permissions: read-all
@@ -39,19 +55,4 @@ jobs:
       - name: Run unit tests
         shell: bash
         run: poetry run pytest
-  create-pr:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    steps:
-      - name: Fetch repo
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          title: Merge ${{ github.ref_name }} -> main
-          branch: ${{ github.ref }}
-          base: main
