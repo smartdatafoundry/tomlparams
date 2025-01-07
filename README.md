@@ -49,7 +49,7 @@ from datetime import date, datetime
 from tomlparams import TOMLParams
 
 defaults = {
-    'start_date': datetime.date(2024, 1, 1),
+    'start_date': datetime.date(2024, 1, 2),
     'run_days': 366,
     'tolerance': 0.0002,
     'log': True,
@@ -74,7 +74,7 @@ attribute lookup or dictionary-style lookup with `[]`:
 >>> params.run_days
 366
 >>> params['start_date']
-datetime.date(2024, 1, 1)
+datetime.date(2024, 1, 2)
 >>> params.logging.format
 '.csv'
 >>> params['logging']['events']
