@@ -98,7 +98,6 @@ jobs:
           git push --follow-tags origin main
 
   release:
-    name: Publish release to PyPI
     runs-on: ubuntu-latest
     environment:
       name: pypi
