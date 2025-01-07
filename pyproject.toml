@@ -1,6 +1,6 @@
 [project]
 name = "tomlparams"
-version = "0.1.36"
+version = "0.1.37"
 description = ""
 authors = [
   { name = "Smart Data Foundry", email = "datascience@smartdatafoundry.com" },
