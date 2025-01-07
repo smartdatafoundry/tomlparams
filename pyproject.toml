@@ -1,21 +1,21 @@
-[tool.poetry]
+[project]
 name = "tomlparams"
 version = "0.1.28"
 description = ""
 authors = [
-  "Smart Data Foundry <datascience@smartdatafoundry.com>",
-  "Paola Arce <paola.arce@smartdatafoundry.com>",
-  "Victor Diaz <victor.diaz@smartdatafoundry.com>",
-  "Eric Janto <eric.janto@smartdatafoundry.com>",
-  "Del Middlemiss <derek.middlemiss@smartdatafoundry.com>",
-  "Nick Radcliffe <njr@stochasticsolutions.com>",
+  { name = "Smart Data Foundry", email = "datascience@smartdatafoundry.com" },
+  { name = "Paola Arce", email = "paola.arce@smartdatafoundry.com" },
+  { name = "Victor Diaz", email = "victor.diaz@smartdatafoundry.com" },
+  { name = "Eric Janto", email = "eric.janto@smartdatafoundry.com" },
+  { name = "Del Middlemiss", email = "derek.middlemiss@smartdatafoundry.com" },
+  { name = "Nick Radcliffe", email = "njr@stochasticsolutions.com" },
 ]
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.9"
-tomli = "^2.0.1"
-tomli-w = "^1.0.0"
+dependencies=[
+  "tomli>=2.0.1",
+  "tomli-w>=1.0.0",
+]
+requires-python = ">=3.9"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.1"
@@ -48,7 +48,7 @@ exclude = '''
 )/
 '''
 
-[tool.poetry.scripts]
+[project.scripts]
 tomlparams = "tomlparams.console:main"
 
 [build-system]
