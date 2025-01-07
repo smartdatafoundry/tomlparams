@@ -750,7 +750,7 @@ class TestTOMLParams(unittest.TestCase):
 
         self.assertEqual(len(params['array']), 1)
 
-    @parameterized.expand(
+    @parameterized.expand(  # type: ignore [misc]
         [
             ["a", 2],  # present in defaults
             [
