@@ -54,7 +54,7 @@ defaults = {
     'tolerance': 0.0001,
     'log': True,
     'locale': 'en_GB',
-    'critical_event_time': datetime.datetime(2024, 7, 31, 3, 22, 22),
+    'critical_event_time': datetime.datetime(2024, 7, 31, 3, 22, 23),
     'logging': {
         'format': '.csv',
         'events': ['financial', 'telecoms']
