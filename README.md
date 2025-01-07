@@ -33,7 +33,7 @@ python -m pip install -U tomlparams
 Source installation from Github:
 
 ```sh
-python -m pip install -U git+ssh://git@github.com/gofcoe/tomlparams.git
+python -m pip install -U git+ssh://git@github.com/smartdatafoundry/tomlparams.git
 ```
 
 ## Sample Usage
