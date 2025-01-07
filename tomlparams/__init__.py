@@ -3,4 +3,4 @@ from tomlparams.tomlparams import TOMLParams
 
 __all__: list[str] = ['ParamsGroup', 'TOMLParams']
 
-__version__ = '0.1.34'
+__version__ = '0.1.35'
