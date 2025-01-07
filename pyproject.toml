@@ -11,10 +11,7 @@ authors = [
   { name = "Nick Radcliffe", email = "njr@stochasticsolutions.com" },
 ]
 readme = "README.md"
-dependencies=[
-  "tomli>=2.0.1",
-  "tomli-w>=1.0.0",
-]
+dependencies = ["tomli>=2.0.1", "tomli-w>=1.0.0"]
 requires-python = ">=3.9"
 
 [tool.poetry.group.dev.dependencies]
@@ -28,6 +25,7 @@ optional = true
 
 [tool.poetry.group.docs.dependencies]
 myst-parser = "^2.0.0"
+Sphinx = { version = ">=6,<8", optional = true }
 
 [tool.black]
 line-length = 79
@@ -86,12 +84,12 @@ line-length = 79
 
 [tool.rufff.lint]
 select = [
-    "E",  # pycodestyle
-    "F",  # pyflakes
-    "UP", # pyupgrade
+  "E",  # pycodestyle
+  "F",  # pyflakes
+  "UP", # pyupgrade
 ]
 ignore = [
-    "E501",
+  "E501",
 ] # Ignore line length errors, since we're using Black/docformatter
 
 [tool.ruff.lint.per-file-ignores]
