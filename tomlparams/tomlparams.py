@@ -198,7 +198,7 @@ class TOMLParams:
             int(k) if k.isdigit() else k for k in key.split(".")
         ]
         # first key is always a string
-        _initial_key = splitted_key[0]
+        _initial_key = splitted_key.pop(0)
         assert isinstance(_initial_key, str)
         initial_key: str = _initial_key
         if len(splitted_key) == 0 and isinstance(initial_key, str):

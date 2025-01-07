@@ -750,6 +750,55 @@ class TestTOMLParams(unittest.TestCase):
 
         self.assertEqual(len(params['array']), 1)
 
+    @parameterized.expand(  # type: ignore [misc]
+        [
+            ["a", 2],  # present in defaults
+            [
+                "b",
+                3,  # not present, but top level key currently works (should it?)
+            ],
+            ["nested.a", 4],  # nested key
+        ]
+    )
+    def test_set_item(self, key: str, value: Any) -> None:
+        defaults: dict[str, Any] = {
+            'a': 1,
+            "nested": {
+                "a": 1,
+                "b": 2,
+            },
+        }
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+
+        params = TOMLParams(
+            defaults=defaults,
+            name='base',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+        )
+        params[key] = value
+        assert params[key] == value
+
+    def test_set_item_raises(self) -> None:
+        """Trying to set a nested key that doesn't exist should raise a
+        KeyError."""
+        defaults: dict[str, Any] = {
+            'a': 1,
+        }
+        stddir = os.path.join(XDIR, 'tomlparams')
+        userdir = os.path.join(XDIR, 'usertomlparams')
+
+        params = TOMLParams(
+            defaults=defaults,
+            name='base',
+            standard_params_dir=stddir,
+            user_params_dir=userdir,
+        )
+
+        with self.assertRaises(KeyError):
+            params['b.c'] = 2
+
 
 if __name__ == '__main__':
     unittest.main()
