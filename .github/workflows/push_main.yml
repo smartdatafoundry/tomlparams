@@ -130,6 +130,9 @@ jobs:
         shell: bash
         run: poetry install
 
-      - name: Build and publish
+      - name: Build
         shell: bash
-        run: poetry publish --build
+        run: poetry build
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
