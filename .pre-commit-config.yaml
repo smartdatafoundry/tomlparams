@@ -1,23 +1,23 @@
 repos:
 
 - repo: https://github.com/python-poetry/poetry
-  rev: "2.0.0"
+  rev: "2.0.1"
   hooks:
     - id: poetry-check
       verbose: true
 
 - repo: https://github.com/psf/black
-  rev: 24.10.0
+  rev: 25.1.0
   hooks:
     - id: black
 
 - repo: https://github.com/pycqa/isort
-  rev: 5.13.2
+  rev: 6.0.0
   hooks:
     - id: isort
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.8.6
+  rev: v0.9.4
   hooks:
     - id: ruff
       types_or: [python, pyi, jupyter]
@@ -52,7 +52,7 @@ repos:
     # - id: check-merge-conflict
   
 - repo: https://github.com/executablebooks/mdformat
-  rev: 0.7.21
+  rev: 0.7.22
   hooks:
     - id: mdformat
       exclude: '(\.github/pull_request_template\.md|\.github/ISSUE_TEMPLATE/.*\.md|doc/.*)'
