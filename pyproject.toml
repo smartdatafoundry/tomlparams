@@ -12,7 +12,7 @@ authors = [
 ]
 readme = "README.md"
 dependencies = ["tomli>=2.0.1", "tomli-w>=1.0.0"]
-requires-python = ">=3.9"
+requires-python = ">=3.9,<4.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.1"
