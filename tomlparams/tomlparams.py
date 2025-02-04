@@ -307,6 +307,7 @@ class TOMLParams:
                         f'{pfile} exists as {std_path} '
                         f'and {custom_path}; using {custom_path}'
                     )
+                    path = custom_path
             elif os.path.exists(custom_path):
                 path = custom_path
             else:
