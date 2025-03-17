@@ -208,24 +208,22 @@ def convert_dicts_to_lists(
 
     ```python
     d = {
-        0.0: {"weight": 1},
-        0.1: {"weight": 2},
-        1.0: {"weight": 3},
-        1.1: {"weight": 4},
+        0:{0: {"weight": 1}},
+        1:{1: {"weight": 2}},
+        2:{0: {"weight": 3}},
+        3:{1: {"weight": 4}},
     }
     new_d = convert_dicts_to_lists(d)
     ```
     will be converted to the following dictionary:
 
     ```python
-    new_d = {
-        "a": {
-            "matter": [
-                [{"weight": 1}, {"weight": 2}],
-                [{"weight": 3}, {"weight": 4}],
-            ]
-        }
-    }
+    new_d =   [
+        [{"weight": 1}],
+        [{"weight": 2}],
+        [{"weight": 3}],
+        [{"weight": 4}],
+    ]
     ```
 
     Args:
