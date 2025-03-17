@@ -39,6 +39,20 @@ class TestConvertDictsToLists(unittest.TestCase):
                 [{"a": {"b": {"c": 1}}, "d": {"e": {"f": 2}}}],
                 [{"a": {"b": {"c": 1}}, "d": {"e": {"f": 2}}}],
             ),
+            (
+                {
+                    0: {0: {"weight": 1}},
+                    1: {1: {"weight": 2}},
+                    2: {0: {"weight": 3}},
+                    3: {1: {"weight": 4}},
+                },
+                [
+                    [{"weight": 1}],
+                    [{"weight": 2}],
+                    [{"weight": 3}],
+                    [{"weight": 4}],
+                ],
+            ),
         ]
     )
     def test_convert_dicts_to_lists(
