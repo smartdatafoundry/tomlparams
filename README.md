@@ -1,6 +1,6 @@
 # TOMLParams
 
-[![TOMLParams tests](https://github.com/smartdatafoundry/tomlparams/actions/workflows/push_main.yml/badge.svg)](https://github.com/smartdatafoundry/tomlparams/actions/workflows/push_main.yml)
+[![TOMLParams tests](https://github.com/itsbigspark/tomlparams/actions/workflows/push_main.yml/badge.svg)](https://github.com/itsbigspark/tomlparams/actions/workflows/push_main.yml)
 
 TOML-based parameter files made better
 
@@ -33,7 +33,7 @@ python -m pip install -U tomlparams
 Source installation from Github:
 
 ```sh
-python -m pip install -U git+ssh://git@github.com/smartdatafoundry/tomlparams.git
+python -m pip install -U git+ssh://git@github.com/itsbigspark/tomlparams.git
 ```
 
 ## Sample Usage
@@ -254,10 +254,10 @@ we see the following output:
 
 ```none
 $ python readme4.py
-Parameters set from: /home/sdf/tomlparams/examples/readme/three.toml
-Parameters set from: /home/sdf/tomlparams/examples/readme/one.toml
-Parameters set from: /home/sdf/tomlparams/examples/readme/two.toml
-Parameters set from: /home/sdf/tomlparams/examples/readme/hier.toml
+Parameters set from: /home/itsbigspark/tomlparams/examples/readme/three.toml
+Parameters set from: /home/itsbigspark/tomlparams/examples/readme/one.toml
+Parameters set from: /home/itsbigspark/tomlparams/examples/readme/two.toml
+Parameters set from: /home/itsbigspark/tomlparams/examples/readme/hier.toml
 TOMLParams(
     a='hier',
     b='two',
@@ -546,7 +546,7 @@ USAGE:
     tomlparams examples  --- copy the examples to ./tomlparams_examples
 
 Documentation: https://tomlparams.readthedocs.io/
-Source code:   https://github.com/smartdatafoundry.com/tomlparams
+Source code:   https://github.com/itsbigspark.com/tomlparams
 Website:       https://tomlparams.com
 
 Installation:
@@ -559,10 +559,10 @@ The examples can be copied as follows:
 
 ```sh
 $ pwd
-/home/sdf/tomlparams
+/home/itsbigspark/tomlparams
 
 $ tomlparams examples
-Examples copied to /home/sdf/tomlparams/tomlparams_examples.
+Examples copied to /home/itsbigspark/tomlparams/tomlparams_examples.
 ```
 
 The `readme` subdirectory of the resulting `tomlparams_examples` contains all

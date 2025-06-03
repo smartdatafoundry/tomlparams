@@ -3,12 +3,12 @@ name = "tomlparams"
 version = "0.1.41"
 description = ""
 authors = [
-  { name = "Smart Data Foundry", email = "datascience@smartdatafoundry.com" },
-  { name = "Paola Arce", email = "paola.arce@smartdatafoundry.com" },
-  { name = "Victor Diaz", email = "victor.diaz@smartdatafoundry.com" },
-  { name = "Eric Janto", email = "eric.janto@smartdatafoundry.com" },
-  { name = "Del Middlemiss", email = "derek.middlemiss@smartdatafoundry.com" },
-  { name = "Nick Radcliffe", email = "njr@stochasticsolutions.com" },
+  { name = "Paola Arce @mapsa" },
+  { name = "Victor Diaz @vadrienzo" },
+  { name = "Eric Janto @ericjanto" },
+  { name = "Del Middlemiss @derekmiddlemiss" },
+  { name = "Nick Radcliffe @njr0" },
+  { name = "William Arnott @w-arnott" },
 ]
 readme = "README.md"
 dependencies = ["tomli>=2.0.1", "tomli-w>=1.0.0"]

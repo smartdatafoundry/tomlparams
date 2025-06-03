@@ -29,7 +29,7 @@ repos:
     - id: autoflake
       args: [ --remove-all-unused-imports]
 
-- repo: https://github.com/smartdatafoundry/docformatter
+- repo: https://github.com/itsbigspark/docformatter
   # forked from https://github.com/PyCQA/docformatter due to pre-commit incompatiblity
   # fixed in the repo but not released.
   # https://github.com/PyCQA/docformatter/issues/293
