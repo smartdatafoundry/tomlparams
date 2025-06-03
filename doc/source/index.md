@@ -8,7 +8,7 @@ Version {sub-ref}`release`
 
 **Authors**
 
-Smart Data Foundry Limited
+Bigspark Limited
 
 **Contents**
 :::
